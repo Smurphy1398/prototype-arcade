@@ -1,42 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Halo FPS Prototype</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Halo FPS Prototype | Simon’s Prototype Arcade</title>
+
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #111;
+      background:
+        radial-gradient(circle at top, rgba(80, 120, 255, 0.18), transparent 35%),
+        linear-gradient(135deg, #0d0f14, #151515);
       color: #f5f5f5;
-      display: grid;
-      place-items: center;
       min-height: 100vh;
-      text-align: center;
+      line-height: 1.5;
     }
 
-    .box {
-      max-width: 700px;
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .back-link {
+      color: #cfcfcf;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .back-link:hover {
+      color: #fff;
+    }
+
+    .hero {
+      background: rgba(20, 20, 20, 0.88);
+      border: 1px solid #333;
+      border-radius: 22px;
       padding: 32px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35);
     }
 
-    a {
-      color: #111;
+    .tag {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: #26324a;
+      color: #dce6ff;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 44px;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      color: #d6d6d6;
+      font-size: 18px;
+      max-width: 760px;
+      margin-bottom: 24px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 16px;
+      border-radius: 12px;
       background: #f5f5f5;
-      padding: 10px 14px;
-      border-radius: 10px;
+      color: #111;
       text-decoration: none;
       font-weight: bold;
-      display: inline-block;
-      margin-top: 18px;
+    }
+
+    .button:hover {
+      background: #ddd;
+    }
+
+    .button.secondary {
+      background: #2a2a2a;
+      color: #f5f5f5;
+      border: 1px solid #444;
+    }
+
+    .button.secondary:hover {
+      background: #383838;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: #181818;
+      border: 1px solid #333;
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin: 0 0 10px;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #d8d8d8;
+    }
+
+    .card p {
+      color: #d8d8d8;
+      margin: 0;
+    }
+
+    .note {
+      margin-top: 20px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 32px;
+      color: #777;
+      text-align: center;
+      font-size: 14px;
     }
   </style>
 </head>
+
 <body>
-  <div class="box">
-    <h1>Halo FPS Prototype</h1>
-    <p>This page will hold the playable FPS build.</p>
-    <a href="../index.html">Back to Arcade</a>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="back-link" href="../index.html">← Back to Prototype Arcade</a>
+      <span class="tag">Friend Test Build</span>
+    </div>
+
+    <main class="hero">
+      <span class="tag">HTML / JavaScript FPS Prototype</span>
+
+      <h1>Halo FPS Prototype</h1>
+
+      <p class="subtitle">
+        An experimental browser-based arena shooter prototype focused on fast combat,
+        weapon testing, pickups, enemy AI, and arcade-style FPS mechanics.
+      </p>
+
+      <div class="actions">
+        <a class="button" href="halo-fps-game.html">Launch Game</a>
+        <a class="button secondary" href="../index.html">Back to Arcade</a>
+      </div>
+
+      <div class="grid">
+        <section class="card">
+          <h2>Build Info</h2>
+          <p>
+            <strong>Version:</strong> v1.7.6<br>
+            <strong>Status:</strong> Playable test build<br>
+            <strong>Platform:</strong> Browser / HTML
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>Controls</h2>
+          <ul>
+            <li>WASD: Move</li>
+            <li>Mouse: Aim / look</li>
+            <li>Click: Shoot</li>
+            <li>Esc: Pause / unlock mouse</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>Known Notes</h2>
+          <ul>
+            <li>Experimental prototype</li>
+            <li>Some systems may be unfinished</li>
+            <li>Balance and UI may change often</li>
+            <li>Best played on desktop</li>
+          </ul>
+        </section>
+      </div>
+
+      <p class="note">
+        Tip: If the game uses mouse-look or fullscreen, click inside the game window after launching.
+      </p>
+    </main>
+
+    <footer>
+      Built by Simon Murphy · Prototype Arcade
+    </footer>
   </div>
 </body>
 </html>
