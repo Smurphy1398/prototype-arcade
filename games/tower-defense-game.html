@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tower Defense V6.1</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(38,130,255,.2), transparent 28%),
+        radial-gradient(circle at 80% 0%, rgba(180,80,255,.18), transparent 24%),
+        #06101d;
+      color: #eef6ff;
+      overflow-x: hidden;
+    }
+    .app { width: min(1580px, 100%); margin: 0 auto; padding: 14px; }
+    header { display:flex; justify-content:space-between; align-items:end; gap:12px; margin-bottom:10px; }
+    h1 { margin:0; font-size:clamp(25px,3vw,36px); letter-spacing:-1px; }
+    .subtitle { color:#91a7bf; margin-top:5px; line-height:1.25; font-size:13px; }
+    .controls { display:flex; flex-wrap:wrap; gap:7px; justify-content:flex-end; align-items:center; }
+    button, select {
+      border-radius:12px;
+      padding:8px 11px;
+      font-weight:800;
+      background:#1bc7e8;
+      color:#06111d;
+      border:0;
+      cursor:pointer;
+      transition:transform .08s ease, opacity .15s ease, background .15s ease;
+      font-size:13px;
+    }
+    button:hover, select:hover { transform:translateY(-1px); }
+    button:disabled { cursor:not-allowed; opacity:.45; transform:none; }
+    select { background:#0e1d30; color:#eef6ff; border:1px solid #2b415d; max-width:280px; }
+    input[type="range"] { width: 96px; accent-color: #37e4ff; cursor:pointer; }
+    .slider-wrap { display:flex; align-items:center; gap:5px; color:#9db1c7; font-size:11px; background:#0e1d30; border:1px solid #2b415d; border-radius:12px; padding:5px 8px; }
+    .secondary { background:#25344a; color:#eef6ff; }
+    .outline { background:transparent; color:#eef6ff; border:1px solid #33465f; }
+    .danger { background:#ff5178; color:#fff; }
+    .green { background:#7cffad; color:#06111d; }
+    .purple { background:#b47cff; color:#fff; }
+    .active-toggle { outline:2px solid #7cffad; }
+    .layout { display:grid; grid-template-columns:minmax(700px,1fr) 390px; gap:12px; align-items:start; }
+    .panel { background:rgba(13,24,41,.96); border:1px solid #20334d; border-radius:18px; box-shadow:0 18px 50px rgba(0,0,0,.35); }
+    .game-column { display:grid; gap:10px; }
+    .game-panel { padding:10px; overflow:auto; position:relative; }
+    canvas { display:block; background:#07111f; border:1px solid #24364d; border-radius:16px; margin:0 auto; box-shadow:inset 0 0 30px rgba(0,0,0,.42); max-width:100%; height:auto; }
+    .bottom-bar { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .sidebar { display:grid; gap:8px; align-content:start; max-height:calc(100vh - 88px); overflow:auto; padding-right:2px; }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px; }
+    .sidebar .stats { grid-template-columns:1fr 1fr; }
+    .stat { background:#08111f; border:1px solid #20334d; border-radius:14px; padding:9px; }
+    .stat-label { color:#6f849c; font-size:10px; text-transform:uppercase; letter-spacing:.8px; }
+    .stat-value { font-size:21px; font-weight:900; margin-top:2px; }
+    .box { padding:9px; }
+    h2 { margin:0 0 6px; font-size:16px; }
+    .section-title { color:#91a7bf; text-transform:uppercase; letter-spacing:.9px; font-size:10px; font-weight:900; margin:6px 0 4px; }
+    .build-list { display:grid; gap:5px; }
+    .tower-row { display:grid; grid-template-columns:1fr 78px; gap:5px; align-items:stretch; }
+    .tower-card {
+      width:100%; display:grid; grid-template-columns:31px 1fr auto; align-items:center; gap:8px; background:#08111f; color:#eef6ff;
+      border:1px solid #20334d; text-align:left; border-radius:14px; padding:7px; min-height:46px; position:relative; z-index:1;
+    }
+    .tower-card.selected { border-color:#37e4ff; background:rgba(55,228,255,.1); }
+    .quick-upgrade { min-width:78px; padding:6px 7px; border-radius:14px; background:#18273d; color:#d8e9ff; border:1px solid #2b415d; font-size:10px; line-height:1.1; position:relative; z-index:3; pointer-events:auto; }
+    .quick-upgrade b { color:#7cffad; display:block; font-size:11px; margin-top:2px; }
+    .tower-icon { width:29px; height:29px; border-radius:10px; display:grid; place-items:center; font-size:16px; font-weight:900; color:#06111d; box-shadow:0 0 14px rgba(255,255,255,.12); }
+    .tower-name { font-size:13px; font-weight:900; line-height:1.1; }
+    .tower-desc { font-size:10px; color:#91a7bf; margin-top:2px; font-weight:500; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:165px; }
+    .cost { color:#7cffad; font-size:13px; font-weight:900; white-space:nowrap; }
+    #message { min-height:38px; color:#c7d7e8; line-height:1.3; font-size:13px; }
+    .small { color:#8ea2b8; font-size:12px; line-height:1.4; }
+    .tiny { color:#71879f; font-size:11px; line-height:1.35; }
+    .selected-actions { display:flex; gap:7px; margin-top:8px; flex-wrap:wrap; }
+    .hotkeys { display:grid; grid-template-columns:repeat(4,auto); gap:4px 9px; font-size:11px; color:#91a7bf; }
+    .kbd { background:#08111f; border:1px solid #2b415d; border-radius:6px; padding:1px 5px; color:#fff; }
+    .win-overlay { position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.55); z-index:5; padding:20px; }
+    .win-card { width:min(560px,100%); background:#0d1829; border:1px solid #37e4ff; border-radius:24px; padding:24px; text-align:center; box-shadow:0 24px 80px rgba(0,0,0,.55); }
+    .win-card h2 { font-size:32px; margin:0 0 10px; }
+    .win-card p { color:#c7d7e8; line-height:1.45; }
+    @media (max-width:1160px){ .layout{grid-template-columns:1fr;} .sidebar{grid-template-columns:1fr 1fr; max-height:none; overflow:visible;} .sidebar .stats{grid-template-columns:repeat(4,1fr);} }
+    @media (max-width:820px){ header{display:block;} .controls{justify-content:flex-start;margin-top:10px;} .bottom-bar,.sidebar{grid-template-columns:1fr;} .stats,.sidebar .stats{grid-template-columns:1fr 1fr;} }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Tower Defense V6.1</h1>
+        <div class="subtitle">V6.1: smoother economy curve, 4x beta-test speed, cheaper pack scaling, better large-map starts, compact UI, and continued late-game pressure.</div>
+      </div>
+      <div class="controls">
+        <select id="mapSelect"></select>
+        <button id="startWaveBtn">Start Wave</button>
+        <button id="speedBtn" class="secondary">1x Speed</button>
+        <button id="pauseBtn" class="secondary">Pause</button>
+        <label class="slider-wrap">SFX <input id="sfxVol" type="range" min="0" max="100" value="65" title="Click slider to mute/unmute"></label>
+        <label class="slider-wrap">Music <input id="musicVol" type="range" min="0" max="100" value="45" title="Click slider to mute/unmute"></label>
+        <button id="resetBtn" class="outline">Reset</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="game-column">
+        <section class="panel game-panel"><canvas id="gameCanvas"></canvas></section>
+        <section class="bottom-bar">
+          <div class="panel box">
+            <h2>Selected Tile</h2>
+            <div id="selectedPanel" class="small">Click a tower to upgrade, sell, or pack-a-punch in overtime. Hover land/path to preview builds and traps.</div>
+            <div class="selected-actions">
+              <button id="upgradeBtn" class="green" disabled>Upgrade</button>
+              <button id="packBtn" class="purple" disabled>Pack</button>
+              <button id="sellBtn" class="danger" disabled>Sell</button>
+            </div>
+          </div>
+          <div class="panel box">
+            <h2>Status & Hotkeys</h2>
+            <div id="message">Select a map, build towers, then start a wave.</div>
+            <div class="hotkeys" style="margin-top:8px;">
+              <span><span class="kbd">1-9</span> towers</span><span><span class="kbd">0,-,=</span> traps</span><span><span class="kbd">Space</span> wave/pause</span><span><span class="kbd">F</span> speed</span>
+              <span><span class="kbd">U</span> upgrade</span><span><span class="kbd">P</span> pack</span><span><span class="kbd">S</span> sell</span><span><span class="kbd">Esc</span> clear</span>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="sidebar">
+        <section class="panel stats">
+          <div class="stat"><div class="stat-label">Lives</div><div class="stat-value" id="lives">20</div></div>
+          <div class="stat"><div class="stat-label">Money</div><div class="stat-value" id="money">$150</div></div>
+          <div class="stat"><div class="stat-label">Wave</div><div class="stat-value" id="wave">0/16</div></div>
+          <div class="stat"><div class="stat-label">Score</div><div class="stat-value" id="score">0</div></div>
+        </section>
+        <section class="panel box">
+          <h2>Build Menu</h2>
+          <div class="section-title">Towers + Quick Upgrade</div><div id="towerMenu" class="build-list"></div>
+          <div class="section-title">Emergency Path Traps</div><div id="trapMenu" class="build-list"></div>
+          <div class="tiny" id="selectedInfo" style="margin-top:8px;"></div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-card">
+      <h2 id="modalTitle">Level Complete!</h2>
+      <p id="winText">You survived 16 waves.</p>
+      <button id="continueBtn" class="green">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const CELL = 46;
+    const WIN_WAVE = 16;
+
+    const maps = {
+      beach:{name:"Tropical Beach Paradise - Easy",w:13,h:8,lives:30,money:230,difficulty:.88,music:[196,220,246.94,293.66,329.63,293.66],bossMusic:[110,146.83,164.81],theme:{land1:"#1f6f67",land2:"#0c302f",grid:"rgba(255,255,255,.12)",path1:"#e9c982",path2:"#b68b52",glow:"rgba(255,232,160,.22)",deco:"beach"},path:[[0,4],[1,4],[2,4],[3,4],[3,3],[4,3],[5,3],[6,3],[7,3],[8,3],[8,4],[9,4],[10,4],[11,4],[12,4]]},
+      canyon2:{name:"Grand Canyon Run - Medium",w:15,h:10,lives:25,money:205,difficulty:1.15,music:[130.81,164.81,196,220],bossMusic:[98,123.47,146.83],theme:{land1:"#5a2d14",land2:"#2e160a",grid:"rgba(255,150,100,.2)",path1:"#c06c3b",path2:"#6a3a1d",glow:"rgba(255,140,80,.2)",deco:"stone"},path:[[0,5],[1,5],[2,5],[3,5],[4,5],[4,4],[5,4],[6,4],[7,4],[8,4],[8,5],[8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[14,6]]},
+      moon:{name:"Moon Base - Hard",w:16,h:10,lives:22,money:205,difficulty:1.32,music:[220,246.94,293.66,349.23],bossMusic:[146.83,174.61,220],theme:{land1:"#2c2f3a",land2:"#11131a",grid:"rgba(200,200,255,.15)",path1:"#888ea3",path2:"#4a4f61",glow:"rgba(150,150,255,.2)",deco:"metal"},path:[[0,2],[1,2],[2,2],[3,2],[4,2],[5,2],[5,3],[5,4],[6,4],[7,4],[8,4],[9,4],[10,4],[10,5],[10,6],[11,6],[12,6],[13,6],[14,6],[15,6]]},
+      psychedelic:{name:"Psychedelic Trip - Weird",w:14,h:10,lives:24,money:210,difficulty:1.25,music:[261.63,329.63,392,311.13,233.08],bossMusic:[196,246.94,311.13],theme:{land1:"#2a0f3a",land2:"#14071d",grid:"rgba(255,0,255,.2)",path1:"#ff00ff",path2:"#00ffff",glow:"rgba(255,0,255,.3)",deco:"neon"},path:[[0,5],[1,5],[2,5],[2,4],[2,3],[3,3],[4,3],[5,3],[5,4],[5,5],[6,5],[7,5],[8,5],[8,6],[8,7],[9,7],[10,7],[11,7],[12,7],[13,7]]},
+      vietnam:{name:"Vietnam Flashback - Jungle",w:15,h:10,lives:25,money:205,difficulty:1.28,music:[110,130.81,146.83,164.81],bossMusic:[82.41,110,130.81],theme:{land1:"#1f3d1f",land2:"#0f2410",grid:"rgba(100,200,100,.2)",path1:"#6b8f3a",path2:"#3e5a20",glow:"rgba(120,255,120,.2)",deco:"grass"},path:[[0,6],[1,6],[2,6],[3,6],[3,5],[3,4],[4,4],[5,4],[6,4],[7,4],[7,5],[7,6],[8,6],[9,6],[10,6],[11,6],[11,5],[12,5],[13,5],[14,5]]},
+      meadow:{name:"Meadow Bend - Easy",w:12,h:8,lives:28,money:220,difficulty:.95,music:[130.81,164.81,196,246.94,220,196,164.81,146.83],bossMusic:[98,123.47,146.83,196],theme:{land1:"#15341f",land2:"#0e2418",grid:"rgba(79,130,88,.32)",path1:"#8f6732",path2:"#5f3e21",glow:"rgba(145,255,154,.12)",deco:"grass"},path:[[0,3],[1,3],[2,3],[3,3],[3,2],[4,2],[5,2],[6,2],[6,3],[6,4],[7,4],[8,4],[9,4],[9,5],[10,5],[11,5]]},
+      scrapyard:{name:"Scrapyard Switchbacks - Medium",w:15,h:10,lives:24,money:190,difficulty:1.2,music:[110,146.83,164.81,196,207.65,196,164.81,146.83],bossMusic:[82.41,110,146.83,164.81],theme:{land1:"#202833",land2:"#141b24",grid:"rgba(139,163,183,.2)",path1:"#7a684b",path2:"#4d4233",glow:"rgba(255,206,74,.12)",deco:"metal"},path:[[0,5],[1,5],[2,5],[3,5],[4,5],[4,4],[4,3],[5,3],[6,3],[7,3],[8,3],[8,4],[8,5],[8,6],[9,6],[10,6],[11,6],[11,5],[11,4],[12,4],[13,4],[14,4]]},
+      canyon:{name:"Neon Canyon - Hard",w:18,h:11,lives:20,money:205,difficulty:1.48,music:[146.83,174.61,220,261.63,293.66,261.63,220,174.61],bossMusic:[110,146.83,174.61,220],theme:{land1:"#241034",land2:"#13091f",grid:"rgba(185,94,255,.25)",path1:"#8f3c64",path2:"#552449",glow:"rgba(180,80,255,.18)",deco:"neon"},path:[[0,2],[1,2],[2,2],[3,2],[4,2],[4,3],[4,4],[3,4],[2,4],[2,5],[2,6],[3,6],[4,6],[5,6],[6,6],[7,6],[7,5],[7,4],[8,4],[9,4],[10,4],[11,4],[11,5],[11,6],[11,7],[12,7],[13,7],[14,7],[15,7],[16,7],[17,7]]},
+      frost:{name:"Frostbite Pass - Medium+",w:16,h:9,lives:22,money:190,difficulty:1.32,music:[196,220,246.94,329.63,293.66,246.94,220,196],bossMusic:[98,130.81,164.81,196],theme:{land1:"#153247",land2:"#091e32",grid:"rgba(130,220,255,.22)",path1:"#b8d4db",path2:"#7193a3",glow:"rgba(117,216,255,.16)",deco:"snow"},path:[[0,1],[1,1],[2,1],[3,1],[3,2],[3,3],[4,3],[5,3],[6,3],[7,3],[7,4],[7,5],[6,5],[5,5],[5,6],[6,6],[7,6],[8,6],[9,6],[10,6],[11,6],[11,5],[11,4],[12,4],[13,4],[14,4],[15,4]]},
+      volcano:{name:"Ash Core - Expert",w:20,h:12,lives:18,money:225,difficulty:1.68,music:[98,123.47,146.83,196,185,146.83,123.47,110],bossMusic:[65.41,82.41,98,123.47],theme:{land1:"#2d1411",land2:"#120807",grid:"rgba(255,101,48,.22)",path1:"#4c3b36",path2:"#271d1b",glow:"rgba(255,86,41,.2)",deco:"lava"},path:[[0,6],[1,6],[2,6],[3,6],[4,6],[4,5],[4,4],[5,4],[6,4],[7,4],[8,4],[8,5],[8,6],[8,7],[7,7],[6,7],[6,8],[7,8],[8,8],[9,8],[10,8],[11,8],[12,8],[12,7],[12,6],[13,6],[14,6],[15,6],[16,6],[16,5],[16,4],[17,4],[18,4],[19,4]]},
+      garden:{name:"Garden Maze - Zigzag",w:14,h:11,lives:24,money:200,difficulty:1.22,music:[174.61,196,220,261.63,220,196,174.61,146.83],bossMusic:[110,130.81,174.61,196],theme:{land1:"#1e3a22",land2:"#102716",grid:"rgba(172,255,120,.21)",path1:"#9d7c45",path2:"#604525",glow:"rgba(190,255,120,.13)",deco:"grass"},path:[[0,1],[1,1],[2,1],[3,1],[4,1],[5,1],[5,2],[5,3],[4,3],[3,3],[2,3],[2,4],[2,5],[3,5],[4,5],[5,5],[6,5],[7,5],[7,6],[7,7],[6,7],[5,7],[4,7],[4,8],[4,9],[5,9],[6,9],[7,9],[8,9],[9,9],[10,9],[11,9],[12,9],[13,9]]},
+      pipeline:{name:"Pipeline Drop - Vertical",w:13,h:12,lives:22,money:195,difficulty:1.32,music:[123.47,155.56,185,233.08,185,155.56,138.59,123.47],bossMusic:[82.41,103.83,123.47,155.56],theme:{land1:"#122d35",land2:"#071a20",grid:"rgba(77,222,255,.18)",path1:"#45686f",path2:"#263e46",glow:"rgba(77,222,255,.14)",deco:"metal"},path:[[6,0],[6,1],[6,2],[5,2],[4,2],[3,2],[3,3],[3,4],[4,4],[5,4],[6,4],[7,4],[8,4],[9,4],[9,5],[9,6],[8,6],[7,6],[6,6],[5,6],[4,6],[3,6],[3,7],[3,8],[4,8],[5,8],[6,8],[7,8],[8,8],[9,8],[10,8],[10,9],[10,10],[10,11]]},
+      ruins:{name:"Ancient Ruins - Split Bend",w:18,h:10,lives:19,money:210,difficulty:1.52,music:[164.81,196,246.94,293.66,246.94,220,196,164.81],bossMusic:[98,123.47,164.81,196],theme:{land1:"#2d2b1b",land2:"#17160f",grid:"rgba(231,210,124,.18)",path1:"#776c4c",path2:"#49412e",glow:"rgba(255,232,150,.14)",deco:"stone"},path:[[0,8],[1,8],[2,8],[2,7],[2,6],[3,6],[4,6],[5,6],[5,5],[5,4],[4,4],[3,4],[3,3],[3,2],[4,2],[5,2],[6,2],[7,2],[8,2],[9,2],[9,3],[9,4],[10,4],[11,4],[12,4],[13,4],[14,4],[14,5],[14,6],[15,6],[16,6],[17,6]]}
+    };
+
+    const towerTypes = {
+      basic:{icon:"▲",name:"Bolt",cost:60,range:125,fireRate:.68,damage:18,projectileSpeed:520,color:"#1bc7e8",accent:"#d9fbff",kind:"attack",sound:520,desc:"Balanced starter."},
+      rapid:{icon:"✚",name:"Spark",cost:100,range:112,fireRate:.25,damage:7,projectileSpeed:640,color:"#b47cff",accent:"#efe0ff",kind:"attack",sound:760,desc:"Fast laser bursts."},
+      heavy:{icon:"●",name:"Cannon",cost:150,range:145,fireRate:1.2,damage:44,projectileSpeed:360,color:"#ff9e42",accent:"#ffe4c7",kind:"attack",splash:38,sound:150,desc:"Splash damage."},
+      sniper:{icon:"◆",name:"Sniper",cost:190,range:260,fireRate:1.65,damage:88,projectileSpeed:900,color:"#7cffad",accent:"#e1ffed",kind:"attack",sound:980,desc:"Long range."},
+      frost:{icon:"✦",name:"Frost",cost:140,range:120,fireRate:.95,damage:9,projectileSpeed:430,color:"#75d8ff",accent:"#e0f7ff",kind:"attack",slow:.45,slowTime:1.65,sound:620,desc:"Slows enemies."},
+      flame:{icon:"♨",name:"Flame",cost:165,range:92,fireRate:.16,damage:4,projectileSpeed:0,color:"#ff5a2f",accent:"#ffd0bd",kind:"beam",burn:10,burnTime:2.8,sound:240,desc:"Short range burn."},
+      mortar:{icon:"◒",name:"Mortar",cost:225,range:235,fireRate:2.15,damage:95,projectileSpeed:0,color:"#9aa7ff",accent:"#e4e8ff",kind:"mortar",splash:72,sound:115,desc:"Arcing splash."},
+      factory:{icon:"$",name:"Factory",cost:180,range:0,fireRate:0,damage:0,projectileSpeed:0,color:"#ffd84d",accent:"#fff0a6",kind:"support",income:7,size:2,sound:740,desc:"2x2 wave income."},
+      pack:{icon:"★",name:"Pack Core",cost:5000,range:0,fireRate:0,damage:0,projectileSpeed:0,color:"#37e4ff",accent:"#ffffff",kind:"pack",size:2,sound:1040,desc:"Overtime super-upgrades."}
+    };
+
+    const trapTypes = {
+      glue:{icon:"~",name:"Glue",cost:35,color:"#8cffd2",uses:10,slow:.32,slowTime:2.8,desc:"Slows 10 enemies."},
+      spikes:{icon:"⌃",name:"Spikes",cost:45,color:"#d7d7d7",uses:12,damage:32,desc:"Hurts walkers."},
+      tnt:{icon:"✹",name:"TNT",cost:70,color:"#ff5a3d",uses:1,damage:120,splash:82,desc:"One big boom."}
+    };
+
+    const enemyTypes = {
+      grunt:{name:"Grunt",hp:72,speed:46,reward:10,color:"#ff5178",radius:14,armor:0,sound:210},
+      runner:{name:"Runner",hp:48,speed:78,reward:11,color:"#ffcf4a",radius:11,armor:0,sound:330},
+      brute:{name:"Brute",hp:185,speed:34,reward:18,color:"#c35cff",radius:18,armor:2,sound:150},
+      shield:{name:"Shield",hp:125,speed:42,reward:15,color:"#61a8ff",radius:15,armor:7,sound:260},
+      swarm:{name:"Swarm",hp:30,speed:92,reward:6,color:"#86ff5e",radius:9,armor:0,sound:400},
+      ghost:{name:"Ghost",hp:86,speed:62,reward:13,color:"#d9f7ff",radius:13,armor:1,sound:520,trapResist:.45},
+      regenerator:{name:"Regen",hp:150,speed:39,reward:17,color:"#63ffa4",radius:15,armor:1,sound:470,regen:5},
+      armored:{name:"Armored",hp:230,speed:30,reward:19,color:"#a9b4c4",radius:17,armor:12,sound:120},
+      boss:{name:"Boss",hp:620,speed:30,reward:61,color:"#ff3434",radius:24,armor:3,sound:90,trapResist:.55},
+      snake:{name:"Serpent Prime",hp:1500,speed:23,reward:191,color:"#2dff7a",radius:25,armor:7,sound:65,trapResist:.25,snake:true},
+      trojan:{name:"Trojan Cargo",hp:1250,speed:21,reward:136,color:"#c9924a",radius:27,armor:8,sound:75,trapResist:.25,trojan:true},
+      clown:{name:"Rift Clown",hp:390,speed:50,reward:38,color:"#ff77f7",radius:19,armor:4,sound:620,trapResist:.65},
+      crab:{name:"Titan Crab",hp:520,speed:24,reward:44,color:"#ff8b4a",radius:22,armor:11,sound:130,trapResist:.55},
+      drone:{name:"Moon Drone",hp:160,speed:88,reward:20,color:"#b9f8ff",radius:13,armor:3,sound:720,trapResist:.7}
+    };
+
+    const statusLines = {
+      early:["Scouts report light movement near the path.","The first raiders are testing your defenses.","Command says this should be manageable. Famous last words.","Low threat level. Good time to shape your economy."],
+      mid:["Mixed enemy signatures are forming up.","Armor plates and fast movers spotted in the fog.","The enemy is adapting. Choke points matter now.","Expect pressure on weak corners and open lanes."],
+      late:["Radar is noisy. Something ugly is marching with the convoy.","Command is losing the clean picture. Prepare for chaos.","Heavy signatures detected. This wave has teeth.","The field is getting crowded. Upgrade discipline matters."],
+      overtime:["Overtime scanners are screaming. This is no longer a drill.","The doom engine is awake. Pack-a-punch or perish.","Reality is bending around the path. Hold the line.","Every wave now wants to be your last."],
+      super:["SUPER ENEMY ENERGY DETECTED. Normal towers are losing efficiency.","Pack-a-punch readings are mandatory. The enemy has evolved.","Blue-core enemies inbound. Unpacked damage is partially resisted.","This is late-game territory. Super units are entering the lane."]
+    };
+
+    let mapKey="beach", currentMap, path, pathSet, selectedType="basic", selectedBuildKind="tower", selectedTowerId=null, hoverCell=null;
+    let towers=[], traps=[], enemies=[], projectiles=[], particles=[], enemyId=1, projectileId=1, particleId=1, trapId=1, lastTime=0;
+    let game={}, spawnQueue={list:[],timer:0}, speedMultiplier=1, sfxMuted=false, musicMuted=false, sfxVolume=.65, musicVolume=.45, audioCtx=null, musicTimer=null, musicStep=0;
+    let nextWaveTimer=0, exitFlash=0, screenShake=0, won=false, packUnlocked=false, packTier2Unlocked=false, rockstarShown=false, packFlash=0;
+
+    const els = {
+      lives:document.getElementById("lives"), money:document.getElementById("money"), wave:document.getElementById("wave"), score:document.getElementById("score"), message:document.getElementById("message"), selectedInfo:document.getElementById("selectedInfo"), selectedPanel:document.getElementById("selectedPanel"),
+      startWave:document.getElementById("startWaveBtn"), pause:document.getElementById("pauseBtn"), reset:document.getElementById("resetBtn"), speed:document.getElementById("speedBtn"), sfxVol:document.getElementById("sfxVol"), musicVol:document.getElementById("musicVol"),
+      towerMenu:document.getElementById("towerMenu"), trapMenu:document.getElementById("trapMenu"), mapSelect:document.getElementById("mapSelect"), upgrade:document.getElementById("upgradeBtn"), pack:document.getElementById("packBtn"), sell:document.getElementById("sellBtn"),
+      winOverlay:document.getElementById("winOverlay"), winText:document.getElementById("winText"), modalTitle:document.getElementById("modalTitle"), continueBtn:document.getElementById("continueBtn")
+    };
+
+    function setupMenus(){
+      for(const [key,map] of Object.entries(maps)){ const opt=document.createElement("option"); opt.value=key; opt.textContent=map.name; els.mapSelect.appendChild(opt); }
+      Object.entries(towerTypes).forEach(([key,t],i)=>addTowerButton(key,t,i+1));
+      Object.entries(trapTypes).forEach(([key,t],i)=>addBuildButton(els.trapMenu,key,t,i===0?"0":i===1?"-":"=","trap"));
+    }
+    function addTowerButton(key,t,num){
+      const row=document.createElement("div"); row.className="tower-row"; row.dataset.type=key; if(key==="pack") row.style.display="none";
+      const btn=document.createElement("button"); btn.className="tower-card"+(key===selectedType?" selected":""); btn.dataset.type=key; btn.dataset.kind="tower";
+      btn.innerHTML=`<div class="tower-icon" style="background:${t.color};">${t.icon}</div><div><div class="tower-name">${num}. ${t.name}</div><div class="tower-desc">${t.desc}</div></div><div class="cost">$${t.cost}</div>`;
+      btn.addEventListener("click",()=>selectBuildType("tower",key));
+      const q=document.createElement("button"); q.className="quick-upgrade"; q.dataset.quick=key; q.innerHTML=`Upgrade all<b>—</b>`;
+      q.addEventListener("click",e=>{ e.stopPropagation(); quickUpgradeType(key); });
+      row.appendChild(btn); row.appendChild(q); els.towerMenu.appendChild(row);
+    }
+    function addBuildButton(parent,key,item,num,kind){
+      const btn=document.createElement("button"); btn.className="tower-card"; btn.dataset.type=key; btn.dataset.kind=kind;
+      btn.innerHTML=`<div class="tower-icon" style="background:${item.color};">${item.icon}</div><div><div class="tower-name">${num}. ${item.name}</div><div class="tower-desc">${item.desc}</div></div><div class="cost">$${item.cost}</div>`;
+      btn.addEventListener("click",()=>selectBuildType(kind,key)); parent.appendChild(btn);
+    }
+    function selectBuildType(kind,key){
+      if(key==="pack"&&!packUnlocked){ setMessage("Pack Core unlocks after beating wave 16."); return; }
+      selectedBuildKind=kind; selectedType=key; selectedTowerId=null;
+      document.querySelectorAll(".tower-card").forEach(b=>b.classList.toggle("selected",b.dataset.kind===kind&&b.dataset.type===key));
+      setMessage(`${kind==="trap"?trapTypes[key].name:towerTypes[key].name} selected.`); updateUi();
+    }
+    function initMap(key){
+      mapKey=key; currentMap=maps[key]; path=currentMap.path; pathSet=new Set(path.map(([x,y])=>`${x},${y}`));
+      canvas.width=currentMap.w*CELL; canvas.height=currentMap.h*CELL;
+      towers=[]; traps=[]; enemies=[]; projectiles=[]; particles=[]; selectedTowerId=null; hoverCell=null;
+      enemyId=1; projectileId=1; particleId=1; trapId=1; won=false; packUnlocked=false; packTier2Unlocked=false; rockstarShown=false; nextWaveTimer=0; exitFlash=0; screenShake=0; packFlash=0;
+      game={lives:currentMap.lives,money:currentMap.money,wave:0,score:0,running:false,gameOver:false,waveActive:false,overtime:false}; spawnQueue={list:[],timer:0}; speedMultiplier=1;
+      els.speed.textContent="1x Speed"; els.speed.classList.remove("active-toggle"); els.winOverlay.style.display="none"; els.mapSelect.value=key;
+      document.querySelectorAll('[data-type="pack"]').forEach(r=>{ if(r.classList.contains("tower-row")) r.style.display="none"; });
+      setMessage(`${currentMap.name} loaded. Survive 16 waves. ${previewWaveText(1)}`); updateUi(); draw();
+    }
+
+    function centerOf(cell){return{x:cell[0]*CELL+CELL/2,y:cell[1]*CELL+CELL/2};}
+    function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
+    function rand(min,max){return min+Math.random()*(max-min);}
+    function setMessage(t){els.message.textContent=t;}
+    function ensureAudio(){ if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==="suspended") audioCtx.resume(); }
+    function tone(freq,duration=.08,type="sine",volume=.04){ if(sfxMuted||!audioCtx) return; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type=type; o.frequency.value=freq; g.gain.setValueAtTime(volume*sfxVolume,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+duration); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+duration); }
+    function musicTone(freq,duration=.16,volume=.018){ if(musicMuted||!audioCtx) return; const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type="triangle"; o.frequency.value=freq; g.gain.setValueAtTime(volume*musicVolume,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+duration); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+duration); }
+    function bossPresent(){return enemies.some(e=>e.alive&&(e.type==="boss"||e.type==="snake"||e.type==="trojan"||e.superUnit));}
+    function startMusic(){ ensureAudio(); if(musicTimer) clearInterval(musicTimer); musicTimer=setInterval(()=>{ if(!musicMuted&&game.running){ const notes=bossPresent()?currentMap.bossMusic:currentMap.music; musicTone(notes[musicStep%notes.length],bossPresent()?.26:.22,bossPresent()?.026:.017); if(musicStep%4===0) musicTone(notes[(musicStep+2)%notes.length]/2,.32,bossPresent()?.018:.012); musicStep++; } },280); }
+    function playTowerSound(type,packed=false,packLevel=0){const t=towerTypes[type]; tone((t.sound||520)*(packed?1.35:1)*(packLevel>=2?1.18:1),packed?.055:.035,type==="heavy"?"sawtooth":type==="sniper"?"square":type==="flame"?"sawtooth":"triangle",packed?.025:.014); if(packed) tone((t.sound||520)*2,.035,"triangle",packLevel>=2?.017:.01);}
+    function playEnemySound(type){const e=enemyTypes[type]; tone(e.sound,.05,type==="snake"?"sawtooth":type==="trojan"?"square":"square",(type==="snake"||type==="trojan")?.05:.018);}
+    function addParticle(x,y,text,color="#fff",life=.55,size=14){particles.push({id:particleId++,x,y,vx:rand(-12,12),vy:rand(-45,-18),text,color,life,maxLife:life,size});}
+    function burst(x,y,color,count=8,power=90){for(let i=0;i<count;i++)particles.push({id:particleId++,x,y,vx:rand(-power,power),vy:rand(-power,power),color,life:rand(.25,.55),maxLife:.55,dot:true,size:rand(2,4)});}
+    function explosion(x,y,r,color="#ff9e42",shake=true){particles.push({id:particleId++,x,y,r,ring:true,color,life:.38,maxLife:.38});burst(x,y,color,24,170);tone(80,.12,"sawtooth",.055);tone(180,.08,"square",.025);if(shake)screenShake=Math.max(screenShake,.18);}
+
+    function effectiveSpec(tower){
+      const b=towerTypes[tower.type], l=tower.level||1, pl=tower.packLevel||0;
+      const mult=pl===2?3.8:pl===1?2.25:1;
+      const rate=pl===2?.46:pl===1?.68:1;
+      return {...b,range:b.range*(1+(l-1)*.09)*(pl?1.12+(pl-1)*.08:1),damage:Math.round((b.damage||0)*(1+(l-1)*.45)*mult),fireRate:b.fireRate?b.fireRate*Math.pow(.88,l-1)*rate:0,income:b.income?Math.round(b.income*(1+(l-1)*.45)*(pl===2?2.25:pl===1?1.5:1)):0,splash:b.splash?b.splash*(1+(l-1)*.1)*(pl===2?1.45:pl===1?1.2:1):0,burn:b.burn?Math.round(b.burn*(1+(l-1)*.35)*(pl===2?3.2:pl===1?2:1)):0};
+    }
+    function upgradeCostForLevel(level,type){const base=towerTypes[type].cost*(type==="factory"?1.0:.75);return Math.round(base*(.82+level*(type==="factory"?.62:.45)));}
+    function packCost(){return game.wave>=35?3500:game.wave>=25?4000:4500;}
+    function roundReward(w){
+      if(w<=4) return 45+w*25;
+      if(w<=16) return 130+(w-4)*55;
+      if(w<=40) return 800+(w-16)*85;
+      return 2800+(w-40)*145;
+    }
+    function towerValue(t){let v=towerTypes[t.type].cost;for(let l=1;l<t.level;l++)v+=upgradeCostForLevel(l,t.type);if(t.packLevel)v+=packCost()*t.packLevel;return v;}
+    function areaCellsFor(type,x,y){const s=towerTypes[type]?.size||1,c=[];for(let yy=0;yy<s;yy++)for(let xx=0;xx<s;xx++)c.push([x+xx,y+yy]);return c;}
+    function canPlaceTower(type,x,y){return areaCellsFor(type,x,y).every(([cx,cy])=>cx>=0&&cy>=0&&cx<currentMap.w&&cy<currentMap.h&&!pathSet.has(`${cx},${cy}`)&&!towers.some(t=>areaCellsFor(t.type,t.x,t.y).some(([tx,ty])=>tx===cx&&ty===cy)));}
+
+    function createEnemy(typeKey,wave,x=null,y=null,node=0){
+      const b=enemyTypes[typeKey],s=x==null?centerOf(path[0]):{x,y},d=currentMap.difficulty,overtime=wave>WIN_WAVE?1+(wave-WIN_WAVE)*.085:1;
+      const superUnit=wave>=50&&Math.random()<Math.min(.55,.08+(wave-50)*.012)&&!["snake","trojan"].includes(typeKey);
+      const hp=Math.round(b.hp*d*(1+wave*.2+Math.max(0,wave-10)*.045)*overtime*(superUnit?1.9:1));
+      return{id:enemyId++,type:typeKey,name:superUnit?`Super ${b.name}`:b.name,x:s.x,y:s.y,node,hp,maxHp:hp,speed:b.speed*(1+Math.min(wave*.017,.46))*(superUnit?1.08:1),reward:Math.max(4,Math.round((b.reward+1)*d*(wave>WIN_WAVE?.82:.92)*(superUnit?1.35:1))),color:superUnit?"#37e4ff":b.color,radius:b.radius+(superUnit?3:0),armor:b.armor+Math.floor(wave/12)+(superUnit?8:0),trapResist:(b.trapResist||1)*(superUnit?.55:1),regen:b.regen||0,superUnit,alive:true,slowTimer:0,slowMult:1,hitFlash:0,trapsHit:new Set(),burnTimer:0,burnDps:0,wiggle:Math.random()*Math.PI*2};
+    }
+    function buildWaveList(wave){
+      const list=[],d=currentMap.difficulty,base=Math.round((5+wave*2+Math.max(0,wave-8)*1.05+Math.max(0,wave-35)*.55)*d);
+      for(let i=0;i<base;i++){
+        let pool=["grunt"];
+        if(wave>=2)pool.push("runner");
+        if(wave>=3)pool.push("swarm","shield");
+        if(wave>=5)pool.push("brute");
+        if(wave>=8)pool.push("ghost");
+        if(wave>=10)pool.push("regenerator");
+        if(wave>=12)pool.push("armored","runner","swarm");
+        if(wave>=18)pool.push("clown");
+        if(wave>=24)pool.push("crab","drone");
+        const type=pool[(i+wave*3+Math.floor(i/3))%pool.length]; list.push(type);
+      }
+      const bossCount=wave<5?0:Math.floor(wave/5)+Math.floor(Math.max(0,wave-12)/4)+Math.floor(Math.max(0,wave-30)/6);
+      for(let b=0;b<bossCount;b++)list.splice(Math.min(list.length,4+b*8),0,"boss");
+      if(wave>=10)for(let s=0;s<Math.floor(wave/3);s++)list.splice(Math.floor(list.length*.55),0,"swarm","swarm","runner");
+      if(wave===14||wave>=18&&wave%5===3)list.splice(Math.floor(list.length*.45),0,"trojan");
+      if(wave===16||wave>=19&&wave%6===1)list.push("snake");
+      if(wave>=50){if(wave%4===0)list.push("snake");if(wave%5===0)list.splice(Math.floor(list.length*.35),0,"trojan");for(let i=0;i<Math.floor((wave-45)/7);i++)list.splice(Math.floor(list.length*.65),0,"armored","regenerator","ghost");}
+      return list;
+    }
+    function previewWaveText(w){
+      const list=buildWaveList(w),counts={};list.forEach(t=>counts[t]=(counts[t]||0)+1);let bits=[];
+      if(w>=50)bits.push("super-class enemies possible");
+      if(counts.snake)bits.push("SERPENT PRIME detected");
+      if(counts.trojan)bits.push("Trojan Cargo inbound");
+      if(counts.boss)bits.push(`${counts.boss} boss${counts.boss>1?"es":""}`);
+      if(counts.crab)bits.push("Titan Crabs");
+      if(counts.drone)bits.push("Moon Drones");
+      if(counts.armored)bits.push("armored units");
+      if(counts.regenerator)bits.push("regenerators");
+      if(counts.ghost)bits.push("trap-resistant ghosts");
+      if(counts.swarm>8)bits.push("heavy swarm activity");
+      if(!bits.length)bits.push(w<4?"basic raiders and runners":"mixed enemies forming up");
+      const pool=w>=50?statusLines.super:w>WIN_WAVE?statusLines.overtime:w>=10?statusLines.late:w>=5?statusLines.mid:statusLines.early;
+      const doom=pool[(w+mapKey.length)%pool.length];
+      return `${doom} Wave ${w>WIN_WAVE?`${w}+`:`${w}/${WIN_WAVE}`} brings ${bits.join(", ")}.`;
+    }
+
+    function startWave(){ensureAudio();startMusic();if(game.gameOver)return;if(game.waveActive){game.running=true;updateUi();return;}game.wave++;game.waveActive=true;game.running=true;nextWaveTimer=0;spawnQueue={list:buildWaveList(game.wave),timer:0};tone(392,.12,"sawtooth",.035);tone(523,.16,"triangle",.03);setMessage(previewWaveText(game.wave));updateUi();}
+    function togglePause(){if(game.gameOver)return;ensureAudio();game.running=!game.running;updateUi();}
+    function toggleSpeed(){speedMultiplier=speedMultiplier===1?2:speedMultiplier===2?3:speedMultiplier===3?4:1;els.speed.textContent=`${speedMultiplier}x Speed`;els.speed.classList.toggle("active-toggle",speedMultiplier>1);tone(300+speedMultiplier*120,.08,"square",.025);}
+    function placeBuild(x,y){ensureAudio();if(selectedBuildKind==="trap")return placeTrap(x,y);return placeTower(x,y);}
+    function placeTower(x,y){
+      selectedTowerId=null;const existing=towers.find(t=>areaCellsFor(t.type,t.x,t.y).some(([tx,ty])=>tx===x&&ty===y));if(existing){selectTower(existing);return;}
+      const spec=towerTypes[selectedType];if(selectedType==="pack"&&!packUnlocked){setMessage("Pack Core unlocks in overtime after wave 16.");return;}
+      if(!canPlaceTower(selectedType,x,y)){setMessage(spec.size===2?`${spec.name} needs a clear 2x2 land area.`:"You can't build there.");tone(110,.12,"sawtooth",.035);return;}
+      if(game.money<spec.cost){setMessage(`Need $${spec.cost} for ${spec.name}.`);tone(120,.1,"sawtooth",.035);return;}
+      towers.push({id:Date.now()+Math.random(),type:selectedType,x,y,cooldown:0,level:1,pulse:0,incomeTimer:5.8,packed:false,packLevel:0});game.money-=spec.cost;const p=centerOf([x,y]);burst(p.x,p.y,spec.color,12);tone(spec.sound||520,.08,"triangle",.035);setMessage(`${spec.name} built.`);updateUi();
+    }
+    function placeTrap(x,y){const key=`${x},${y}`,spec=trapTypes[selectedType];if(!pathSet.has(key)){setMessage("Traps must be placed on the enemy path.");tone(110,.1,"sawtooth",.035);return;}if(traps.some(t=>t.x===x&&t.y===y)){setMessage("There is already a trap there.");return;}if(game.money<spec.cost){setMessage(`Need $${spec.cost} for ${spec.name}.`);tone(120,.1,"sawtooth",.035);return;}traps.push({id:trapId++,type:selectedType,x,y,uses:spec.uses,armed:true,pulse:.35});game.money-=spec.cost;const p=centerOf([x,y]);burst(p.x,p.y,spec.color,10);tone(selectedType==="tnt"?180:420,.08,"square",.03);setMessage(`${spec.name} trap placed.`);updateUi();}
+    function selectTower(t){selectedTowerId=t.id;setMessage(`${towerTypes[t.type].name} selected.`);updateUi();}
+    function upgradeSelected(){ensureAudio();const t=towers.find(t=>t.id===selectedTowerId);if(!t||t.type==="pack")return;if(t.level>=4){setMessage("This tower is already max level. Pack-a-punch it in overtime.");return;}const cost=upgradeCostForLevel(t.level,t.type);if(game.money<cost){setMessage(`Need $${cost} to upgrade.`);tone(120,.1,"sawtooth",.035);return;}game.money-=cost;t.level++;t.pulse=.5;const p=centerOf([t.x,t.y]);addParticle(p.x,p.y-8,`LVL ${t.level}`,"#7cffad",.9,18);burst(p.x,p.y,towerTypes[t.type].color,16);tone(660,.1,"triangle",.04);tone(880,.12,"triangle",.025);setMessage(`${towerTypes[t.type].name} upgraded to level ${t.level}.`);updateUi();}
+    function packSelected(){
+      ensureAudio();const t=towers.find(t=>t.id===selectedTowerId);if(!t)return;if(t.type==="pack")return upgradePackCore(t);
+      if(!packUnlocked){setMessage("Pack-a-punch unlocks after wave 16.");return;}if(!towers.some(t=>t.type==="pack")){setMessage("Build a Pack Core first.");return;}if(t.level<4){setMessage("Tower must be max level before pack-a-punch.");return;}
+      if(t.packLevel>=2){setMessage("This tower is already double packed.");return;}if(t.packLevel===1&&!packTier2Unlocked){setMessage("Double pack-a-punch unlocks at 1,000,000 score.");return;}const cost=packCost();if(game.money<cost){setMessage(`Need $${cost} to pack-a-punch this tower.`);return;}
+      game.money-=cost;t.packed=true;t.packLevel=(t.packLevel||0)+1;t.pulse=1;packFlash=t.packLevel>=2?1.4:1;const p=centerOf([t.x,t.y]);addParticle(p.x,p.y,t.packLevel>=2?"DOUBLE PACKED!":"PACKED!",t.packLevel>=2?"#ffd84d":"#37e4ff",1.2,22);burst(p.x,p.y,t.packLevel>=2?"#ffd84d":"#37e4ff",46,230);tone(t.packLevel>=2?1320:1040,.14,"triangle",.06);tone(t.packLevel>=2?1760:1560,.18,"sawtooth",.04);setMessage(`${towerTypes[t.type].name} ${t.packLevel>=2?"double pack-a-punched":"pack-a-punched"}. The tower is surging.`);updateUi();
+    }
+    function upgradePackCore(t){if(!packTier2Unlocked){setMessage("Reach 1,000,000 score to unlock Tier 2 Pack Core.");return;}if(t.packLevel>=2){setMessage("Pack Core is already Tier 2.");return;}const cost=packCost();if(game.money<cost){setMessage(`Need $${cost} to upgrade the Pack Core.`);return;}game.money-=cost;t.packLevel=2;t.packed=true;t.pulse=1.4;packFlash=1.6;const p=centerOf([t.x,t.y]);burst(p.x,p.y,"#ffd84d",60,260);addParticle(p.x,p.y,"TIER 2 CORE","#ffd84d",1.4,24);setMessage("Tier 2 Pack Core online. Double pack-a-punch is now available.");tone(1560,.2,"triangle",.07);updateUi();}
+    function sellSelected(){ensureAudio();const idx=towers.findIndex(t=>t.id===selectedTowerId);if(idx<0)return;const t=towers[idx],refund=Math.round(towerValue(t)*.6),p=centerOf([t.x,t.y]);game.money+=refund;addParticle(p.x,p.y,`+$${refund}`,"#7cffad",.75,16);burst(p.x,p.y,"#ffd84d",10);towers.splice(idx,1);selectedTowerId=null;tone(240,.08,"square",.025);setMessage(`Tower sold for $${refund}.`);updateUi();}
+    function quickUpgradeType(type){ensureAudio();const candidates=towers.filter(t=>t.type===type&&t.level<4);if(!candidates.length){setMessage(`No ${towerTypes[type].name} towers need normal upgrades.`);return;}const total=candidates.reduce((sum,t)=>sum+upgradeCostForLevel(t.level,t.type),0);if(game.money<total){setMessage(`Need $${total} to upgrade all ${towerTypes[type].name} towers.`);tone(120,.1,"sawtooth",.035);return;}game.money-=total;candidates.forEach(t=>{t.level++;t.pulse=.5;});setMessage(`All ${towerTypes[type].name} towers upgraded for $${total}.`);tone(760,.12,"triangle",.04);updateUi();}
+
+    function update(dt){
+      const scaled=dt*speedMultiplier; exitFlash=Math.max(0,exitFlash-dt); screenShake=Math.max(0,screenShake-dt); packFlash=Math.max(0,packFlash-dt); scoreCheck();
+      if(!game.running||game.gameOver){updateParticles(dt);return;}
+      if(!game.waveActive&&nextWaveTimer>0){nextWaveTimer-=scaled;if(nextWaveTimer<=0)startWave();else setMessage(`Next wave in ${Math.ceil(nextWaveTimer)} seconds. ${previewWaveText(game.wave+1)}`);updateParticles(scaled);updateUi();return;}
+      if(spawnQueue.list.length>0){spawnQueue.timer-=scaled;if(spawnQueue.timer<=0){const type=spawnQueue.list.shift();enemies.push(createEnemy(type,game.wave));if(["boss","snake","trojan"].includes(type))playEnemySound(type);spawnQueue.timer=Math.max(.16,.72-game.wave*.022);}}
+      for(const e of enemies){
+        if(!e.alive)continue;e.hitFlash=Math.max(0,e.hitFlash-scaled);e.wiggle+=scaled*5;
+        if(e.burnTimer>0){e.burnTimer-=scaled;damageEnemy(e,e.burnDps*scaled,{type:"flame",slow:0},true,true);}if(e.regen&&e.hp>0)e.hp=Math.min(e.maxHp,e.hp+e.regen*scaled);
+        if(e.slowTimer>0)e.slowTimer-=scaled;else e.slowMult=1;
+        const tn=Math.min(e.node+1,path.length-1),target=centerOf(path[tn]);const dx=target.x-e.x,dy=target.y-e.y,d=Math.hypot(dx,dy),move=e.speed*e.slowMult*scaled;
+        if(d<=move){e.x=target.x;e.y=target.y;e.node=tn;if(tn>=path.length-1){e.alive=false;game.lives--;exitFlash=.55;screenShake=.28;addParticle(e.x,e.y,"LIFE LOST","#ff5178",1,22);tone(70,.22,"sawtooth",.07);if(game.lives<=0){game.lives=0;game.running=false;game.gameOver=true;setMessage("Game over. Reset and try traps, slows, and better choke points.");}}}
+        else{let ox=0,oy=0;if(e.snake){ox=Math.sin(e.wiggle)*2.1;oy=Math.cos(e.wiggle*.8)*2.1;}e.x+=(dx/d)*move+ox*scaled;e.y+=(dy/d)*move+oy*scaled;}
+        checkTraps(e);
+      }
+      for(const t of traps)t.pulse=Math.max(0,t.pulse-scaled);traps=traps.filter(t=>t.uses>0);
+      for(const tower of towers){
+        const base=towerTypes[tower.type],spec=effectiveSpec(tower);tower.pulse=Math.max(0,tower.pulse-scaled);
+        if(base.kind==="support"){if(!game.waveActive)continue;tower.incomeTimer-=scaled;if(tower.incomeTimer<=0){const income=spec.income;game.money+=income;const p=centerOf([tower.x,tower.y]);addParticle(p.x+CELL/2,p.y,`+$${income}`,"#ffd84d",.8,16);tower.pulse=.35;tower.incomeTimer=Math.max(4.8,7.1-tower.level*.45);tone(740,.05,"triangle",.018);}if(tower.packed)factorySnipers(tower,scaled);continue;}
+        if(base.kind==="pack")continue;
+        tower.cooldown=Math.max(0,tower.cooldown-scaled);const pos=centerOf([tower.x,tower.y]);
+        if(base.kind==="beam"){const targets=enemies.filter(e=>e.alive&&dist(pos,e)<=spec.range).sort((a,b)=>dist(pos,a)-dist(pos,b)).slice(0,tower.packLevel>=2?8:tower.packed?6:4);if(targets.length){tower.pulse=.12;if(tower.cooldown<=0){targets.forEach(e=>{damageEnemy(e,spec.damage,{type:tower.type,slow:0,towerId:tower.id},true);e.burnTimer=Math.max(e.burnTimer,base.burnTime);e.burnDps=spec.burn;});tower.cooldown=spec.fireRate;playTowerSound(tower.type,tower.packed,tower.packLevel);}tower.beamTargets=targets.map(e=>e.id);}else tower.beamTargets=[];continue;}
+        if(tower.cooldown<=0){const target=enemies.filter(e=>e.alive&&dist(pos,e)<=spec.range).sort((a,b)=>b.node-a.node||dist(pos,a)-dist(pos,b))[0];if(target){if(base.kind==="mortar"){const leadNode=Math.min(target.node+2,path.length-1),lead=centerOf(path[leadNode]);projectiles.push({id:projectileId++,x:pos.x,y:pos.y,targetX:(target.x+lead.x)/2,targetY:(target.y+lead.y)/2,arc:0,damage:spec.damage,speed:tower.packed?1.45:1.15,type:tower.type,towerId:tower.id,packed:tower.packed,packLevel:tower.packLevel||0,splash:spec.splash,slow:0,mortar:true,trail:[]});}else{projectiles.push({id:projectileId++,x:pos.x,y:pos.y,targetId:target.id,damage:spec.damage,speed:spec.projectileSpeed,type:tower.type,towerId:tower.id,packed:tower.packed,packLevel:tower.packLevel||0,splash:spec.splash||0,slow:base.slow||0,slowTime:base.slowTime||0,trail:[]});}tower.cooldown=spec.fireRate;tower.pulse=.18;playTowerSound(tower.type,tower.packed,tower.packLevel);}}
+      }
+      for(const p of projectiles){
+        if(p.mortar){p.arc+=scaled*p.speed;const t=Math.min(1,p.arc);p.trail.push({x:p.x,y:p.y,life:.16});p.trail.forEach(q=>q.life-=scaled);p.trail=p.trail.filter(q=>q.life>0);const dx=p.targetX-p.x,dy=p.targetY-p.y;p.x+=dx*t*.08;p.y+=dy*t*.08-Math.sin(t*Math.PI)*5;if(t>=1){explosion(p.targetX,p.targetY,p.splash,towerTypes[p.type].color,false);for(const e of enemies)if(e.alive&&dist(e,{x:p.targetX,y:p.targetY})<=p.splash)damageEnemy(e,p.damage,p,true);p.hit=true;}continue;}
+        const target=enemies.find(e=>e.id===p.targetId&&e.alive);if(!target){p.hit=true;continue;}p.trail.push({x:p.x,y:p.y,life:.16});p.trail.forEach(t=>t.life-=scaled);p.trail=p.trail.filter(t=>t.life>0);const dx=target.x-p.x,dy=target.y-p.y,d=Math.hypot(dx,dy),move=p.speed*scaled;if(d<=move){damageEnemy(target,p.damage,p);p.hit=true;if(p.splash){explosion(target.x,target.y,p.splash,towerTypes[p.type].color,false);for(const e of enemies)if(e!==target&&e.alive&&dist(e,target)<=p.splash)damageEnemy(e,Math.round(p.damage*.45),p,true);}}else{p.x+=(dx/d)*move;p.y+=(dy/d)*move;}
+      }
+      enemies=enemies.filter(e=>e.alive);projectiles=projectiles.filter(p=>!p.hit);updateParticles(scaled);
+      if(game.waveActive&&spawnQueue.list.length<=0&&enemies.length===0&&!game.gameOver){game.waveActive=false;game.running=true;const bonus=roundReward(game.wave);game.money+=bonus;if(game.wave===WIN_WAVE&&!won){won=true;game.overtime=true;packUnlocked=true;document.querySelectorAll('[data-type="pack"]').forEach(r=>{if(r.classList.contains("tower-row"))r.style.display="grid";});els.modalTitle.textContent="Level Complete!";els.winText.textContent=`You beat ${currentMap.name} after ${WIN_WAVE} waves. Pack Core is unlocked. Continue into overtime for Serpent Prime, Trojan Cargo, super enemies, and escalating doom.`;els.winOverlay.style.display="grid";game.running=false;}else{nextWaveTimer=12;setMessage(`Wave ${waveLabel()} cleared. Round reward $${bonus} awarded. Next wave in 12 seconds. ${previewWaveText(game.wave+1)}`);tone(523,.12,"triangle",.035);tone(784,.14,"triangle",.025);}}
+      updateUi();
+    }
+
+    function factorySnipers(tower,scaled){tower.sniperCooldown=Math.max(0,(tower.sniperCooldown||0)-scaled);if(tower.sniperCooldown>0)return;const pos={x:tower.x*CELL+CELL,y:tower.y*CELL+10};const shots=tower.packLevel>=2?2:1;for(let i=0;i<shots;i++){const target=enemies.filter(e=>e.alive&&dist(pos,e)<=270).sort((a,b)=>b.node-a.node)[i];if(target){projectiles.push({id:projectileId++,x:pos.x+(i?12:-12),y:pos.y,targetId:target.id,damage:tower.packLevel>=2?160:105,speed:950,type:"sniper",towerId:tower.id,packed:true,packLevel:tower.packLevel||1,splash:0,slow:0,slowTime:0,trail:[]});}}tower.sniperCooldown=tower.packLevel>=2?.75:1.05;}
+    function scoreCheck(){if(!rockstarShown&&game.score>=1000000){rockstarShown=true;packTier2Unlocked=true;game.running=false;els.modalTitle.textContent="Rockstar Unlocked!";els.winText.textContent="Congratulations, you reached 1 million points — you are a rockstar! You unlocked Double Pack-a-Punch. Pack the Pack Core to activate Tier 2.";els.continueBtn.textContent="Keep Rocking";els.winOverlay.style.display="grid";packFlash=1.8;tone(880,.2,"triangle",.08);tone(1320,.25,"sawtooth",.05);}}
+    function checkTraps(e){for(const t of traps){if(!t.armed||t.uses<=0||e.trapsHit.has(t.id))continue;const p=centerOf([t.x,t.y]);if(dist(e,p)>CELL*.42)continue;const spec=trapTypes[t.type],res=e.trapResist||1;e.trapsHit.add(t.id);t.uses--;t.pulse=.4;if(t.type==="glue"){e.slowMult=Math.max(.2,spec.slow+(1-res)*.45);e.slowTimer=Math.max(e.slowTimer,spec.slowTime*res);addParticle(e.x,e.y,"GLUED",spec.color,.55,13);burst(e.x,e.y,spec.color,6);tone(310,.08,"triangle",.025);}else if(t.type==="spikes"){damageEnemy(e,spec.damage*res,{type:"basic",slow:0});addParticle(e.x,e.y,"SPIKES",spec.color,.45,12);tone(520,.035,"square",.022);}else if(t.type==="tnt"){explosion(p.x,p.y,spec.splash,spec.color,true);for(const en of enemies)if(en.alive&&dist(en,p)<=spec.splash)damageEnemy(en,spec.damage*(en.trapResist||1),{type:"heavy",slow:0},en!==e);t.uses=0;}}}
+    function damageEnemy(enemy,amount,projectile,splashHit=false,noReward=false){if(!enemy.alive)return;let sourcePacked=false;if(projectile.towerId){const src=towers.find(t=>t.id===projectile.towerId);sourcePacked=!!(src&&src.packed);}if(enemy.superUnit&&!sourcePacked)amount*=.5;const finalDamage=Math.max(1,amount-enemy.armor);enemy.hp-=finalDamage;enemy.hitFlash=.12;if(!splashHit)addParticle(enemy.x,enemy.y-enemy.radius,`-${Math.round(finalDamage)}`,"#fff",.45,12);if(projectile.slow){enemy.slowMult=projectile.slow;enemy.slowTimer=projectile.slowTime;}burst(enemy.x,enemy.y,towerTypes[projectile.type]?.color||"#fff",splashHit?2:5);if(enemy.hp<=0&&enemy.alive){enemy.alive=false;if(enemy.type==="trojan")releaseTrojan(enemy);if(!noReward){game.money+=enemy.reward+1;game.score+=10+enemy.reward+game.wave;addParticle(enemy.x,enemy.y,`+$${enemy.reward+1}`,"#7cffad",.7,14);}playEnemySound(enemy.type);}}
+    function releaseTrojan(e){explosion(e.x,e.y,70,"#c9924a",true);addParticle(e.x,e.y,"CARGO BREACH","#ffd84d",1.1,18);const count=10+Math.floor(game.wave/3);for(let i=0;i<count;i++){const type=i%3===0?"runner":i%3===1?"swarm":"grunt";const child=createEnemy(type,game.wave,e.x+rand(-14,14),e.y+rand(-14,14),Math.max(0,e.node-1));child.hp=Math.round(child.hp*.45);child.maxHp=child.hp;child.speed*=1.18;enemies.push(child);}}
+    function updateParticles(dt){for(const p of particles){p.life-=dt;if(!p.ring){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=55*dt;}}particles=particles.filter(p=>p.life>0);}
+    function waveLabel(){return game.overtime&&game.wave>WIN_WAVE?`${game.wave}+`:`${Math.min(game.wave,WIN_WAVE)}/${WIN_WAVE}`;}
+
+    function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.save();if(screenShake>0)ctx.translate(rand(-8,8)*screenShake*4,rand(-8,8)*screenShake*4);drawGrid();drawPathGlow();drawTraps();drawHoverPreview();drawTowers();drawProjectiles();drawEnemies();drawParticles();drawOverlays();ctx.restore();}
+    function drawGrid(){const th=currentMap.theme;for(let y=0;y<currentMap.h;y++)for(let x=0;x<currentMap.w;x++){const isPath=pathSet.has(`${x},${y}`),g=ctx.createLinearGradient(x*CELL,y*CELL,x*CELL+CELL,y*CELL+CELL);g.addColorStop(0,isPath?th.path1:th.land1);g.addColorStop(1,isPath?th.path2:th.land2);ctx.fillStyle=g;ctx.fillRect(x*CELL,y*CELL,CELL,CELL);ctx.strokeStyle=th.grid;ctx.strokeRect(x*CELL,y*CELL,CELL,CELL);drawDeco(x,y,isPath,th.deco);}ctx.font="bold 11px Arial";ctx.textAlign="center";ctx.fillStyle="#70ffad";let start=centerOf(path[0]);ctx.fillText("START",start.x,start.y+4);const end=centerOf(path[path.length-1]);ctx.fillStyle="#ff7b9c";ctx.fillText("EXIT",end.x,end.y+4);ctx.textAlign="left";}
+    function drawDeco(x,y,isPath,deco){if(isPath||((x*17+y*31)%9!==0))return;const px=x*CELL+10+((x*13)%22),py=y*CELL+10+((y*19)%22);if(deco==="grass"){ctx.strokeStyle="rgba(124,255,173,.26)";ctx.beginPath();ctx.moveTo(px,py+7);ctx.lineTo(px+4,py);ctx.lineTo(px+8,py+7);ctx.stroke();}if(deco==="beach"){ctx.fillStyle="rgba(255,235,180,.28)";ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fill();ctx.strokeStyle="rgba(80,255,220,.2)";ctx.beginPath();ctx.moveTo(px-4,py+8);ctx.lineTo(px+8,py+8);ctx.stroke();}if(deco==="metal"){ctx.fillStyle="rgba(190,210,220,.18)";ctx.fillRect(px,py,14,5);ctx.strokeStyle="rgba(255,255,255,.12)";ctx.strokeRect(px,py,14,5);}if(deco==="neon"){ctx.fillStyle="rgba(180,80,255,.3)";ctx.fillRect(px,py,3,18);ctx.fillStyle="rgba(55,228,255,.25)";ctx.fillRect(px+6,py+5,3,13);}if(deco==="snow"){ctx.fillStyle="rgba(230,250,255,.35)";ctx.beginPath();ctx.arc(px,py,2,0,Math.PI*2);ctx.arc(px+9,py+6,1.5,0,Math.PI*2);ctx.fill();}if(deco==="lava"){ctx.fillStyle="rgba(255,86,41,.22)";ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fill();}if(deco==="stone"){ctx.fillStyle="rgba(231,210,124,.18)";ctx.fillRect(px,py,10,10);}}
+    function drawPathGlow(){const th=currentMap.theme;ctx.save();ctx.lineWidth=8;ctx.strokeStyle=th.glow;ctx.beginPath();path.forEach((cell,i)=>{const p=centerOf(cell);if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.restore();}
+    function drawTraps(){for(const t of traps){const s=trapTypes[t.type],p=centerOf([t.x,t.y]);ctx.save();ctx.translate(p.x,p.y);ctx.globalAlpha=.75;ctx.shadowColor=s.color;ctx.shadowBlur=10+(t.pulse*18);ctx.fillStyle=s.color;ctx.beginPath();ctx.roundRect(-15,-15,30,30,8);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle="#06111d";ctx.font="bold 16px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(s.icon,0,0);ctx.fillStyle="#fff";ctx.font="bold 9px Arial";ctx.fillText(t.uses,13,14);ctx.restore();}}
+    function drawHoverPreview(){if(!hoverCell||selectedTowerId)return;const{x,y}=hoverCell,pos=centerOf([x,y]);ctx.save();if(selectedBuildKind==="trap"){const s=trapTypes[selectedType],blocked=!pathSet.has(`${x},${y}`)||traps.some(t=>t.x===x&&t.y===y)||game.money<s.cost;ctx.globalAlpha=blocked?.35:.7;ctx.fillStyle=blocked?"#ff5178":s.color;ctx.beginPath();ctx.roundRect(pos.x-16,pos.y-16,32,32,8);ctx.fill();ctx.fillStyle="#06111d";ctx.font="bold 16px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(s.icon,pos.x,pos.y);}else{const b=towerTypes[selectedType],blocked=!canPlaceTower(selectedType,x,y)||game.money<b.cost||(selectedType==="pack"&&!packUnlocked),sz=b.size||1;ctx.globalAlpha=blocked?.35:.65;ctx.fillStyle=blocked?"#ff5178":b.color;ctx.fillRect(x*CELL+5,y*CELL+5,CELL*sz-10,CELL*sz-10);ctx.strokeStyle=blocked?"#ffb3c2":b.accent;ctx.lineWidth=2;ctx.strokeRect(x*CELL+5,y*CELL+5,CELL*sz-10,CELL*sz-10);if(b.kind!=="support"&&b.kind!=="pack"){ctx.beginPath();ctx.arc(pos.x,pos.y,b.range,0,Math.PI*2);ctx.fillStyle=blocked?"rgba(255,81,120,.06)":"rgba(55,228,255,.06)";ctx.fill();ctx.strokeStyle=blocked?"rgba(255,81,120,.3)":"rgba(55,228,255,.28)";ctx.stroke();}ctx.fillStyle="#06111d";ctx.font="bold 14px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(b.icon,pos.x+(sz-1)*CELL/2,pos.y+(sz-1)*CELL/2);}ctx.restore();ctx.textAlign="left";ctx.textBaseline="alphabetic";}
+    function drawTowers(){for(const t of towers){const b=towerTypes[t.type],spec=effectiveSpec(t),sz=b.size||1,pos={x:t.x*CELL+(CELL*sz)/2,y:t.y*CELL+(CELL*sz)/2},selected=t.id===selectedTowerId;if(selected&&b.kind!=="support"&&b.kind!=="pack"){ctx.beginPath();ctx.arc(pos.x,pos.y,spec.range,0,Math.PI*2);ctx.fillStyle="rgba(55,228,255,.07)";ctx.fill();ctx.strokeStyle="rgba(55,228,255,.28)";ctx.stroke();}if(b.kind==="beam"&&t.beamTargets){ctx.lineWidth=t.packLevel>=2?15:t.packed?12:8;ctx.strokeStyle=t.packLevel>=2?"rgba(255,216,77,.58)":t.packed?"rgba(55,228,255,.5)":"rgba(255,90,47,.45)";for(const id of t.beamTargets){const e=enemies.find(e=>e.id===id);if(e){ctx.beginPath();ctx.moveTo(pos.x,pos.y);ctx.lineTo(e.x,e.y);ctx.stroke();}}}const pulse=t.pulse>0?t.pulse*11:0;ctx.save();ctx.translate(pos.x,pos.y);ctx.shadowColor=t.packLevel>=2?"#ffd84d":t.packed?"#37e4ff":b.color;ctx.shadowBlur=selected?24:t.packed?22:12;ctx.beginPath();ctx.arc(0,0,(sz===2?29:17)+pulse,0,Math.PI*2);ctx.fillStyle=t.packLevel>=2?"#ffd84d":t.packed?"#37e4ff":b.color;ctx.fill();ctx.shadowBlur=0;ctx.lineWidth=selected?4:2;ctx.strokeStyle=selected?"#fff":t.packLevel>=2?"#37e4ff":t.packed?"#ffffff":b.accent;ctx.stroke();if(t.packed){ctx.strokeStyle=t.packLevel>=2?"#ffd84d":"#b9f8ff";ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,(sz===2?36:23)+Math.sin(Date.now()/120)*2,0,Math.PI*2);ctx.stroke();if(t.packLevel>=2){ctx.strokeStyle="#37e4ff";ctx.beginPath();ctx.arc(0,0,(sz===2?43:29)+Math.cos(Date.now()/110)*2,0,Math.PI*2);ctx.stroke();}}ctx.fillStyle="#06111d";ctx.font=`bold ${sz===2?22:14}px Arial`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(b.icon,0,0);for(let i=0;i<t.level;i++){ctx.beginPath();ctx.arc(-12+i*8,sz===2?35:22,3,0,Math.PI*2);ctx.fillStyle=t.packLevel>=2?"#ffd84d":t.packed?"#37e4ff":i<3?"#7cffad":"#ffd84d";ctx.fill();}if(t.type==="factory"&&t.packed){ctx.fillStyle=t.packLevel>=2?"#ffd84d":"#37e4ff";ctx.font="bold 10px Arial";ctx.fillText(t.packLevel>=2?"S S":"S",0,-22);}ctx.restore();}}
+    function drawEnemies(){for(const e of enemies){ctx.save();ctx.translate(e.x,e.y);ctx.shadowColor=e.superUnit?"#37e4ff":e.color;ctx.shadowBlur=e.superUnit?22:e.hitFlash>0?22:10;if(e.snake){ctx.strokeStyle=e.superUnit?"rgba(55,228,255,.42)":"rgba(45,255,122,.35)";ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(-28*Math.sin(e.wiggle),-10);ctx.quadraticCurveTo(0,12*Math.sin(e.wiggle),28*Math.sin(e.wiggle),10);ctx.stroke();}ctx.beginPath();ctx.arc(0,0,e.radius,0,Math.PI*2);ctx.fillStyle=e.hitFlash>0?"#fff":e.color;ctx.fill();ctx.lineWidth=e.superUnit?4:2;ctx.strokeStyle=e.superUnit?"#37e4ff":e.armor>0?"#d9eeff":"rgba(255,255,255,.75)";ctx.stroke();ctx.fillStyle="#06111d";ctx.strokeStyle="#06111d";ctx.lineWidth=3;if(e.type==="runner"){ctx.beginPath();ctx.moveTo(-4,-7);ctx.lineTo(8,0);ctx.lineTo(-4,7);ctx.closePath();ctx.fill();}else if(e.type==="brute"){ctx.beginPath();ctx.moveTo(-8,-4);ctx.lineTo(8,4);ctx.moveTo(8,-4);ctx.lineTo(-8,4);ctx.stroke();}else if(e.type==="shield"||e.type==="armored"){ctx.strokeRect(-7,-7,14,14);}else if(e.type==="boss"){ctx.font="bold 16px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("!",0,1);}else if(e.type==="swarm"){ctx.font="bold 12px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("×",0,0);}else if(e.type==="ghost"){ctx.font="bold 13px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("○",0,0);}else if(e.type==="regenerator"){ctx.font="bold 13px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("+",0,0);}else if(e.type==="snake"){ctx.font="bold 17px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("S",0,1);}else if(e.type==="trojan"){ctx.fillStyle="#06111d";ctx.fillRect(-13,-9,26,18);ctx.fillStyle=e.color;ctx.fillRect(-8,-14,16,9);ctx.fillStyle="#06111d";ctx.beginPath();ctx.arc(-10,12,4,0,Math.PI*2);ctx.arc(10,12,4,0,Math.PI*2);ctx.fill();}else if(e.type==="clown"){ctx.font="bold 15px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("?",0,0);}else if(e.type==="crab"){ctx.font="bold 14px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("C",0,0);}else if(e.type==="drone"){ctx.font="bold 14px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("◇",0,0);}if(e.slowTimer>0){ctx.strokeStyle="#75d8ff";ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,e.radius+5,0,Math.PI*2);ctx.stroke();}if(e.burnTimer>0){ctx.strokeStyle="#ff5a2f";ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,e.radius+8,0,Math.PI*2);ctx.stroke();}ctx.restore();const bw=e.radius*2+10,bh=5;ctx.fillStyle="#26384f";ctx.fillRect(e.x-bw/2,e.y+e.radius+8,bw,bh);ctx.fillStyle=e.hp/e.maxHp<.35?"#ffcf4a":"#a5ff55";ctx.fillRect(e.x-bw/2,e.y+e.radius+8,bw*Math.max(0,e.hp/e.maxHp),bh);}}
+    function drawProjectiles(){for(const p of projectiles){const color=p.packLevel>=2?"#ffd84d":p.packed?"#37e4ff":towerTypes[p.type].color;for(const t of p.trail||[]){ctx.globalAlpha=Math.max(0,t.life/.16)*.5;ctx.beginPath();ctx.arc(t.x,t.y,3+(p.packed?2:0),0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}ctx.globalAlpha=1;ctx.beginPath();ctx.arc(p.x,p.y,(p.type==="heavy"?6:p.type==="mortar"?7:4)+(p.packed?3:0),0,Math.PI*2);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle="rgba(255,255,255,.8)";ctx.stroke();}ctx.globalAlpha=1;}
+    function drawParticles(){for(const p of particles){const a=Math.max(0,p.life/p.maxLife);ctx.globalAlpha=a;if(p.ring){ctx.strokeStyle=p.color;ctx.lineWidth=5;ctx.beginPath();ctx.arc(p.x,p.y,p.r*(1-a),0,Math.PI*2);ctx.stroke();ctx.fillStyle=p.color;ctx.globalAlpha=a*.18;ctx.beginPath();ctx.arc(p.x,p.y,p.r*(1-a)*.8,0,Math.PI*2);ctx.fill();}else if(p.dot){ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();}else{ctx.fillStyle=p.color;ctx.font=`bold ${p.size}px Arial`;ctx.textAlign="center";ctx.fillText(p.text,p.x,p.y);}}ctx.globalAlpha=1;ctx.textAlign="left";}
+    function drawOverlays(){if(packFlash>0){ctx.save();ctx.globalAlpha=Math.min(.6,packFlash);const g=ctx.createRadialGradient(canvas.width/2,canvas.height/2,20,canvas.width/2,canvas.height/2,canvas.width/1.5);g.addColorStop(0,packTier2Unlocked?"rgba(255,216,77,.45)":"rgba(55,228,255,.42)");g.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.restore();}if(exitFlash>0){ctx.save();ctx.globalAlpha=exitFlash/.55;ctx.fillStyle="rgba(255,40,70,.25)";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.strokeStyle="rgba(255,80,100,.9)";ctx.lineWidth=10;ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);ctx.fillStyle="#fff";ctx.font="bold 34px Arial";ctx.textAlign="center";ctx.fillText("LIFE LOST!",canvas.width/2,60);ctx.restore();}if(nextWaveTimer>0&&!game.waveActive){ctx.save();ctx.fillStyle="rgba(0,0,0,.22)";ctx.fillRect(canvas.width/2-105,12,210,54);ctx.strokeStyle="#37e4ff";ctx.strokeRect(canvas.width/2-105,12,210,54);ctx.fillStyle="#fff";ctx.font="bold 20px Arial";ctx.textAlign="center";ctx.fillText(`Next Wave: ${Math.ceil(nextWaveTimer)}`,canvas.width/2,46);ctx.restore();}}
+
+    function gameLoop(ts){if(!lastTime)lastTime=ts;const dt=Math.min((ts-lastTime)/1000,.04);lastTime=ts;update(dt);draw();requestAnimationFrame(gameLoop);}
+    function updateQuickButtons(){document.querySelectorAll(".quick-upgrade").forEach(btn=>{const type=btn.dataset.quick;if(type==="pack"){btn.style.visibility="hidden";return;}const candidates=towers.filter(t=>t.type===type&&t.level<4);const total=candidates.reduce((s,t)=>s+upgradeCostForLevel(t.level,t.type),0);btn.innerHTML=`Upgrade all<b>${candidates.length?"$"+total:"—"}</b>`;btn.disabled=!candidates.length||game.money<total;});}
+    function updateUi(){els.lives.textContent=game.lives;els.money.textContent=`$${game.money}`;els.wave.textContent=waveLabel();els.score.textContent=game.score;els.startWave.disabled=game.gameOver||game.waveActive||nextWaveTimer>0;els.pause.disabled=game.gameOver;els.pause.textContent=game.running?"Pause":"Resume";const item=selectedBuildKind==="trap"?trapTypes[selectedType]:towerTypes[selectedType];els.selectedInfo.innerHTML=`Selected: <strong style="color:#37e4ff">${item.name}</strong> • ${item.desc}<br>Cost: $${item.cost}${selectedBuildKind==="trap"?" • place on path":item.kind!=="support"&&item.kind!=="pack"?` • Range: ${item.range||"—"} • Damage: ${item.damage||"—"}`:item.kind==="pack"?" • unlocks tower super-upgrades":" • 2x2 • wave income"}`;const t=towers.find(t=>t.id===selectedTowerId);if(t){const spec=effectiveSpec(t),base=towerTypes[t.type],refund=Math.round(towerValue(t)*.6),uc=t.level>=4?null:upgradeCostForLevel(t.level,t.type);els.selectedPanel.innerHTML=`<strong style="color:${t.packLevel>=2?"#ffd84d":t.packed?"#37e4ff":base.color}">${base.name}${t.packLevel>=2?" ✸✸":t.packed?" ✸":""}</strong><br>Level ${t.level}/4 ${base.size===2?"• 2x2 building":""}<br>${base.kind==="support"?`Income: $${spec.income} every ${Math.max(4.8,7.1-t.level*.45).toFixed(1)}s during waves${t.packed?` • roof sniper${t.packLevel>=2?"s":""}`:""}`:base.kind==="pack"?`${t.packLevel>=2?"Tier 2 Core active. Double pack-a-punch available.":packTier2Unlocked?"Upgrade this Pack Core to activate Tier 2.":"Enables $5000 pack-a-punch upgrades on max towers."}`:`Damage: ${spec.damage} • Range: ${Math.round(spec.range)} • Rate: ${spec.fireRate.toFixed(2)}s`}<br>Sell refund: $${refund}${uc?`<br>Next upgrade: $${uc}`:t.packLevel>=2?`<br>Double pack-a-punched.`:t.packed?`<br>Pack-a-punched. ${packTier2Unlocked?"Double pack available.":"Tier 2 unlocks at 1M score."}`:`<br>Max level. ${packUnlocked?"Ready for pack-a-punch.":"Pack unlocks after wave 16."}`}`;els.upgrade.disabled=t.level>=4||game.money<uc||base.kind==="pack";els.pack.textContent=`Pack $${packCost()}`;els.pack.disabled=base.kind==="pack"?(!packTier2Unlocked||t.packLevel>=2||game.money<packCost()):(!packUnlocked||t.level<4||t.packLevel>=2||game.money<packCost()||!towers.some(t=>t.type==="pack")||(t.packed&&!packTier2Unlocked));els.sell.disabled=false;}else{els.selectedPanel.textContent="Click a tower to upgrade, sell, or pack-a-punch in overtime. Hover land/path to preview builds and traps.";els.upgrade.disabled=true;els.pack.disabled=true;els.sell.disabled=true;}updateQuickButtons();}
+
+    canvas.addEventListener("mousemove",e=>{const r=canvas.getBoundingClientRect(),sx=canvas.width/r.width,sy=canvas.height/r.height;const x=Math.floor(((e.clientX-r.left)*sx)/CELL),y=Math.floor(((e.clientY-r.top)*sy)/CELL);hoverCell=(x>=0&&x<currentMap.w&&y>=0&&y<currentMap.h)?{x,y}:null;});
+    canvas.addEventListener("mouseleave",()=>hoverCell=null);
+    canvas.addEventListener("click",e=>{const r=canvas.getBoundingClientRect(),sx=canvas.width/r.width,sy=canvas.height/r.height;const x=Math.floor(((e.clientX-r.left)*sx)/CELL),y=Math.floor(((e.clientY-r.top)*sy)/CELL);if(x<0||x>=currentMap.w||y<0||y>=currentMap.h)return;const t=towers.find(t=>areaCellsFor(t.type,t.x,t.y).some(([tx,ty])=>tx===x&&ty===y));if(t)selectTower(t);else placeBuild(x,y);});
+    document.addEventListener("keydown",e=>{if(["INPUT","SELECT","TEXTAREA"].includes(document.activeElement.tagName))return;const towerKeys=Object.keys(towerTypes),trapKeys=Object.keys(trapTypes);if(e.key>="1"&&e.key<="9")selectBuildType("tower",towerKeys[Number(e.key)-1]);if(e.key==="0")selectBuildType("trap",trapKeys[0]);if(e.key==="-")selectBuildType("trap",trapKeys[1]);if(e.key==="=")selectBuildType("trap",trapKeys[2]);if(e.code==="Space"){e.preventDefault();if(game.waveActive||nextWaveTimer>0)togglePause();else startWave();}if(e.key.toLowerCase()==="f")toggleSpeed();if(e.key.toLowerCase()==="u")upgradeSelected();if(e.key.toLowerCase()==="p")packSelected();if(e.key.toLowerCase()==="s")sellSelected();if(e.key==="Escape"){selectedTowerId=null;updateUi();}});
+    els.startWave.addEventListener("click",startWave);els.pause.addEventListener("click",togglePause);els.reset.addEventListener("click",()=>initMap(mapKey));els.speed.addEventListener("click",toggleSpeed);els.upgrade.addEventListener("click",upgradeSelected);els.pack.addEventListener("click",packSelected);els.sell.addEventListener("click",sellSelected);els.mapSelect.addEventListener("change",e=>initMap(e.target.value));
+    els.sfxVol.addEventListener("input",e=>{sfxVolume=Number(e.target.value)/100;sfxMuted=sfxVolume===0;updateUi();});
+    els.musicVol.addEventListener("input",e=>{musicVolume=Number(e.target.value)/100;musicMuted=musicVolume===0;if(!musicMuted)startMusic();updateUi();});
+    els.sfxVol.addEventListener("click",()=>{if(sfxVolume>0){els.sfxVol.dataset.prev=sfxVolume;sfxVolume=0;els.sfxVol.value=0;sfxMuted=true;}else{sfxVolume=Number(els.sfxVol.dataset.prev||.65);els.sfxVol.value=Math.round(sfxVolume*100);sfxMuted=false;}updateUi();});
+    els.musicVol.addEventListener("click",()=>{if(musicVolume>0){els.musicVol.dataset.prev=musicVolume;musicVolume=0;els.musicVol.value=0;musicMuted=true;}else{musicVolume=Number(els.musicVol.dataset.prev||.45);els.musicVol.value=Math.round(musicVolume*100);musicMuted=false;startMusic();}updateUi();});
+    els.continueBtn.addEventListener("click",()=>{els.winOverlay.style.display="none";els.continueBtn.textContent="Continue";if(rockstarShown&&game.score>=1000000){game.running=true;setMessage("Rockstar mode active. Upgrade the Pack Core to enable double pack-a-punch.");}else{nextWaveTimer=12;game.running=true;setMessage("Overtime begins in 12 seconds. Pack Core unlocked. The doom engine is warming up.");}updateUi();});
+
+    setupMenus();
+    initMap(mapKey);
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>

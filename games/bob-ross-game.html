@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Accidents Painting Simulator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #1e1b18;
+      color: #f6ead7;
+      overflow: hidden;
+    }
+
+    .screen {
+      width: 100vw;
+      height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 24px;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      text-align: center;
+      line-height: 1.5;
+      color: #d9c6aa;
+      margin-bottom: 28px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 15px;
+      background: #d8a657;
+      color: #1e1b18;
+      font-weight: bold;
+      transition: transform 0.1s ease, opacity 0.1s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+
+    .menu-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #gameScreen {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      grid-template-columns: 250px 1fr 290px;
+      grid-template-rows: 64px 1fr;
+      gap: 0;
+      background: #24201c;
+    }
+
+    #gameScreen.active {
+      display: grid;
+    }
+
+    .topbar {
+      grid-column: 1 / 4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: #161310;
+      border-bottom: 1px solid #3b3229;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #f6ead7;
+      font-size: 14px;
+    }
+
+    .panel {
+      padding: 16px;
+      background: #191612;
+      border-right: 1px solid #3b3229;
+      overflow-y: auto;
+    }
+
+    .right-panel {
+      border-right: none;
+      border-left: 1px solid #3b3229;
+    }
+
+    .panel h2 {
+      font-size: 17px;
+      margin: 0 0 12px;
+      color: #f6ead7;
+    }
+
+    .tool-grid, .color-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .tool-button {
+      background: #302922;
+      color: #f6ead7;
+      border: 1px solid #4b4035;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .tool-button.active {
+      outline: 2px solid #d8a657;
+    }
+
+    .color-swatch {
+      height: 38px;
+      border-radius: 10px;
+      border: 2px solid #4b4035;
+      cursor: pointer;
+    }
+
+    .color-swatch.active {
+      outline: 3px solid #f6ead7;
+    }
+
+    .canvas-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: radial-gradient(circle at center, #3a3128 0%, #211d19 70%);
+      overflow: hidden;
+      position: relative;
+    }
+
+    canvas {
+      background: #f5efe2;
+      border: 12px solid #7a5030;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+      touch-action: none;
+    }
+
+    .palette {
+      height: 160px;
+      background: #8a633e;
+      border-radius: 44% 38% 45% 35%;
+      border: 5px solid #4a2f1c;
+      position: relative;
+      margin: 8px 0 18px;
+    }
+
+    .palette::after {
+      content: "";
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #191612;
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      border: 3px solid #4a2f1c;
+    }
+
+    .paint-blob {
+      width: 32px;
+      height: 24px;
+      border-radius: 50%;
+      position: absolute;
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.35);
+    }
+
+    .brush-preview {
+      height: 90px;
+      border-radius: 12px;
+      border: 1px solid #4b4035;
+      background: #2b251f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-stroke {
+      width: 120px;
+      height: 18px;
+      border-radius: 999px;
+      opacity: 0.9;
+      transform: rotate(-8deg);
+    }
+
+    .instruction-card {
+      background: #302922;
+      border: 1px solid #4b4035;
+      border-radius: 14px;
+      padding: 14px;
+      line-height: 1.45;
+      color: #eadcc7;
+      margin-bottom: 14px;
+    }
+
+    .meters {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .meter label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #d9c6aa;
+      margin-bottom: 5px;
+    }
+
+    .bar {
+      height: 9px;
+      background: #3b3229;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      width: 100%;
+      background: #d8a657;
+    }
+
+    .small-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .secondary {
+      background: #3b3229;
+      color: #f6ead7;
+      border: 1px solid #5b4c3e;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <section id="menuScreen" class="screen active">
+    <h1>Happy Accidents</h1>
+    <p class="subtitle">
+      A cozy-but-chaotic painting simulator where you follow along, mix colors, clean your brush, scrape with knives, and turn mistakes into masterpieces.
+    </p>
+    <div class="menu-buttons">
+      <button onclick="startGame('campaign')">Play Campaign</button>
+      <button onclick="startGame('free')">Free Paint</button>
+    </div>
+  </section>
+
+  <section id="gameScreen">
+    <header class="topbar">
+      <strong id="modeTitle">Free Paint</strong>
+      <div class="status">
+        <span id="timerText">No time limit</span>
+        <button class="secondary" onclick="savePainting()">Save Masterpiece</button>
+        <button class="secondary" onclick="returnToMenu()">Menu</button>
+      </div>
+    </header>
+
+    <aside class="panel">
+      <h2>Tools</h2>
+      <div class="tool-grid">
+        <button class="tool-button active" data-tool="brush" onclick="selectTool('brush')">Fan Brush</button>
+        <button class="tool-button" data-tool="round" onclick="selectTool('round')">Round Brush</button>
+        <button class="tool-button" data-tool="knife" onclick="selectTool('knife')">Palette Knife</button>
+        <button class="tool-button" data-tool="thinner" onclick="selectTool('thinner')">Paint Thinner</button>
+      </div>
+
+      <h2>Colors</h2>
+      <div class="color-grid" id="colorGrid"></div>
+
+      <h2>Brush Size</h2>
+      <input id="sizeSlider" type="range" min="2" max="60" value="18" />
+
+      <div class="small-actions">
+        <button onclick="cleanBrush()">Clean Brush</button>
+        <button onclick="beatBrush()">Beat the Devil Out of It</button>
+        <button onclick="clearCanvas()" class="secondary">Clear Canvas</button>
+      </div>
+    </aside>
+
+    <main class="canvas-wrap">
+      <canvas id="paintingCanvas" width="900" height="580"></canvas>
+    </main>
+
+    <aside class="panel right-panel">
+      <h2>Preview</h2>
+      <div class="brush-preview">
+        <div id="previewStroke" class="preview-stroke"></div>
+      </div>
+
+      <h2>Palette</h2>
+      <div class="palette" id="palette"></div>
+
+      <div class="meters">
+        <div class="meter">
+          <label><span>Paint Load</span><span id="paintLoadText">100%</span></label>
+          <div class="bar"><div id="paintLoadFill" class="fill"></div></div>
+        </div>
+        <div class="meter">
+          <label><span>Brush Cleanliness</span><span id="cleanText">100%</span></label>
+          <div class="bar"><div id="cleanFill" class="fill"></div></div>
+        </div>
+      </div>
+
+      <h2>Instructor</h2>
+      <div class="instruction-card" id="instructionCard">
+        Pick a color and start with a gentle sky. Remember: there are no mistakes, only happy accidents.
+      </div>
+      <button onclick="nextInstruction()">Next Instruction</button>
+    </aside>
+  </section>
+
+  <script>
+    const canvas = document.getElementById('paintingCanvas');
+    const ctx = canvas.getContext('2d');
+    const colorGrid = document.getElementById('colorGrid');
+    const palette = document.getElementById('palette');
+    const previewStroke = document.getElementById('previewStroke');
+    const sizeSlider = document.getElementById('sizeSlider');
+
+    const colors = [
+      { name: 'Titanium White', value: '#f8f3e8' },
+      { name: 'Phthalo Blue', value: '#174d7c' },
+      { name: 'Midnight Black', value: '#101010' },
+      { name: 'Alizarin Crimson', value: '#8f1d2c' },
+      { name: 'Sap Green', value: '#31572c' },
+      { name: 'Van Dyke Brown', value: '#4b2e1e' },
+      { name: 'Yellow Ochre', value: '#c79634' },
+      { name: 'Bright Red', value: '#c33828' }
+    ];
+
+    const instructions = [
+      'Start with a soft sky. Use blue and white with broad horizontal strokes.',
+      'Add distant mountains with the palette knife. Let the edge break naturally.',
+      'Tap in some happy little trees. Vary the pressure so they do not all look the same.',
+      'Scrape in a shoreline or path. A little contrast makes the scene come alive.',
+      'Add final highlights. Do not overthink it — let the happy accidents stay.'
+    ];
+
+    let currentTool = 'brush';
+    let currentColor = colors[1].value;
+    let isPainting = false;
+    let lastX = 0;
+    let lastY = 0;
+    let paintLoad = 100;
+    let cleanliness = 100;
+    let instructionIndex = 0;
+    let gameMode = 'free';
+    let secondsLeft = 300;
+    let timerId = null;
+
+    function setup() {
+      ctx.fillStyle = '#f5efe2';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      renderColors();
+      renderPalette();
+      updatePreview();
+      updateMeters();
+    }
+
+    function renderColors() {
+      colorGrid.innerHTML = '';
+      colors.forEach((color, index) => {
+        const swatch = document.createElement('div');
+        swatch.className = 'color-swatch' + (color.value === currentColor ? ' active' : '');
+        swatch.style.background = color.value;
+        swatch.title = color.name;
+        swatch.onclick = () => selectColor(color.value);
+        colorGrid.appendChild(swatch);
+      });
+    }
+
+    function renderPalette() {
+      palette.innerHTML = '';
+      colors.forEach((color, index) => {
+        const blob = document.createElement('div');
+        blob.className = 'paint-blob';
+        blob.style.background = color.value;
+        blob.style.left = `${70 + (index % 4) * 45}px`;
+        blob.style.top = `${26 + Math.floor(index / 4) * 54}px`;
+        blob.title = color.name;
+        blob.onclick = () => selectColor(color.value);
+        palette.appendChild(blob);
+      });
+    }
+
+    function selectColor(color) {
+      currentColor = color;
+      paintLoad = Math.min(100, paintLoad + 35);
+      renderColors();
+      updatePreview();
+      updateMeters();
+    }
+
+    function selectTool(tool) {
+      currentTool = tool;
+      document.querySelectorAll('.tool-button').forEach(button => {
+        button.classList.toggle('active', button.dataset.tool === tool);
+      });
+      updatePreview();
+    }
+
+    function updatePreview() {
+      previewStroke.style.background = currentColor;
+      previewStroke.style.height = currentTool === 'knife' ? '8px' : currentTool === 'thinner' ? '12px' : '18px';
+      previewStroke.style.opacity = currentTool === 'thinner' ? '0.35' : Math.max(0.25, paintLoad / 100);
+      previewStroke.style.borderRadius = currentTool === 'knife' ? '2px' : '999px';
+    }
+
+    function startGame(mode) {
+      gameMode = mode;
+      document.getElementById('menuScreen').classList.remove('active');
+      document.getElementById('gameScreen').classList.add('active');
+      document.getElementById('modeTitle').textContent = mode === 'campaign' ? 'Campaign: Mountain Lake' : 'Free Paint';
+      instructionIndex = 0;
+      document.getElementById('instructionCard').textContent = instructions[instructionIndex];
+
+      if (timerId) clearInterval(timerId);
+      if (mode === 'campaign') {
+        secondsLeft = 300;
+        timerId = setInterval(tickTimer, 1000);
+      } else {
+        document.getElementById('timerText').textContent = 'No time limit';
+      }
+    }
+
+    function tickTimer() {
+      secondsLeft--;
+      const minutes = Math.floor(secondsLeft / 60);
+      const seconds = String(secondsLeft % 60).padStart(2, '0');
+      document.getElementById('timerText').textContent = `${minutes}:${seconds}`;
+      if (secondsLeft <= 0) {
+        clearInterval(timerId);
+        document.getElementById('instructionCard').textContent = 'Time is up! Step back and admire your happy accident.';
+      }
+    }
+
+    function returnToMenu() {
+      if (timerId) clearInterval(timerId);
+      document.getElementById('gameScreen').classList.remove('active');
+      document.getElementById('menuScreen').classList.add('active');
+    }
+
+    function nextInstruction() {
+      instructionIndex = (instructionIndex + 1) % instructions.length;
+      document.getElementById('instructionCard').textContent = instructions[instructionIndex];
+    }
+
+    function getPointerPosition(event) {
+      const rect = canvas.getBoundingClientRect();
+      const pointer = event.touches ? event.touches[0] : event;
+      return {
+        x: (pointer.clientX - rect.left) * (canvas.width / rect.width),
+        y: (pointer.clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+
+    canvas.addEventListener('mousedown', startPaint);
+    canvas.addEventListener('mousemove', paint);
+    window.addEventListener('mouseup', stopPaint);
+
+    canvas.addEventListener('touchstart', startPaint);
+    canvas.addEventListener('touchmove', paint);
+    window.addEventListener('touchend', stopPaint);
+
+    function startPaint(event) {
+      event.preventDefault();
+      isPainting = true;
+      const pos = getPointerPosition(event);
+      lastX = pos.x;
+      lastY = pos.y;
+      paint(event);
+    }
+
+    function stopPaint() {
+      isPainting = false;
+      ctx.globalAlpha = 1;
+    }
+
+    function paint(event) {
+      if (!isPainting) return;
+      event.preventDefault();
+      const pos = getPointerPosition(event);
+      const size = Number(sizeSlider.value);
+      const pressure = Math.max(0.12, paintLoad / 100);
+      const dirtyFactor = cleanliness < 60 ? 0.72 : 1;
+
+      ctx.lineCap = currentTool === 'knife' ? 'butt' : 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = currentColor;
+      ctx.globalAlpha = currentTool === 'thinner' ? 0.16 : pressure * dirtyFactor;
+
+      if (currentTool === 'knife') {
+        drawKnifeStroke(pos.x, pos.y, size);
+      } else if (currentTool === 'round') {
+        drawRoundStroke(pos.x, pos.y, size);
+      } else if (currentTool === 'thinner') {
+        drawThinnerStroke(pos.x, pos.y, size);
+      } else {
+        drawFanBrush(pos.x, pos.y, size);
+      }
+
+      lastX = pos.x;
+      lastY = pos.y;
+      paintLoad = Math.max(0, paintLoad - 0.35);
+      cleanliness = Math.max(0, cleanliness - 0.12);
+      updateMeters();
+      updatePreview();
+    }
+
+    function drawRoundStroke(x, y, size) {
+      ctx.beginPath();
+      ctx.lineWidth = size;
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+
+    function drawFanBrush(x, y, size) {
+      for (let i = -3; i <= 3; i++) {
+        ctx.beginPath();
+        ctx.lineWidth = Math.max(1, size / 7);
+        ctx.moveTo(lastX + i * size * 0.12, lastY + Math.sin(i) * 2);
+        ctx.lineTo(x + i * size * 0.12, y + Math.cos(i) * 2);
+        ctx.stroke();
+      }
+    }
+
+    function drawKnifeStroke(x, y, size) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.atan2(y - lastY, x - lastX));
+      ctx.fillStyle = currentColor;
+      ctx.globalAlpha = Math.max(0.25, paintLoad / 100);
+      ctx.fillRect(-size * 0.7, -2, size * 1.4, 4);
+      ctx.restore();
+    }
+
+    function drawThinnerStroke(x, y, size) {
+      ctx.beginPath();
+      ctx.lineWidth = size * 1.4;
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+
+    function cleanBrush() {
+      cleanliness = 100;
+      paintLoad = Math.max(10, paintLoad - 40);
+      updateMeters();
+      updatePreview();
+      document.getElementById('instructionCard').textContent = 'Brush cleaned. Now it is ready for a fresh happy little decision.';
+    }
+
+    function beatBrush() {
+      cleanliness = 100;
+      paintLoad = 0;
+      updateMeters();
+      updatePreview();
+      document.getElementById('instructionCard').textContent = 'You beat the devil out of it. The brush is clean, loud, and dramatic.';
+    }
+
+    function updateMeters() {
+      document.getElementById('paintLoadFill').style.width = `${paintLoad}%`;
+      document.getElementById('cleanFill').style.width = `${cleanliness}%`;
+      document.getElementById('paintLoadText').textContent = `${Math.round(paintLoad)}%`;
+      document.getElementById('cleanText').textContent = `${Math.round(cleanliness)}%`;
+    }
+
+    function clearCanvas() {
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#f5efe2';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function savePainting() {
+      const link = document.createElement('a');
+      link.download = 'happy-accident-masterpiece.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    setup();
+  </script>
+</body>
+</html>
