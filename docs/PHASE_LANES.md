@@ -70,15 +70,78 @@ Last updated: **2026-07-13**.
 - **Status:** ✅ Complete, pending Simon's review. **Commit/push/deploy:** stop before commit; push/deploy remain separate.
 - **Next lane:** Lane 2C (on Simon's approval of this lane).
 
-### Lane 2C — Homepage Arcade Refresh  ·  Proposed
+### Lane 2C — Homepage Arcade Refresh  ·  🟡 Implemented, pending Simon's visual review
 - **Goal:** redesign the homepage as a cohesive arcade using the Claude-selected, Grok-informed direction —
   hero, featured row, responsive grid, CSS-placeholder cover treatments, status/genre/control badges,
   prototype labels, documented (unpopulated) future-media hook fields.
-- **Allowed changes:** `index.html` (and shared CSS if extracted). **Exclusions:** no fake screenshots/reviews/player-counts/trailer controls, no React/Vite, existing URLs preserved.
-- **🧠 Grok:** direction already captured in Lane 2A (evidence, not authority). **🔍 Codex:** required — links, responsive, accessibility basics, Pages compatibility, duplication, no accidental runtime changes.
-- **Status:** Proposed. **Next lane:** Lane 2D.
+- **Allowed changes:** `index.html` only (kept single-file, matching the project's standalone-HTML ethos —
+  no CSS extracted). **Exclusions:** no fake screenshots/reviews/player-counts/trailer controls, no
+  React/Vite, existing URLs preserved.
+- **🧠 Grok:** direction captured in Lane 2A (evidence, not authority) — implemented the "Prototype Cabinet
+  Row" system: dark amber-accent stage, per-game accent colors + CSS-marquee cover placeholders, one
+  featured slot (Halo, per Grok's "sticky default" rule since all 4 imports landed the same day), Floor
+  grid (6 primary games) + dashed-border Bonus rail (World History Atlas), unified honest status vocabulary
+  (Playable Prototype / Early Prototype / Experimental Build — per Simon's Lane 2B vocabulary, not Grok's
+  "Rough"), sticky in-page nav, responsive 3/2/1 grid, `data-media="placeholder"` hooks for future real
+  covers. **🔍 Codex:** not yet run — pending Simon's visual review first, per his explicit sequencing.
+- **Validation:** local HTTP server; homepage returns 200; all 7 card hrefs resolve to real, unmodified
+  `games/*.html` files; tag-balance sanity check passed; `games/` folder confirmed untouched.
+  **No in-browser visual/responsive check performed by Claude** — that's this lane's explicit gate, handed
+  to Simon via the local server.
+- **Status:** 🟡 Implemented, awaiting Simon's local visual review. **Commit/push/deploy:** not committed yet.
+- **Next lane:** 🔍 Codex review (post-acceptance) → Lane 2D (full smoke).
 
 ### Lane 2D — Full Arcade Smoke  ·  Proposed
 - **Goal:** verify homepage + all 7 game cards/launches across desktop/tablet-landscape/tablet-portrait/phone;
   confirm existing 3 URLs still valid; no missing assets/console-blocking errors; report limitations honestly.
-- **Status:** Proposed. **Next lane:** Lane 2 (deferred reconciliation) resumes.
+- **Status:** Proposed. **Next lane:** **Game History Recovery** (below) — the explicit next lane, not the
+  deferred Lane 2 reconciliation.
+
+---
+
+## Game History Recovery  ·  Proposed — **the explicit next lane after Lane 2C is finished/checkpointed**
+
+Not started. Gated behind Simon's acceptance of Lane 2C (currently 🟡 pending his visual review) — this is
+documentation/research, not implementation, but it must not run against a still-uncommitted, still-changing
+homepage lane. Once Lane 2C is checkpointed, this runs **before any hands-on Nebula Rescue or Halo FPS
+source repairs** — that sequencing is a hard prerequisite, not a suggestion (see `docs/BACKLOG.md` B8).
+
+- **Goal:** recover durable version/checkpoint history from the protected, read-only source archive
+  (`..\PROTOTYPE ARCADE` — never edited, renamed, or reorganized) for **Nebula Rescue, Halo FPS, Pictionary,
+  Tower Defense, World History Atlas**. Chess and Bob Ross may be added only if evidence is readily
+  available — must not dilute the five required.
+- **Evidence to inspect (read-only):** version folders, filenames + internal visible version labels, hashes,
+  changelog/readme/passover/handoff/history files, prompt notes, benchmark/final/master labels, duplicate
+  files, clarifying screenshots, meaningful content diffs between versions. **Never rank builds by filename,
+  modification date, or highest version number alone.**
+- **Durable outputs:** `docs/game-history/README.md` + one file per game — `nebula-rescue.md`,
+  `halo-fps.md`, `pictionary.md`, `tower-defense.md`, `world-history-atlas.md`. Each must contain: current
+  provisional build, source archive locations, evidence confidence, version/checkpoint timeline, major
+  changes per meaningful checkpoint, known-good checkpoints, regressions/abandoned experiments,
+  internal-label/filename conflicts, exact useful quotes from source notes, protected wins / do-not-regress
+  behavior, known unresolved problems, historical design intent, what still requires hands-on playtesting,
+  recommended next hardening/rescue lane, and source filename/hash references.
+- **Per-game specific tracking (do not drop any of these):**
+  - **Nebula Rescue:** spinner implementation and later fixes; slide/ramp/rail changes; plunger; flipper
+    controls; camera modes; table geometry; collision/physics changes; ball saves/kickbacks; scoring
+    economy; mission progression; visual-theme changes; performance/FPS changes; known glitch periods;
+    current v6.4 lineage; **which changes must not be bundled together during rescue.**
+  - **Halo FPS:** the published v1.7.5.2-vs-v1.7.6 conflict; movement; weapons; enemies/AI; pickups/
+    loadouts; map/camera changes; HUD/minimap; performance; multiplayer/friend-playtest benchmarks.
+  - **Pictionary:** party-flow changes; drawing tools; secret-word/reveal flow; team/scoring changes;
+    gallery exports vs. game builds; multiplayer/AI-image ambitions vs. current local build.
+  - **Tower Defense:** economy; wave balance; towers/upgrades; enemy progression; scaling/difficulty; v6.1
+    economy-rebalance lineage.
+  - **World History Atlas:** clean-rebuild lineage; map provider/CDNs; GeoJSON/data sources; timeline/
+    navigation; region/era coverage; performance/load issues; historical-content architecture.
+- **Raw-note preservation:** when small source `.txt` files hold unique historical context, preserve their
+  exact content under `docs/game-history/raw/` (already seeded with `2026-07-14-video-review.md`). **Never**
+  copy whole historical HTML builds into `docs/`.
+- **Never fabricate missing history** — use `Unknown` + an explicit confidence label wherever evidence is incomplete.
+- **Integration (when this lane actually runs):** link outputs from `docs/GAME_CATALOG.md`, `docs/BACKLOG.md`,
+  `docs/ROADMAP.md`, `docs/PHASE_LANES.md`, `docs/PROJECT_STATE.md`, `docs/PROJECT_LOG.md`.
+- **🧠 Grok / 🔍 Codex:** unnecessary — this is Claude reading the local archive directly.
+- **Explicit exclusions:** no game source changes, no source-archive changes, no commit/push/deploy. Read-only
+  investigation only — stop for Simon's review at the end.
+- **Status:** Proposed, not started. **Next lane:** Nebula Rescue rescue/hardening (`BACKLOG.md` B8) — only
+  after this lane is complete and reviewed.

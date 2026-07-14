@@ -6,6 +6,137 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-07-14 — Workflow hard-rule repair: report contract regression fixed
+**Agent Snapshot:** 🧭 Claude (Opus, sole editor; workflow-rule repair, no outside agents needed).
+
+**TL;DR:** The prior Lane 2C/capability report regressed on Simon's actual ask — it lacked a detailed
+`Agent Contributions` section (because the old rule only required it "when an outside agent was used," and
+that pass was Claude-solo) and gave no smoke-test instructions at all. Fixed at the source: `AGENTS.md`'s
+report contract now requires `Agent Contributions` on **every** report (with an explicit solo-work form) and
+adds a mandatory `Smoke Test — Do This Now` block for any runnable/visual work, adapted from Simon's
+`VIBE_CODE_DEFAULT_PROJECT_FOUNDATION_v1.1.md` §7.
+
+**What changed:** `AGENTS.md`'s "Report format when an outside agent was used" section replaced with
+"Required report contract (HARD RULE — v1.1)" — 9-part required order (Agent Snapshot → TL;DR → What
+Changed/Current State → Smoke Test-or-Not-Required → Agent Contributions → Claude Synthesis → Work
+Completed/Evidence → Git/Commit/Push/Deploy State → Exact Next Action), carried-forward-contribution
+labeling rule, and the always-required Agent Contributions section (solo-work template included).
+
+**What didn't need to change:** `CLAUDE.md` — already thin, already references `@AGENTS.md`, no duplicated
+report-format text to drift. The 4 status skills (`/handoff`, `/roadmap`, `/phaselane`, `/whatsnext`) —
+inspected, no genuinely conflicting report-format instructions found (only a passing, non-conflicting
+mention of "smoke" in `/handoff`'s validation-sources line); their compact, command-specific output formats
+are intentionally different from this lane-report contract and were left intact.
+
+**Decision:** This repair is deliberately kept separable from the still-pending Lane 2C homepage diff — only
+`AGENTS.md` and this log entry changed; `index.html` remains exactly the pre-existing, unrelated Lane 2C
+diff (`+479/-120`, unstaged, uncommitted). This repair can become its own docs-only checkpoint independent
+of Lane 2C's acceptance.
+
+**Transcript records:** none (rule repair, not an agent consultation).
+
+---
+
+## 2026-07-14 — Visual-capability check + video-review capture + Game History Recovery defined
+**Agent Snapshot:** 🧭 Claude (Opus, capability probe + docs; no outside agents this entry).
+
+**TL;DR:** Confirmed Claude *can* genuinely see rendered pages (headless Chrome + `Read` on the resulting
+PNG — verified, not assumed); confirmed Grok's local CLI is text-only (no image support) while Codex's
+supports image input; preserved Simon's raw Nebula Rescue feedback and a secondary-evidence review record
+from his screen recording; defined (not started) a Game History Recovery lane as the explicit next step
+after Lane 2C, ahead of any hands-on Nebula/Halo repairs.
+
+**Visual-capability result: "visual capture available and verified."** Chrome and Edge both exist locally;
+headless Chrome screenshot capture against the local server was run and the resulting PNGs were viewed
+directly via the `Read` tool. Two pages captured with dual timing each (immediate + a 25,000ms
+`--virtual-time-budget` "delayed" pass, per Simon's request to distinguish an initial loading state from a
+page that never initializes):
+- `index.html` — immediate: 291,611 B; delayed: 291,611 B (byte-identical — static page, expected).
+- `games/nebula-rescue-game.html` — immediate: 644,961 B; delayed: 647,699 B.
+
+**Nebula Rescue finding — important nuance, not a contradiction of Simon's report:** both headless captures
+show a **fully rendered main menu** (title "NEBULA RESCUE", a "START GAME" button, a populated mission-computer
+HUD, a controls legend, and 3D table geometry visible behind the menu) — not a blank/white screen. However:
+the *first* ("immediate") capture took roughly 4 minutes of real wall-clock time to complete, despite a
+2,000ms virtual-time-budget request, most plausibly because it was Chrome's cold start plus the real network
+fetch of Three.js from `cdn.jsdelivr.net` (see the Lane 2B Codex-caught dependency finding) — virtual time
+does not accelerate real network I/O. The *second* pass (after Chrome/CDN was already warm) completed in
+~78 seconds. **This does not confirm or deny Simon's observed ~24-second white screen** — headless capture
+conditions (no GPU, different cache state, different machine load) are not the same as his real browser
+session, and no claim is made that this reproduces or disproves it. What it *does* establish: the page does
+reach a fully-formed, non-crashed main menu, and the menu is stable (identical before/after the 25s virtual
+delay — nothing auto-advances without clicking Start, as expected). The actual white-screen *duration and
+cause* in a normal browser session remains genuinely unconfirmed and is exactly the kind of question the
+Game History Recovery lane (and eventual hands-on Nebula testing) should resolve — not this probe.
+
+**🧠 Grok / 🔍 Codex capability:** Grok's local CLI has no image/attach flag (confirmed via full `--help`
+scan) — it is text-only through this integration and cannot see a screenshot or video frame. Codex's CLI
+does support `-i/--image <FILE>` — a genuine secondary visual opinion from Codex is possible once a
+screenshot exists, unlike Grok. `ffmpeg` is not installed, so no video-frame extraction is available without
+an explicit package-install approval (flagged, not silently installed).
+
+**Preserved feedback:**
+- Simon's raw Nebula Rescue quote → `docs/RAW_IDEA_INBOX.md` (2026-07-14 entry), verbatim.
+- ChatGPT's screen-recording observations (Atlas, Halo, Chess, Nebula Rescue, Pictionary, Tower Defense, Bob
+  Ross, homepage) → `docs/game-history/raw/2026-07-14-video-review.md`, explicitly marked as secondary
+  evidence, not a formal `AGENTS.md` agent run, and not console/gameplay proof.
+- Structured backlog entry `docs/BACKLOG.md` B8 — Nebula Rescue elevated to top rescue priority, with the
+  spinners marked as a **protected win** and the slide/ramp marked **known-broken**, gated behind Game
+  History Recovery completing first. Also B9 — landing-page cleanup, captured but not yet scoped.
+
+**Game History Recovery** — defined in full in `docs/PHASE_LANES.md` (goal, archive-evidence types, 5
+required output files, per-game tracking lists for Nebula/Halo/Pictionary/Tower Defense/Atlas, raw-note
+preservation rule, integration points, exclusions) and sequenced in `docs/ROADMAP.md` as the **explicit next
+lane immediately after Lane 2C is finished/checkpointed** — not buried in `Later`. **Not started** —
+gated behind Simon's acceptance of the still-pending Lane 2C visual review, and a hard prerequisite before
+any hands-on Nebula/Halo source work.
+
+**Decision:** Lane 2C's own status is unchanged by this entry — still 🟡 awaiting Simon's visual acceptance.
+This was a parallel capture/definition pass, not a Lane 2C edit.
+
+**Transcript records:** none new (capability probe + doc capture, not an agent consultation). Screenshot
+PNGs remain in the local scratchpad only — **not added to Git this lane**, per Simon's instruction.
+
+---
+
+## 2026-07-14 — Lane 2C: Homepage Arcade Refresh (implemented, awaiting visual review) + Agent Snapshot rule
+**TL;DR:** Implemented the Claude-selected, Grok-informed "Prototype Cabinet Row" homepage direction across
+all 7 games (single-file `index.html`, no build step). Added the required "Agent Snapshot" one-line
+attribution rule to `AGENTS.md` per Simon's correction. Confirmed the live-site 3-game state was expected
+(Lane 2B never touched `index.html`); committed Lane 2B (`7d19000`); ran a local browser gate (server +
+exact URLs) for Simon's own visual pass instead of claiming an automated one Claude can't actually perform.
+
+**Agents:** 🧭 Claude (sole editor/implementer this entry). 🧠 Grok and 🔍 Codex's contributions to the
+direction and the import review are logged in their own earlier entries below — not re-claimed here.
+
+**Captain's synthesis (🧭 Claude):**
+- Simon correctly flagged two gaps: reports needed a compact agent-attribution line *before* the TL;DR (not
+  just the longer Agent Contributions section), and he hadn't seen Grok's contribution reflected clearly
+  enough. Fixed by adding the `Agent Snapshot:` rule to `AGENTS.md` as a hard requirement on every
+  checkpoint/audit/handoff/lane/release report going forward.
+- Clarified (not fixed, because nothing was broken): the production site correctly still shows only 3 games
+  — Lane 2B only added files to `games/`, never touched `index.html` or pushed anything. This was the
+  expected state, not a regression.
+- Implemented Lane 2C using Grok's own highest-leverage subset (cover placeholders, featured slot, accent +
+  Play hierarchy, card anatomy, responsive rules) plus the structural pieces needed to onboard all 7 games:
+  amber-on-dark tokens, per-game accent + CSS-marquee covers, one featured cabinet (Halo — Grok's "sticky
+  default" since all 4 new imports landed the same day, avoiding an arbitrary pick among them), a primary
+  Floor grid, a dashed-border Bonus rail for the Atlas, sticky in-page nav, and `data-media="placeholder"`
+  hooks for future real covers. Used Simon's own status vocabulary (Playable/Early Prototype, Experimental
+  Build) rather than Grok's suggested "Rough," since Simon had already specified that wording in his Lane 2B
+  instructions.
+- Because there is no headless-browser or screenshot tool available, Claude cannot itself verify visual
+  rendering/responsive behavior — this is stated honestly rather than claimed. A local HTTP server was left
+  running with exact URLs handed to Simon for his own in-browser check, matching his explicit instruction not
+  to point him at production until this is committed and pushed.
+
+**Decision:** Hold before commit and before the 🔍 Codex review of `index.html` — both come after Simon's
+visual acceptance. No push/deploy until then.
+
+**Transcript records:** none new this entry (implementation work, not an agent consultation).
+
+---
+
 ## 2026-07-14 — Lane 2B: Import Missing Games + 🔍 Codex import review
 **TL;DR:** Imported all 4 missing games (Chess, Nebula Rescue, Pictionary, World History Atlas) as
 landing+game file pairs, byte-verified against their source hashes, honestly labeled Provisional. Ran one

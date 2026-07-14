@@ -75,6 +75,42 @@ Common back-to-arcade nav, pause, and home behavior across games. Revisit once �
 
 ---
 
+### B8 — Nebula Rescue rescue/hardening  · TOP PRIORITY (blocked on Game History Recovery — do not start yet)
+Simon's direct verdict after watching the Lane 2C build (2026-07-14, verbatim in `RAW_IDEA_INBOX.md`):
+*"the nebula rescue probably needs the most rescue, the slide doesnt work and its glitchy and needs some
+serious work to get it balanced, we just barely got the spinners right."*
+
+- **🔒 Protected win — do not regress:** the spinners were only recently brought to an acceptable state.
+  Any rescue/hardening pass must fix the rest **without casually destabilizing the spinner behavior.**
+- **Known-broken:** the slide/ramp mechanic does not work.
+- **General:** the game is glitchy overall and needs serious balance work (scoring/mission progression,
+  difficulty).
+- **Secondary evidence (not proof):** a screen-recording review flagged a ~24s white screen before the game
+  appears (cause unconfirmed — could be genuine load time, the CDN-loaded Three.js dependency, a navigation
+  artifact, or a recording pause), a distant camera framing that makes the ball hard to track, and a crowded
+  playfield hierarchy. Full notes: `docs/game-history/raw/2026-07-14-video-review.md`.
+- **Hard prerequisite:** do not begin source edits until the **Game History Recovery** lane
+  (`docs/PHASE_LANES.md`) has recovered Nebula Rescue's version/checkpoint history from the source archive —
+  so a rescue pass doesn't accidentally undo the spinner work or repeat an already-abandoned experiment.
+- **Non-goals (now):** no Nebula source edits of any kind until history recovery is complete and reviewed.
+
+### B10 — Homepage accent-color CSS scoping bug  · QUEUED, non-blocking (found by 🔍 Codex, Lane 2C release review, 2026-07-14)
+`--game-accent` is defined only on each `.cover[data-game="..."]` element, but `.cabinet:hover`'s
+border-color/box-shadow and `.chip.genre`'s color/border-color try to read it from `.cabinet-body` and
+`.cabinet:hover` — siblings/parents of `.cover`, not descendants. CSS custom properties don't cascade
+sideways or upward, so these all silently fall back to the global `--accent` (amber) instead of showing
+per-game colors. **Not a release blocker** — degrades gracefully to the already-approved amber look, doesn't
+break links/layout/readability. Fix: move `data-game="..."` (and the corresponding `--game-accent` custom
+property) onto the `.cabinet` element itself, or scope the accent selectors to `.cabinet[data-game="..."]`
+so descendants (`.cover`, `.cabinet-body`, `.chip`) can all inherit it. Also fold in the related find: the
+featured Halo `.cover` is missing its `data-media="placeholder"` attribute (all 6 other covers have it).
+Full record: `docs/agent-runs/2026-07-14-codex-homepage-refresh-review.md`.
+
+### B9 — Landing-page cleanup (light polish)  · QUEUED, not scoped yet
+Simon: the 7 games' landing pages "could be a little cleaned up." Not detailed or scoped — captured here so
+it isn't lost. Likely candidate for the same lane as the eventual Codex review of Lane 2C, or its own small
+follow-up pass; revisit once Lane 2C is accepted.
+
 ### B7 — Arcade Media Library  · PARKED (future, not built this sprint)
 Structured spec for real cover art / screenshots / trailers, preserved in full rather than compressed:
 - **Per game:** one custom cover image; one or more screenshots; an optional short trailer/gameplay clip;

@@ -76,41 +76,67 @@ and release reports.
 
 ---
 
-## Report format when an outside agent was used
+## Required report contract  (HARD RULE — v1.1, repairs the earlier softer wording)
 
-**Required brief agent snapshot.** Every meaningful checkpoint, audit, handoff, lane report, and release
-report must **begin** with a compact agent/model summary — **before** the TL;DR:
+This is a hard rule for **every** meaningful checkpoint, audit, handoff, lane report, implementation report,
+smoke-ready report, and release report. Adapted from `VIBE_CODE_DEFAULT_PROJECT_FOUNDATION_v1.1.md` §7 for
+this project. **This replaces the earlier "only when an outside agent was used" wording** — that
+conditionality is exactly what caused a real regression (2026-07-14): a Claude-solo report omitted the
+detailed contributions section and gave no smoke-test instructions, because the old rule let it.
 
-`Agent Snapshot: 🧠 Grok (<brief contribution>) · 🔍 Codex (<brief contribution>) · 🧭 Claude (<model/effort, captain/implementation contribution>)`
+**Required order, unless Simon explicitly asks for a different shape:**
 
-- Only include agents that **actually contributed to the work being reported** — not agents that
-  contributed to an earlier lane. A combined multi-lane summary may include several agents, but must
-  identify which lane each one worked on.
-- Never claim an agent or model was used unless it actually ran. Include Claude's real model/effort when known.
-- Examples:
-  - `Agent Snapshot: 🧠 Grok (homepage direction and product challenge) · 🧭 Claude (Opus/High, audit and synthesis)`
-  - `Agent Snapshot: 🔍 Codex (import dependency/path review) · 🧭 Claude (Opus/High, implementation and fixes)`
-  - `Agent Snapshot: 🧭 Claude (Sonnet/Medium, sole editor; no outside agents used)`
+1. `Agent Snapshot`
+2. `TL;DR`
+3. `What Changed / Current State`
+4. `Smoke Test — Do This Now` **or** `Smoke: Not required — docs/read-only work only.`
+5. `Agent Contributions`
+6. `🧭 Claude Synthesis`
+7. `Work Completed / Evidence`
+8. `Git / Commit / Push / Deploy State`
+9. `Exact Next Action`
 
-This one-liner is the **immediate** summary; the longer **Agent Contributions** section below (quotes,
-disposition, transcript paths, disagreements, synthesis) remains the detailed evidence layer, later in the
-same report. Whenever 🧠 Grok, 🔍 Codex, or 🛠️ Fable contributes to a lane, 🧭 Claude's final report to Simon
-must include, in this order:
+**Do not omit the smoke block on runnable/visual work. Do not omit the detailed Agent Contributions block
+merely because the compact Snapshot already named agents.**
 
-**Agent Snapshot** — the one-liner above.
+### 1. Agent Snapshot — compact layer
+One line, before the TL;DR: `Agent Snapshot: 🧠 Grok (<brief contribution>) · 🔍 Codex (<brief contribution>) · 🧭 Claude (<model/effort, contribution>)`.
+Only agents that materially contributed to *this* report. A carried-forward contribution may be named only
+if the report states clearly the agent did **not** run again this time, e.g.
+`🧠 Grok (Lane 2A direction carried into this implementation; not rerun)`. Never claim an agent or model ran
+unless it actually did.
 
-**TL;DR** — the result in plain English.
+### 4. Smoke Test — mandatory for runnable/visual work
+Whenever a lane changes any runnable source, UI, game, page, app behavior, audio, controls, data flow, or
+user-visible output, include a `## Smoke Test — Do This Now` block stating: exact URL/command to open or
+run; exact checkpoint/commit/WIP label being tested; what changed visibly/behaviorally; exact steps; expected
+result per step; what counts as failure/regression; devices/viewports/browsers that matter; known
+limitations of the current validation; what not to do yet (e.g. do not commit/push/deploy/start the next
+lane); and exactly what feedback Simon should return. If the work is docs/read-only only, write plainly:
+`Smoke: Not required — docs/read-only work only.` **Never leave Simon guessing whether he needs to smoke-test.**
 
-**Agent Contributions** — one block per agent that actually ran:
-- 🧠 **Grok** / 🔍 **Codex** / 🛠️ **Fable**: why called · what it contributed · important **exact** quote(s) ·
-  Accepted / Modified / Rejected / Parked · transcript path under `docs/agent-runs/`
-- Omit agents that were not used. State plainly when a lane needed no outside agents.
+### 5. Agent Contributions — detailed layer, **always required, even solo**
+One block per agent that actually ran: why called · what it contributed · important **exact** quote(s) ·
+Accepted / Accepted with modification / Rejected / Parked · transcript path under `docs/agent-runs/`.
+**When no outside agent ran, still include the section:**
+```
+## Agent Contributions
+- 🧭 Claude — <what was performed as sole editor/integrator>.
+- Outside agents — not used for this lane, <short reason>.
+```
+Never create empty Grok/Codex/Fable subsections. For carried-forward work, say so explicitly (see above) and
+quote only from the preserved transcript — never a fresh paraphrase dressed as a new quote.
 
-**🧭 Claude Synthesis** — where agents agreed, where they disagreed, what Claude chose, why, and what changed.
+### 6–9. Claude Synthesis / Work Completed / Git State / Exact Next Action
+**🧭 Claude Synthesis** — where agents agreed/disagreed, what Claude chose, why, what changed, what remains
+uncertain. If no outside agent ran, state Claude's reasoning and why outside review was unnecessary.
+**Work Completed / Evidence** — files changed, validation (name the precision level — static inspection vs.
+HTTP/serve vs. launch/render vs. interaction vs. functional/gameplay vs. real-device; never overstate one as
+another). **Git / Commit / Push / Deploy State** — local/staged/committed/pushed/deployed, stated separately.
+**Exact Next Action** — one concrete operational instruction, not "continue when ready."
 
-**Work Completed** — files changed, validation, Git state, commit/push/deploy status, and the exact next action.
-
-Two-tier visibility: `PROJECT_LOG.md` is the skimmable executive layer; `docs/agent-runs/` holds the full evidence.
+Two-tier visibility unchanged: `PROJECT_LOG.md` is the skimmable executive layer; `docs/agent-runs/` holds
+the full evidence.
 
 ---
 

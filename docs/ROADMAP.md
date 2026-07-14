@@ -18,22 +18,31 @@ Provisional builds may publish honestly labeled as prototype/playtest — never 
   model/effort routing — all four tested and passing (Lane 1B, committed `7d4d512`)
 
 ## Now
-- [ ] **Arcade Expansion & Homepage Refresh** — add all viable missing games, refresh the homepage into a
-  cohesive arcade, prepare card structure for future media _(Lane 2A active — audit + one bounded 🧠 Grok
-  review; 2B import, 2C homepage, 2D smoke to follow on separate approval)_
+- [x] Lane 2A (audit + 🧠 Grok direction) — accepted/committed `2bc6c03`
+- [x] Lane 2B (4 games imported + 🔍 Codex review + fixes) — committed `7d19000`
+- [ ] **Lane 2C — Homepage Arcade Refresh** — implemented locally, 🟡 awaiting Simon's visual acceptance
+  (the current blocking step; see `docs/PHASE_LANES.md`)
+- [ ] Lane 2D — full arcade smoke (after Lane 2C is accepted)
 
-## Next
+## Next  (explicit order — each step gates the next)
+1. [ ] **Finish/checkpoint Lane 2C** — Simon's visual acceptance → 🔍 Codex review → commit.
+2. [ ] **Game History Recovery** (documentation/research only) — recover durable version/checkpoint history
+   for Nebula Rescue, Halo FPS, Pictionary, Tower Defense, World History Atlas from the protected source
+   archive. **Explicit prerequisite before any hands-on Nebula/Halo repairs** — not buried in `Later`; see
+   `docs/PHASE_LANES.md`.
+- [ ] **Nebula Rescue rescue/hardening** — top-priority game fix (`BACKLOG.md` B8): slide/ramp broken,
+  general glitchiness, balance work — **protected win: do not regress the recently-fixed spinners.** Blocked
+  on Game History Recovery completing first.
 - [ ] **Published-build reconciliation & stabilization** — resolve the ⚠️ Halo v1.7.6-vs-v1.7.5.2 provenance
-  conflict; confirm Tower Defense & Bob Ross canonical; general game-stability hardening _(deferred hardening
-  lane — not dropped, just sequenced behind the expansion sprint; only re-prioritized earlier if a conflict
-  directly blocks importing or launching a game)_
-- [ ] **Game-specific upgrades** — per-game polish once imported (e.g. Chess v2.2-vs-v2.3 resolution, Nebula
-  Rescue stability, Pictionary vision-gap items from `BACKLOG.md`)
+  conflict; confirm Tower Defense & Bob Ross canonical; general game-stability hardening _(deferred, not
+  dropped — only re-prioritized earlier if a conflict directly blocks importing or launching a game)_
+- [ ] **Other game-specific upgrades** — per-game polish (e.g. Chess v2.2-vs-v2.3 resolution, Pictionary
+  vision-gap items from `BACKLOG.md`)
+- [ ] **Landing-page cleanup** — light polish pass (`BACKLOG.md` B9), not yet scoped
 
 ## Later
 - [ ] **Media/cover/screenshot/trailer pipeline** — see "Arcade Media Library" spec in `BACKLOG.md`
 - [ ] **Shared navigation & responsive behavior** — common back/pause/home across games
-- [ ] **Halo FPS stabilization** — 3D/controls/perf hardening
 - [ ] **Future prototype expansion** — new games from `RAW_IDEA_INBOX.md`
 - [ ] **Workflow promotion** — generic `/handoff` etc. to global / future VIBE CODE OS; adapt `/peer-review`
 

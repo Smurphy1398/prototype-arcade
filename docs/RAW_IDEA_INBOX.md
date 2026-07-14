@@ -66,6 +66,14 @@ peggle
 
 ---
 
+## 2026-07-14 — Simon, direct feedback after watching the local Lane 2C homepage/games in screen recording
+Reproduced exactly (no edits):
+
+> "the nebula rescue probably needs the most rescue, the slide doesnt work and its glitchy and needs some
+> serious work to get it balanced, we just barely got the spinners right."
+
+---
+
 ## Other raw notes in the source collection (not yet captured here — preserve when processing)
 These `.txt` notes live under `..\PROTOTYPE ARCADE\` and should be captured verbatim before they inform any build:
 - `3d halo fps arena\I'm continuing my HTMLBabylon.js lo.txt` — Halo continuation notes
