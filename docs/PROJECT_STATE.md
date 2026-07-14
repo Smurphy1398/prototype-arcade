@@ -8,19 +8,16 @@ Last updated: **2026-07-13**.
 reconciliation is deferred behind this sprint, not dropped — see Known risks below.
 
 ## Current lane
-**Lane 2C — Homepage Arcade Refresh.** Status: **🟡 Implemented, awaiting Simon's local visual review**.
-🧭 Claude sole editor; implemented the Claude-selected, Grok-informed "Prototype Cabinet Row" direction from
-Lane 2A. Lane 2B (4 game imports) is ✅ committed (`7d19000`). Lane 2A (`2bc6c03`) and Lane 1B (`7d4d512`)
-are committed, not yet pushed.
+**Lane 2C — Homepage Arcade Refresh.** Status: **✅ Accepted / committed.** Simon reviewed the live local
+build in his own browser, accepted the homepage, and confirmed Nebula Rescue now loads in ~5 seconds with
+no white screen (previously ~24s blank). 🔍 Codex ran a final release review — no blockers. Proceeding
+through the release sequence: commit → push → verify public site.
 
 ## Exact next action
-1. **Simon:** open `http://127.0.0.1:8791/index.html` on this machine (local server running) and visually
-   review the new homepage — desktop, then resize for tablet/phone. This is the lane's explicit visual gate;
-   Claude has not automated it (no headless-browser/screenshot tool available).
-2. On acceptance: run the bounded 🔍 Codex review of the `index.html` diff (links, responsive, accessibility,
-   Pages compatibility, no accidental runtime changes), then commit Lane 2C.
-3. Then **Lane 2D — full arcade smoke** across desktop/tablet/phone, all 7 URLs, existing 3 unaffected.
-4. Lanes 1B/2A/2B (`7d4d512`/`2bc6c03`/`7d19000`) still need a **separate push approval** — nothing pushed yet.
+1. Push `main` to `origin/main`.
+2. Visually verify the public site (headless Chrome, not just HTTP) shows the new 7-game homepage.
+3. Record the live checkpoint in docs, commit + push that too.
+4. **Tomorrow's first task: Game History Recovery** (read-only, `docs/PHASE_LANES.md`) — before any Nebula/Halo source work.
 
 ## Published state (live == repo)
 - 🟢 Live & smoke-passed 2026-07-13 (after the docs-only push): https://smurphy1398.github.io/prototype-arcade/ —

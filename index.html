@@ -4,213 +4,572 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Simon’s Prototype Arcade</title>
+  <title>Simon's Prototype Arcade</title>
 
   <style>
+    :root {
+      --bg: #0a0a0c;
+      --surface: #141418;
+      --surface-2: #1c1c22;
+      --border: #2a2a32;
+      --text: #f2f2f4;
+      --muted: #9a9aa3;
+      --accent: #f0b429;
+      --accent-dim: #c48a12;
+      --glow: rgba(240, 180, 41, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #f5f5f5;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(240, 180, 41, 0.08), transparent 45%),
+        var(--bg);
+      color: var(--text);
       line-height: 1.5;
     }
 
+    a { color: inherit; }
+
+    /* ---- Sticky nav ---- */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px;
+      background: rgba(10, 10, 12, 0.88);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-size: 18px;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--text);
+    }
+
+    /* ---- Header ---- */
     header {
-      padding: 48px 24px;
+      padding: 56px 24px 40px;
       text-align: center;
-      background: linear-gradient(135deg, #1f1f1f, #292929);
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
     header h1 {
-      margin: 0 0 12px;
+      margin: 0 0 14px;
       font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
 
     header p {
       margin: 0 auto;
-      max-width: 760px;
-      color: #cfcfcf;
+      max-width: 640px;
+      color: var(--muted);
       font-size: 18px;
     }
 
     main {
-      max-width: 1100px;
+      max-width: 1160px;
       margin: 0 auto;
-      padding: 32px 24px;
+      padding: 0 24px 32px;
+    }
+
+    section { margin-top: 48px; }
+
+    .section-label {
+      display: block;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
 
     h2 {
-      margin-top: 0;
-      font-size: 28px;
+      margin: 0 0 8px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
     }
 
     .section-intro {
-      color: #cfcfcf;
-      max-width: 760px;
-      margin-bottom: 20px;
+      color: var(--muted);
+      max-width: 680px;
+      margin: 0 0 20px;
+      font-size: 15px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: #1b1b1b;
-      border: 1px solid #333;
+    /* ---- Cabinet (card) ---- */
+    .cabinet {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      overflow: hidden;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     }
 
-    .card h3 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      font-size: 22px;
+    .cabinet:hover,
+    .cabinet:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--game-accent, var(--accent));
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--game-accent, var(--accent)) inset;
+      outline: none;
     }
 
-    .card p {
-      color: #d8d8d8;
+    .cover {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: var(--surface-2);
     }
 
-    .tag {
+    .cover-title {
+      position: absolute;
+      left: 14px;
+      bottom: 10px;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+
+    .cabinet-body {
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
       display: inline-block;
-      margin-bottom: 10px;
-      padding: 4px 10px;
+      padding: 3px 10px;
       border-radius: 999px;
-      background: #333;
-      color: #ddd;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    .chip.genre {
+      color: var(--game-accent, var(--accent));
+      border-color: var(--game-accent, var(--accent));
+    }
+
+    .cabinet-body h3 {
+      margin: 2px 0 0;
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .pitch {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status-row {
+      margin-top: auto;
+      padding-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .play {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #111;
+      font-weight: 700;
       font-size: 13px;
     }
 
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
+    .cabinet:hover .play,
+    .cabinet:focus-visible .play {
+      background: var(--accent-dim);
     }
 
-    .button {
-      display: inline-block;
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: #f5f5f5;
-      color: #111;
-      text-decoration: none;
-      font-weight: bold;
+    /* ---- Cover art per game (CSS placeholders, no assets yet) ---- */
+    .cover[data-game="halo"] {
+      background:
+        radial-gradient(circle at 70% 20%, rgba(92, 184, 255, 0.35), transparent 55%),
+        linear-gradient(135deg, #0d1b2a, #142433);
+      --game-accent: #5cb8ff;
+    }
+    .cover[data-game="tower-defense"] {
+      background:
+        repeating-linear-gradient(45deg, rgba(120, 220, 130, 0.08) 0 2px, transparent 2px 14px),
+        linear-gradient(135deg, #0d1f10, #142a17);
+      --game-accent: #6fdb7a;
+    }
+    .cover[data-game="bob-ross"] {
+      background:
+        radial-gradient(circle at 30% 75%, rgba(255, 255, 255, 0.5) 0 18px, transparent 20px),
+        linear-gradient(180deg, #1a2a3a 0%, #16241f 60%, #101a14 100%);
+      --game-accent: #8fc7e8;
+    }
+    .cover[data-game="chess"] {
+      background:
+        conic-gradient(from 45deg, #1c2b1e 0 25%, #23331f 0 50%, #1c2b1e 0 75%, #23331f 0) 0 0 / 34px 34px,
+        linear-gradient(0deg, rgba(0,0,0,0.35), rgba(0,0,0,0.35));
+      --game-accent: #b7d9a0;
+    }
+    .cover[data-game="nebula-rescue"] {
+      background:
+        radial-gradient(circle at 65% 40%, rgba(200, 130, 255, 0.4), transparent 50%),
+        linear-gradient(135deg, #1c1024, #150c1e);
+      --game-accent: #c887ff;
+    }
+    .cover[data-game="pictionary"] {
+      background:
+        linear-gradient(135deg, #2a1c12, #1e140d);
+      --game-accent: #ff9b5c;
+    }
+    .cover[data-game="pictionary"]::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border: 2px dashed rgba(255, 155, 92, 0.35);
+      border-radius: 6px;
+      transform: rotate(-2deg);
+    }
+    .cover[data-game="world-history"] {
+      background:
+        repeating-linear-gradient(0deg, rgba(207, 255, 248, 0.05) 0 1px, transparent 1px 22px),
+        repeating-linear-gradient(90deg, rgba(207, 255, 248, 0.05) 0 1px, transparent 1px 22px),
+        linear-gradient(135deg, #0c201d, #0a1917);
+      --game-accent: #4fd6c4;
     }
 
-    .button:hover {
-      background: #ddd;
+    /* ---- Featured cabinet ---- */
+    .featured {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 0;
+    }
+    .featured .cover { aspect-ratio: auto; height: 100%; min-height: 220px; }
+    .featured .cabinet-body { justify-content: center; gap: 10px; }
+    .featured .cabinet-body h3 { font-size: 28px; }
+    .featured .pitch { font-size: 15px; }
+    .featured .play { align-self: flex-start; padding: 10px 20px; font-size: 14px; }
+
+    /* ---- Grid ---- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
     }
 
-    .button.secondary {
-      background: #333;
-      color: #f5f5f5;
-      border: 1px solid #444;
+    /* ---- Bonus rail ---- */
+    .bonus .cabinet {
+      border-style: dashed;
+      opacity: 0.92;
+    }
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
     }
 
-    .button.secondary:hover {
-      background: #444;
+    /* ---- About / Lab ---- */
+    .about p, .lab-note p {
+      color: var(--muted);
+      max-width: 720px;
+      font-size: 15px;
     }
 
     .lab-note {
-      margin-top: 40px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface);
     }
 
+    .lab-note h2 { font-size: 18px; }
+
     footer {
+      margin-top: 56px;
       padding: 24px;
       text-align: center;
-      color: #888;
-      border-top: 1px solid #333;
-      margin-top: 32px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    footer .rule {
+      color: var(--accent);
+      margin: 0 8px;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 1099px) {
+      .featured { grid-template-columns: 1fr; }
+      .featured .cover { min-height: 200px; }
+    }
+
+    @media (max-width: 720px) {
+      header h1 { font-size: 30px; }
+      header p { font-size: 16px; }
+      .nav-links { gap: 12px; font-size: 13px; }
+      .play { width: 100%; justify-content: center; }
+      .status-row { flex-direction: column; align-items: stretch; gap: 10px; }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>Simon’s Prototype Arcade</h1>
-    <p>
-      A lightweight hub for experimental HTML games, creative coding sketches,
-      and future tech projects.
-    </p>
+  <div class="nav">
+    <a class="nav-brand" href="#top">Prototype Arcade</a>
+    <div class="nav-links">
+      <a href="#floor">Floor</a>
+      <a href="#about">About</a>
+      <a href="#lab">Lab</a>
+    </div>
+  </div>
+
+  <header id="top">
+    <span class="badge">Prototypes · Not Final</span>
+    <h1>Simon's Prototype Arcade</h1>
+    <p>Playable browser prototypes — unfinished on purpose. Experimental games built and imported one lane at a time.</p>
   </header>
 
   <main>
-    <section>
-      <h2>Featured Builds</h2>
+    <!--
+      Featured rotation policy: newest playable import for ~14 days, else Simon's pick.
+      Currently featuring Halo FPS (strongest game-feel demo) while the four 2026-07-14
+      imports settle into the Floor grid together, rather than crowning one arbitrarily.
+    -->
+    <section id="featured">
+      <span class="section-label">Tonight's Cabinet</span>
+      <a class="cabinet featured" href="games/halo-fps.html">
+        <div class="cover" data-game="halo" aria-hidden="true">
+          <span class="cover-title">Halo FPS</span>
+        </div>
+        <div class="cabinet-body">
+          <div class="chip-row">
+            <span class="chip genre">FPS</span>
+            <span class="chip">Keyboard + mouse</span>
+          </div>
+          <h3>Halo FPS Prototype</h3>
+          <p class="pitch">Arena shooter experiment with loadouts, pickups, enemy AI, and weapon testing.</p>
+          <div class="status-row">
+            <span class="status">Playable Prototype</span>
+            <span class="play">Play →</span>
+          </div>
+        </div>
+      </a>
+    </section>
 
+    <section id="floor">
+      <span class="section-label">Floor</span>
+      <h2>Playable Cabinets</h2>
       <p class="section-intro">
-        Playable or in-progress browser prototypes. These builds are experimental,
-        so some features may be unfinished, buggy, or actively changing between versions.
+        Experimental prototypes — some features may be unfinished, buggy, or actively changing between versions.
       </p>
 
       <div class="grid">
-        <div class="card">
-          <span class="tag">HTML / JavaScript FPS</span>
-          <h3>Halo FPS Prototype</h3>
-          <p>
-            Arena shooter experiment with loadouts, pickups, enemy AI, and weapon testing.
-          </p>
-          <p>
-            <strong>Status:</strong> Playable test build<br>
-            <strong>Version:</strong> v1.7.6
-          </p>
-          <div class="button-row">
-            <a class="button" href="games/halo-fps.html">Play</a>
+        <a class="cabinet" href="games/tower-defense.html">
+          <div class="cover" data-game="tower-defense" data-media="placeholder" aria-hidden="true">
+            <span class="cover-title">Tower Defense</span>
           </div>
-        </div>
+          <div class="cabinet-body">
+            <div class="chip-row">
+              <span class="chip genre">Tower Defense</span>
+              <span class="chip">Mouse</span>
+            </div>
+            <h3>Tower Defense Prototype</h3>
+            <p class="pitch">Wave-survival tower defense focused on upgrades, enemy scaling, and long-term pacing.</p>
+            <div class="status-row">
+              <span class="status">Playable Prototype</span>
+              <span class="play">Play →</span>
+            </div>
+          </div>
+        </a>
 
-        <div class="card">
-          <span class="tag">Tower Defense</span>
-          <h3>Tower Defense Prototype</h3>
-          <p>
-            Wave-survival tower defense experiment focused on scaling difficulty,
-            upgrades, enemy evolution, and long-term pacing.
-          </p>
-          <p>
-            <strong>Status:</strong> Playtest build<br>
-            <strong>Version:</strong> v6.1
-          </p>
-          <div class="button-row">
-            <a class="button" href="games/tower-defense.html">Play</a>
+        <a class="cabinet" href="games/bob-ross.html">
+          <div class="cover" data-game="bob-ross" data-media="placeholder" aria-hidden="true">
+            <span class="cover-title">Bob Ross</span>
           </div>
-        </div>
+          <div class="cabinet-body">
+            <div class="chip-row">
+              <span class="chip genre">Paint</span>
+              <span class="chip">Mouse / touch</span>
+            </div>
+            <h3>Bob Ross Painting Sim</h3>
+            <p class="pitch">Creative painting simulator with brushes, canvas interaction, and happy little accidents.</p>
+            <div class="status-row">
+              <span class="status">Early Prototype</span>
+              <span class="play">Play →</span>
+            </div>
+          </div>
+        </a>
 
-        <div class="card">
-          <span class="tag">Painting Sim</span>
-          <h3>Bob Ross Painting Sim</h3>
-          <p>
-            Creative painting simulator concept with brushes, color experimentation,
-            canvas interaction, and happy little accidents.
-          </p>
-          <p>
-            <strong>Status:</strong> Early prototype<br>
-            <strong>Version:</strong> v0.1
-          </p>
-          <div class="button-row">
-            <a class="button" href="games/bob-ross.html">Play</a>
+        <a class="cabinet" href="games/chess.html">
+          <div class="cover" data-game="chess" data-media="placeholder" aria-hidden="true">
+            <span class="cover-title">Chess</span>
           </div>
-        </div>
+          <div class="cabinet-body">
+            <div class="chip-row">
+              <span class="chip genre">Board</span>
+              <span class="chip">Mouse / touch</span>
+            </div>
+            <h3>3D Chess + Checkers</h3>
+            <p class="pitch">A 3D chess and checkers prototype with animated pieces and a WebGL board.</p>
+            <div class="status-row">
+              <span class="status">Playable Prototype</span>
+              <span class="play">Play →</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="cabinet" href="games/nebula-rescue.html">
+          <div class="cover" data-game="nebula-rescue" data-media="placeholder" aria-hidden="true">
+            <span class="cover-title">Nebula Rescue</span>
+          </div>
+          <div class="cabinet-body">
+            <div class="chip-row">
+              <span class="chip genre">Pinball</span>
+              <span class="chip">Keyboard</span>
+            </div>
+            <h3>Nebula Rescue Prototype</h3>
+            <p class="pitch">A 3D space-themed pinball prototype focused on flipper feel and table clarity.</p>
+            <div class="status-row">
+              <span class="status">Playable Prototype</span>
+              <span class="play">Play →</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="cabinet" href="games/pictionary.html">
+          <div class="cover" data-game="pictionary" data-media="placeholder" aria-hidden="true">
+            <span class="cover-title">Draw It!</span>
+          </div>
+          <div class="cabinet-body">
+            <div class="chip-row">
+              <span class="chip genre">Party</span>
+              <span class="chip">Mouse / touch</span>
+            </div>
+            <h3>Draw It! Pictionary Prototype</h3>
+            <p class="pitch">A local, hotseat-style Pictionary party game — draw a prompt, pass the device, and guess.</p>
+            <div class="status-row">
+              <span class="status">Playable Prototype</span>
+              <span class="play">Play →</span>
+            </div>
+          </div>
+        </a>
       </div>
     </section>
 
-    <section class="card lab-note">
-      <span class="tag">Future Lab</span>
-      <h3>More Projects Coming Later</h3>
+    <section id="bonus" class="bonus">
+      <span class="section-label">Bonus</span>
+      <h2>Side Room</h2>
+      <p class="section-intro">
+        Not a traditional game — a secondary, playable exploration prototype.
+      </p>
+
+      <div class="bonus-grid">
+        <a class="cabinet" href="games/world-history.html">
+          <div class="cover" data-game="world-history" data-media="placeholder" aria-hidden="true">
+            <span class="cover-title">True History Atlas</span>
+          </div>
+          <div class="cabinet-body">
+            <div class="chip-row">
+              <span class="chip genre">Atlas</span>
+              <span class="chip">Mouse / touch</span>
+              <span class="chip">Requires internet</span>
+            </div>
+            <h3>True History Atlas</h3>
+            <p class="pitch">An interactive world-history map experience for browsing historical events and periods.</p>
+            <div class="status-row">
+              <span class="status">Experimental Build</span>
+              <span class="play">Explore →</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <span class="section-label">About</span>
+      <h2>What This Is</h2>
       <p>
-        Future sections may include physical tech, studio tools, cybersecurity labs,
-        music-related experiments, robotics, and hardware projects. For now, this
-        homepage is focused on playable browser builds.
+        A personal browser-game arcade and creative-coding sandbox. Every build here is a standalone HTML
+        file — open it and it runs, no install required. Builds are provisional by nature: some are polished
+        playtests, others are early sketches. Status labels on each cabinet are honest, not marketing.
+      </p>
+    </section>
+
+    <section id="lab" class="lab-note">
+      <span class="section-label">Lab</span>
+      <h2>More Projects Coming Later</h2>
+      <p>
+        Future sections may include physical tech, studio tools, cybersecurity labs, music-related
+        experiments, robotics, and hardware projects. For now, this homepage is focused on playable
+        browser builds.
       </p>
     </section>
   </main>
 
   <footer>
-    Built by Simon Murphy · Experimental games, prototypes, and creative tech projects
+    Built by Simon Murphy <span class="rule">·</span> Experimental games, prototypes, and creative tech projects
   </footer>
 </body>
 </html>

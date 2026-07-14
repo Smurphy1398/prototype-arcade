@@ -70,7 +70,7 @@ Last updated: **2026-07-13**.
 - **Status:** ✅ Complete, pending Simon's review. **Commit/push/deploy:** stop before commit; push/deploy remain separate.
 - **Next lane:** Lane 2C (on Simon's approval of this lane).
 
-### Lane 2C — Homepage Arcade Refresh  ·  🟡 Implemented, pending Simon's visual review
+### Lane 2C — Homepage Arcade Refresh  ·  ✅ Accepted / committed
 - **Goal:** redesign the homepage as a cohesive arcade using the Claude-selected, Grok-informed direction —
   hero, featured row, responsive grid, CSS-placeholder cover treatments, status/genre/control badges,
   prototype labels, documented (unpopulated) future-media hook fields.
@@ -83,19 +83,25 @@ Last updated: **2026-07-13**.
   grid (6 primary games) + dashed-border Bonus rail (World History Atlas), unified honest status vocabulary
   (Playable Prototype / Early Prototype / Experimental Build — per Simon's Lane 2B vocabulary, not Grok's
   "Rough"), sticky in-page nav, responsive 3/2/1 grid, `data-media="placeholder"` hooks for future real
-  covers. **🔍 Codex:** not yet run — pending Simon's visual review first, per his explicit sequencing.
-- **Validation:** local HTTP server; homepage returns 200; all 7 card hrefs resolve to real, unmodified
-  `games/*.html` files; tag-balance sanity check passed; `games/` folder confirmed untouched.
-  **No in-browser visual/responsive check performed by Claude** — that's this lane's explicit gate, handed
-  to Simon via the local server.
-- **Status:** 🟡 Implemented, awaiting Simon's local visual review. **Commit/push/deploy:** not committed yet.
-- **Next lane:** 🔍 Codex review (post-acceptance) → Lane 2D (full smoke).
+  covers.
+- **🔍 Codex (final release review, 2026-07-14):** bounded read-only pass over the actual diff — **no
+  release blocker** found (links, HTML validity, responsive/a11y basics, fake-content, game-source changes,
+  Pages compatibility all clean). Flagged 2 non-blocking issues: a `--game-accent` CSS scoping bug (per-game
+  colors silently fall back to global amber — cosmetic, deferred to `BACKLOG.md` B10) and stale commit facts
+  in `PROJECT_STATE.md` (fixed same pass). Transcript: `docs/agent-runs/2026-07-14-codex-homepage-refresh-review.md`.
+- **Simon's acceptance (2026-07-14, real browser):** homepage "looks fine." Nebula Rescue loads in
+  **~5 seconds with no white screen** (previously observed as ~24s blank in the original screen recording —
+  materially improved, cause still not diagnosed). **This is acceptance of the homepage presentation and
+  imported-game launch smoke — not of deep Nebula gameplay/physics/slide/ramp/balance**, which remains
+  future rescue work gated behind Game History Recovery.
+- **Validation:** local HTTP server + Codex's independent re-verification (200s, tag-balance, zero
+  `games/` diff) + Simon's own real-browser check. **Full multi-viewport (desktop/tablet-landscape/
+  tablet-portrait/phone) sweep across all 7 games was not exhaustively itemized** — Simon's homepage + Nebula
+  check was accepted as sufficient for tonight's ship; a formal Lane 2D pass remains available if needed later.
+- **Status:** ✅ Accepted / committed. **Commit/push/deploy:** committed this pass; push follows immediately.
+- **Next lane:** **Game History Recovery** — tomorrow's first task, per Simon's explicit sequencing.
 
-### Lane 2D — Full Arcade Smoke  ·  Proposed
-- **Goal:** verify homepage + all 7 game cards/launches across desktop/tablet-landscape/tablet-portrait/phone;
-  confirm existing 3 URLs still valid; no missing assets/console-blocking errors; report limitations honestly.
-- **Status:** Proposed. **Next lane:** **Game History Recovery** (below) — the explicit next lane, not the
-  deferred Lane 2 reconciliation.
+### Lane 2D — Full Arcade Smoke  ·  Parked (Simon's live acceptance covered tonight's ship; formal sweep optional later)
 
 ---
 

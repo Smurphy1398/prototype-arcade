@@ -6,6 +6,39 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-07-14 — Lane 2C accepted + final release sequence
+**Agent Snapshot:** 🔍 Codex (final read-only Lane 2C release review) · 🧭 Claude (Opus, integration, commit, release).
+
+**TL;DR:** Simon accepted the Lane 2C homepage in his real browser and confirmed Nebula Rescue now loads in
+~5 seconds with no white screen (down from ~24s blank in the original recording). 🔍 Codex's final release
+review found no blockers. Committing and pushing tonight.
+
+**Simon's acceptance (preserved facts, not compressed):**
+- Visually reviewed the new Lane 2C homepage: "looks fine."
+- Real-browser Nebula Rescue observation: ~5 seconds to load, white screen no longer present.
+- This is acceptance of the **homepage presentation and imported-game launch smoke** — explicitly **not**
+  acceptance of deep Nebula gameplay, physics, slide/ramp, or balance. Those remain open, gated behind Game
+  History Recovery (`docs/BACKLOG.md` B8).
+
+**🔍 Codex final review:** no release blocker across links/HTML-validity/responsive-a11y-basics/fake-content/
+game-source-changes/Pages-compatibility. Two non-blocking findings, both dispositioned: a `--game-accent`
+CSS scoping bug (degrades gracefully to the already-accepted amber look — deferred as `BACKLOG.md` B10,
+*not* fixed tonight so the shipped visual matches exactly what Simon reviewed) and stale commit facts in
+`PROJECT_STATE.md` (fixed). Full transcript: `docs/agent-runs/2026-07-14-codex-homepage-refresh-review.md`.
+
+**Reporting-format follow-up (deferred, not acted on tonight):** Simon flagged that the smoke checklist
+should sit directly beside the TL;DR as a genuinely short 3–6 item at-a-glance list, with full context
+appearing later — the current contract still buries the practical checklist inside a larger report. Per his
+explicit instruction, **the report contract is not being revised again tonight**; this is preserved as a
+follow-up for the later laptop-Claude / Vibe Code foundation review.
+
+**Decision:** Ship tonight. Commit docs/workflow checkpoint (`9f0c517`) and Lane 2C (`index.html` +
+Lane-2C-specific docs) as separate commits, then push and verify the public site.
+
+**Transcript records:** `docs/agent-runs/2026-07-14-codex-homepage-refresh-review.md` (Full).
+
+---
+
 ## 2026-07-14 — Workflow hard-rule repair: report contract regression fixed
 **Agent Snapshot:** 🧭 Claude (Opus, sole editor; workflow-rule repair, no outside agents needed).
 
