@@ -6,6 +6,31 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-07-13 — Lane 1B: status-skills port
+**TL;DR:** Added Arcade-native `/handoff`, `/roadmap`, `/phaselane`, `/whatsnext` skills plus `docs/ROADMAP.md`,
+`docs/PHASE_LANES.md`, and a model/effort routing table in `AGENTS.md`; corrected the stale `PROJECT_STATE.md`
+(Lane 1 is committed `e9839cc` and pushed). Docs/workflow-only; nothing committed this lane.
+
+**Agents:** 🧭 Claude (Opus, sole editor). No 🧠 Grok / 🔍 Codex / 🛠️ Fable runs — the lane excludes agent invocation.
+
+**Captain's synthesis (🧭 Claude):**
+- Verified Git truth before writing: `e9839cc` is committed and pushed, local == `origin/main`, tree clean — so
+  the earlier "nothing is committed / Lane 1 active" language was stale and is now fixed.
+- Provenance: the local MLB clone holds only `handoff` (+`switchdevice`); `roadmap`/`phaselane`/`whatsnext` were
+  **absent locally** (GPT read them from the GitHub remote). All four Arcade skills were therefore **authored fresh**
+  from Simon's spec — not copied — and kept free of MLB-specific terms.
+- Encoded routing boundaries so an ordinary "what next?" resolves to `/whatsnext`, not a full `/handoff`.
+- Applied skill-authoring principles (valid `name`, "Use when…" trigger-only descriptions, conciseness) but not the
+  subagent pressure-test loop (out of scope; lane forbids agent invocation).
+
+**Decision:** Accepted by Simon after all four skills were reloaded and functionally tested in order
+(`/whatsnext` → `/phaselane` → `/roadmap` → `/handoff`, all passed). Committed. Push and Lane 2 are separate,
+explicitly-approved next steps.
+
+**Transcript records:** none (no outside-agent runs this lane).
+
+---
+
 ## 2026-07-13 — Orientation audit + Lane 1 foundation
 **TL;DR:** Read-only two-folder audit completed and accepted; built the docs-only project-memory
 foundation (9 components) and encoded the agent-attribution system. No game files touched, nothing committed.

@@ -103,3 +103,27 @@ explicit exclusions · 🧠 Grok involvement (required/optional/unnecessary) · 
 (Proposed / Ready / Active / Review / Accepted / Parked / Rejected) · commit-push-deploy status · next lane.**
 
 Docs-only lanes may commit after acceptance; push/deploy is always a separate, explicitly-approved step.
+
+---
+
+## Model & effort routing
+
+Single source of truth for which model/effort to use. Skills and lanes reference this section rather than
+duplicating it. Baseline (adjust up when a task is genuinely harder than it looks):
+
+| Work type | Suggested model / effort |
+|---|---|
+| Read-only status / skill output (`/handoff`, `/roadmap`, `/phaselane`, `/whatsnext`) | Sonnet / Low–Medium |
+| Docs, backlog, catalog, normal workflow work | Sonnet / Medium |
+| Straightforward standalone-game import | Sonnet / Medium or Opus / Medium (by complexity) |
+| Canonical-build ambiguity, major 3D architecture, physics, camera, tangled game-state | Opus / High |
+| Major cross-game architecture or unusually ambiguous root-cause work | Opus / XHigh (only when justified) |
+| 🛠️ Fable | Explicit Simon approval only |
+
+### Status-skill routing boundaries
+- `/whatsnext` = the immediate 1–3 actions only.
+- `/phaselane` = checklist for the current active lane.
+- `/roadmap` = broad project phases and priorities.
+- `/handoff` = complete session/project status brief.
+
+An ordinary "what next?" resolves to `/whatsnext`, not a full `/handoff`.

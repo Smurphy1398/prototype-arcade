@@ -35,6 +35,14 @@ then 🔍 Codex regression/path/responsive review. **Constraint:** must not brea
 ### B5 — Shared game shell  · PARKED
 Common back-to-arcade nav, pause, and home behavior across games. Revisit once ≥4 games are imported.
 
+### B6 — Workflow & tooling  · (B6a DONE · B6b/B6c QUEUED)
+- **B6a — Status-skills port (DONE):** `/handoff`, `/roadmap`, `/phaselane`, `/whatsnext` authored Arcade-native
+  (Lane 1B), backed by `ROADMAP.md` + `PHASE_LANES.md` + `AGENTS.md` routing.
+- **B6b — Generic / global promotion (QUEUED):** once stable, promote generic versions of these skills to global
+  `~/.claude` or a future **VIBE CODE OS** repo for cross-project reuse. Keep Arcade-specific wording out of the global copy.
+- **B6c — `/peer-review` adaptation (QUEUED):** adapt MLB's `/peer-review` as its own later lane — depends on
+  🧠 Grok / 🔍 Codex wrapper scripts and needs careful, non-MLB adaptation. Not part of Lane 1B.
+
 ---
 
 ## Preserved concept specs (do not compress)
