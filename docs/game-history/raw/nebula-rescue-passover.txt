@@ -1,0 +1,213 @@
+Source: `..\PROTOTYPE ARCADE\3d space pinball game\passover.txt` (205 lines, verbatim, unmodified).
+Preserved 2026-07-14 during the Game History Recovery lane — this is the handoff/build-brief that
+produced the v6.4 "Control + Clarity + Nebula Art Benchmark" build, and the only surviving explicit
+record that a "v6.4 Red Spider Cleanup" build existed and was rejected as a failed experiment.
+
+---
+
+We are continuing my single-file HTML game project: "Nebula Rescue," a 3D space pinball machine inspired by Space Cadet but not a clone.
+
+Use the uploaded HTML as the current benchmark. This benchmark is "Nebula Rescue v6.3 — Last-Chance Clean Benchmark."
+
+IMPORTANT:
+Do NOT use v6.4 Red Spider Cleanup as the base. v6.4 was a failed experiment that damaged the layout, lowered visual quality, made the board messier, and hurt playability. Use the uploaded v6.3 file only.
+
+Do NOT restart from scratch unless the file is broken. Preserve the working 3D table, cabinet/backbox, playfield, launcher, ball, flippers, camera controls, HUD, audio, scoring, rails/ramps, spinner targets, lighting systems, and current game systems.
+
+Main goal:
+Create the next version as a true playtest-ready benchmark, not a small patch. The goal is to clean up the layout, improve playability, fix remaining bugs, improve performance intelligently, and make the table visually appealing with a stronger surreal space identity.
+
+Target version name:
+Nebula Rescue v6.4 — Control + Clarity + Nebula Art Benchmark
+
+Critical rules:
+1. Do not break startup.
+2. Do not black-screen the game.
+3. Do not downgrade to 2D/canvas-only.
+4. Do not remove the 3D cabinet/table direction.
+5. Do not rewrite the entire game.
+6. Do not add a bunch of new devices before cleaning the existing layout.
+7. Do not leave hidden active colliders.
+8. Do not leave placeholder geometry visible.
+9. Do not stack more ghost overlays on the playfield.
+10. Preserve the working benchmark mechanics.
+11. Every active collider must have a visible reason to exist.
+12. If a visual object is hidden, its collision must be disabled too.
+
+Current problems to fix:
+
+1. Lower playfield / flipper area is still messy
+
+The bottom third of the table needs the most work. It should look and feel like a real pinball control zone.
+
+Problems:
+- Slingshots are too horizontal and awkward.
+- Slings crowd the top of the flippers and block the cradle/trap area.
+- There are tiny dot/post/ghost-hit objects above or near the slings/flippers that make the ball hit things the player cannot understand.
+- The lower playfield has too many leftover rails, lights, guides, and clutter.
+- Some objects appear to clip/intersect.
+- The ball sometimes reacts to things that are visually unclear.
+
+Fix:
+- Rebuild/clean the lower third as one coherent package.
+- Slingshots should be diagonal, readable, and placed above/outside the flippers.
+- Slings should not block most of the top of the flipper.
+- Remove or disable leftover ghost posts/dots/hidden helper collisions.
+- Every active collider must have a visible reason to exist.
+- No invisible bumpers over the flippers.
+- No random small post/dot collisions in the lower control zone.
+- Keep only essential lower-lane guides: inlanes, outlanes, kickback, extra ball, drain, flippers, slings.
+
+2. Flipper feel needs improvement
+
+Current flippers are playable but still not satisfying.
+
+Problems:
+- They do not hit hard enough.
+- The ball is hard to finesse or juggle lightly.
+- Holding the flipper should allow trapping/cradling, but currently the ball tends to roll off the back or get knocked unpredictably.
+- Held flippers should not act like a perfect full-power shot every time.
+- The player should be able to do light taps, controlled shots, and catch/trap behavior.
+
+Fix:
+- Increase initial snap/power on fresh flipper presses.
+- Preserve quick-tap responsiveness.
+- Holding a flipper should create a raised-bat/trap behavior, not a constant auto-launch.
+- Improve cradle/trap behavior so the ball can rest/control better on a held flipper.
+- Prevent easy roll-off behind the flipper.
+- Do not rewrite flipper physics from scratch unless absolutely necessary; tune the existing system carefully.
+
+Desired feel:
+- Tap = sharp flick.
+- Hold = control/trap.
+- Release/re-hit = finesse shot.
+- Fresh rising stroke = strong shot.
+- Already-held flipper contact = soft control, not full cannon launch.
+
+3. Spinner/flapper targets need physics scaling
+
+Problems:
+- Spinner/flapper doors can feel too fast compared with the rest of the game physics.
+- They should not spin like detached fans.
+- They should respond to ball speed but remain believable.
+
+Fix:
+- Cap max spinner angular velocity.
+- Ball speed should determine spin torque.
+- Slow ball = small flap/spin.
+- Fast ball = fast spin.
+- Add damping so it spins down naturally.
+- Avoid constant sound spam.
+
+4. Lighting needs visible sources and coherent sequencing
+
+The shooter runway lights are the best-looking lighting feature so far. Use that as the model.
+
+Problems:
+- Other board lights still feel like floating/no-source glow.
+- There are random glows/lights with unclear purpose.
+- Lighting is noisy instead of dramatic.
+
+Fix:
+- Every light should belong to a visible object: insert, lamp, bumper ring, sling insert, ramp arrow, wormhole ring, mission core insert, kickback/extra ball insert, or runway lamp.
+- Reduce or remove mystery point lights.
+- Keep the shooter runway chase lights.
+- Add coherent light sequences to other zones without clutter.
+
+Needed light groups:
+- Fuel bank inserts: cyan/green.
+- Mission core inserts: blue/yellow.
+- Moon ramp arrows: amber.
+- Wormhole ring: purple/magenta.
+- Bumper field: warm orange/white bumper rings.
+- Slings: small embedded sling lamps.
+- Kickback / extra ball: low-profile inserts.
+- Runway: existing chase lights.
+
+Lighting states to preserve/improve:
+- Attract mode.
+- Ball ready / launch bay armed.
+- Launch runway chase.
+- Standard gameplay objective pulse.
+- Local shot effects.
+- Mission ready / complete.
+- Meteor / wormhole / supernova skybox reactions.
+- Ball save / kickback / extra ball.
+
+5. Red Spider Nebula visual influence
+
+Use the Red Spider Nebula image as art-direction inspiration, but do not just slap a noisy image onto the board.
+
+Desired vibe:
+- Deep black/blue space base.
+- Electric blue wisps.
+- Crimson/magenta energy core.
+- Bright stellar glow.
+- Surreal, dramatic, premium sci-fi.
+- More beautiful and atmospheric, not more cluttered.
+
+Implement carefully:
+- Center/mission core can have a red/magenta energy-heart feel.
+- Blue nebula wisps can subtly flow through the board art.
+- Keep labels readable.
+- Do not destroy layout readability.
+- Do not add noisy fake routes.
+- Do not make the board low-quality or muddy.
+
+6. Board art / geometry alignment
+
+Problems:
+- Some playfield graphics do not align with actual objects.
+- Some labels/routes feel like they explain a different table than the one being played.
+- Right-side/shooter lane art previously got covered by the shooter wall.
+
+Fix:
+- Draw art based on actual object coordinates.
+- No graphics under walls.
+- No labels where the ball cannot go.
+- No fake shot paths that do not match real routes.
+- Keep the board art clean and integrated.
+
+7. Performance
+
+Current game often feels stuck around 29 FPS and can feel laggy.
+
+Do not solve this by making the game ugly.
+
+Fix performance intelligently:
+- Reduce unnecessary dynamic point lights.
+- Convert some glow effects to emissive meshes instead of actual lights.
+- Reduce duplicate/hidden old objects.
+- Reduce transparent overlays.
+- Simplify rail/tube segment counts where possible.
+- Reduce starfield overhead if needed.
+- Keep default graphics attractive.
+- Optional quality settings are okay, but the default should still look good.
+
+Acceptance checklist before returning the file:
+
+- Syntax check passes.
+- Game loads with no black screen.
+- Ball launches.
+- Flippers work.
+- Held flippers do not auto-launch every contact.
+- Ball can be better trapped/cradled.
+- Slings are visible, diagonal, and not blocking the flippers.
+- No invisible lower-field bumpers/colliders.
+- No confusing tiny dot/post hits over flippers.
+- Spinner speed is capped and believable.
+- Shooter runway lights still work.
+- Board lights have visible sources.
+- Playfield art aligns with geometry.
+- Red Spider Nebula influence improves the vibe without clutter.
+- FPS/performance is not worse than the v6.3 benchmark.
+- Camera controls still work.
+- Restart still works.
+
+Deliverable:
+Return a single downloadable standalone HTML file.
+
+Before giving the download link, report:
+- Syntax check: pass/fail.
+- Brief list of major fixes.
+- Any known limitations honestly.

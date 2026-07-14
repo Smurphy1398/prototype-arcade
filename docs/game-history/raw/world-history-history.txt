@@ -1,0 +1,49 @@
+Source: `..\PROTOTYPE ARCADE\world history map\history.txt` (38 lines, verbatim, unmodified).
+Preserved 2026-07-14 during the Game History Recovery lane. This is the superset design-spec file for
+World History Atlas: it contains Simon's original school-notes timeline example AND his own corrected
+14-era framework (with explicit BCE/CE date corrections), which is the canonical schema baked into the
+game from v5 onward. Byte-identical for its first 11 lines to
+`historical timeline articles FACTS from school.txt` (same folder) — this file is the later, appended
+superset of that one.
+
+---
+
+We gotta improve this, can you also provide a summary and details/info on the selected sub-region, especially on the pop out bubbles, each sub region pop up shares the same tour facts of the time/region, the tour facts should only show up when you click the label, the sub region selections should have their own details and facts; can you make it so you can select each usa state and that gives you a lesson similar to the regions/sub regions, and the usa regions will still have to be selected from the atlas control side menu, but the states can be selected, similar to the country selections, however those country selections should also include a lesson.; The side menu bars are still confusing, can you organize it better, with the left side panel being the main atlas controls with the lessons/tours, can you make the right bar the information side on the overview, facts, places, people, and the selections/ sub selections; Theres issues with the timeline bar, the numbers/years are formatted inconsistently, they go off the screen, it doesnt feel intuitive, and im not sure about the time selections. Can you make sure the historical eras are right with the correct label/name and the exact right time periods.
+
+Here's specifically how i learned the timeline -IMPORTANT EXAMPLE- "articles on the time line: Concept of time (30,000BC-3500BC Prehistoric -> 3500BC-0 Historic )-> Classical Antiquity(Carthage 814BC)->750BC Roman Era( Era of Kings 750BC-510BC/Roman Republic 510BC- 31BC/Imperial Era 31BC-476AD) -> 200AD Late Antiquity -> Early Medieval (Charlemagne- key figure in evolution in Europe)-> High Middle-Ages(Crusades) ->1350AD Renaissance (1450AD -printing press, 1492AD - Columbus) -> 1550AD Early Modern (Scientific Revolution->~17th-18th Enlightenment) -> ~19th-20th Modern (Industrialization, WW1/WW2, 1950-1992 cultural revolution) -> 21st Present";
+
+each article/era can be its own lesson, some are so eventful that the eras can be split up into multiple lessons, there should be a focus on the important figures/names, places/empires/cities, leaders, religions, wars/battles, tragedies, events, discoveries, all notable inventions, etc. anything that plays an important role.
+
+
+
+--update prompt--
+
+We gotta improve this, I got some patch notes and then I got some important notes on the historical time line and how things should layout/organize; can you also provide a summary and details/info on the selected sub-region, especially on the pop out bubbles, each sub region pop up shares the same tour facts of the time/region, the tour facts should only show up when you click the label, the sub region selections should have their own details and facts; the pop out bubbles also get big when you scroll out making it it expand off the screen, it should be the opposite, getting smaller when you zoom out to keep the size consistent of the zoom when you first clicked the pop up bubble.; can you make it so you can select each usa state and that gives you a lesson similar to the regions/sub regions, and the usa regions will still have to be selected from the atlas control side menu, but the states can be selected, similar to the country selections, however those country selections should also include a lesson.; The dark/light mode/themes do not affect the map colors at all, the selected area changes, but the land/water colors stay dark grey; The side menu bars are still confusing, can you organize it better, with the left side panel being the main atlas controls with the lessons/tours and regions, can you make the right bar contain the information side on the overview, facts, places, people, and the selections/ sub selections; Theres issues with the timeline bar, when you select a year i dont think it should change the map/region selection, it should keep the same location of your selection/view so you can explore each region/subregion/point of interest/etc freely through the years, the tours should guide you to the specific areas and/or timeline when you start them, on the timeline itself the numbers/years are formatted inconsistently, they go off the screen, it doesnt feel intuitive, and im not sure about the time selections, its hard to read and they should be properly labeled, it seems like you combined certain periods together, could you divide the timeline/eras/revolutions/ages better. Make sure the historical eras are right with the correct label/name and the exact right time periods. Here's specifically how i learned the timeline -IMPORTANT EXAMPLE- "articles on the time line: Concept of time (30,000BC-3500BC Prehistoric -> 3500BC-0 Historic )-> Classical Antiquity(Carthage 814BC)->750BC Roman Era( Era of Kings 750BC-510BC/Roman Republic 510BC- 31BC/Imperial Era 31BC-476AD) -> 200AD Late Antiquity -> Early Medieval (Charlemagne- key figure in evolution in Europe)-> High Middle-Ages(Crusades) ->1350AD Renaissance (1450AD -printing press, 1492AD - Columbus) -> 1550AD Early Modern (Scientific Revolution->~17th-18th Enlightenment) -> ~19th-20th Modern (Industrialization, WW1/WW2, 1950-1992 cultural revolution) -> 21st Present"; each article/era can be its own lesson, some are so eventful that the eras can be split up into multiple lessons, there should be a focus on the important figures/names, places/empires/cities, leaders, religions, wars/battles, tragedies, events, discoveries, all notable inventions, etc. anything that plays an important role. Please make sure that everything is factually correct, my timeline notes are from my old school notes, so if there are any noticeable or major errors, let me know and correct them. We cant learn if the content is wrong and hard to access/read. Lets make this a true atlas.
+
+
+
+---------
+Historical era framework corrected and expanded:
+Prehistoric Time: c. 30,000–3500 BCE
+Early Historic Civilizations: c. 3500–800 BCE
+Carthage / Phoenician Mediterranean: c. 814–146 BCE
+Roman Kingdom: 753–509 BCE
+Roman Republic: 509–27 BCE
+Roman Empire: 27 BCE–476 CE in the West
+Late Antiquity: c. 200–750 CE
+Early Middle Ages: c. 500–1000 CE
+High Middle Ages: c. 1000–1300 CE
+Late Middle Ages: c. 1300–1500 CE
+Renaissance: c. 1350–1600 CE
+Early Modern World: c. 1500–1800 CE
+Modern Industrial Age: c. 1800–1945
+Postwar / Cold War: 1945–1991
+21st Century / Information Age: 1991–present
+
+Corrections from your notes that I built in:
+
+Rome's traditional founding date is usually 753 BCE, not 750 BCE.
+The Roman Republic is usually dated 509–27 BCE, not 510–31 BCE.
+The Roman imperial period normally begins with Augustus in 27 BCE, not 31 BCE.
+Late Antiquity overlaps the later Roman Empire instead of coming cleanly after it.
+The Renaissance is often dated broadly from around 1350–1600, while the printing press around 1450 and Columbus in 1492 happen inside/near the broader Renaissance and early modern transition.

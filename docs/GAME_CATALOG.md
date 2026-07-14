@@ -46,6 +46,8 @@ derivatives, so the repo and the source archive have diverged.
   (pointer-lock), click shoot, Esc pause. Desktop only; no touch/gamepad. ~60-version history in the source tree.
 - **Must test before Confirmed:** diff/playtest the live file vs `arena-fps-v1-7-6.html`; decide which becomes canonical
   and make the advertised version honest.
+- **Full version history:** `docs/game-history/halo-fps.md` (Game History Recovery lane, 2026-07-14) —
+  resolves the v1.7.5.2-vs-v1.7.6 conflict as a stale-title bug, not a real fork.
 
 ## Tower Defense
 - **Published:** `games/tower-defense-game.html` — hash `948f2386`, 68,559 B. Internal `<title>` `Tower Defense V6.1` (matches card).
@@ -54,6 +56,8 @@ derivatives, so the repo and the source archive have diverged.
 - **Alternatives:** `v6` (`f3e3740d`). Full v1→v6.1 ladder in the tree.
 - **Runtime:** Canvas 2D, self-contained. **Controls:** mouse. Desktop; likely mobile-tolerant.
 - **Must test:** confirm published ≈ v6.1 by diff; quick playtest. Then Confirm.
+- **Full version history:** `docs/game-history/tower-defense.md` (Game History Recovery lane, 2026-07-14) —
+  highest-confidence report of the five; full authored changelog trail v2-v6.1.
 
 ## Bob Ross Painting Sim
 - **Published:** `games/bob-ross-game.html` — hash `282325ef`, 18,161 B, `<title> Happy Accidents Painting Simulator`. Card label v0.1.
@@ -98,6 +102,9 @@ derivatives, so the repo and the source archive have diverged.
 - **Validation performed:** HTTP 200; content byte-verified; nav links verified. **No in-browser
   render/gameplay test performed this lane.**
 - **Future testing still required:** in-browser playtest for stability; confirm v6.4 truly supersedes v6.3; then Confirm.
+- **Full version history:** `docs/game-history/nebula-rescue.md` (Game History Recovery lane, 2026-07-14) —
+  confirms the protected spinner-tuning win; finds no archive evidence explaining the reported slide/ramp
+  break.
 
 ## Pictionary "Draw It! Master Party Edition"  ✅ imported 2026-07-14
 - **Repository path:** `games/pictionary.html` (landing) + `games/pictionary-game.html` (game).
@@ -115,6 +122,8 @@ derivatives, so the repo and the source archive have diverged.
 - **Validation performed:** HTTP 200; content byte-verified; nav links verified. **No in-browser
   render/gameplay test performed this lane.**
 - **Future testing still required:** in-browser playtest; (6) vs (7) comparison if desired; then Confirm.
+- **Full version history:** `docs/game-history/pictionary.md` (Game History Recovery lane, 2026-07-14) —
+  thinnest evidence of the five games researched (no changelogs, no code comments).
 
 ## World History Map / True History Atlas  ✅ imported 2026-07-14 (bonus)
 - **Repository path:** `games/world-history.html` (landing) + `games/world-history-game.html` (game).
@@ -135,6 +144,8 @@ derivatives, so the repo and the source archive have diverged.
   depends on the visitor's own internet access, same as the live Halo/Babylon.js dependency already published).
   Content byte-verified; nav links verified. **No in-browser render/gameplay test performed this lane.**
 - **Future testing still required:** in-browser test with live internet access to confirm tiles load; then Confirm.
+- **Full version history:** `docs/game-history/world-history-atlas.md` (Game History Recovery lane,
+  2026-07-14) — traces the v1-v8 clean-rebuild lineage and the v7 UI regression fixed in v7.1.
 
 ---
 

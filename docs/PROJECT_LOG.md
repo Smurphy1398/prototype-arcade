@@ -6,6 +6,61 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-07-14 — Game History Recovery lane complete (pending review)
+**Agent Snapshot:** 🧭 Claude (Sonnet, sole editor + integrator) — 5 parallel read-only `Explore` subagents
+used to investigate each game's archive folder concurrently; no 🧠 Grok/🔍 Codex runs this pass (lane spec
+judged them unnecessary for reading a local archive).
+
+**TL;DR:** Recovered durable version/checkpoint history from the protected `..\PROTOTYPE ARCADE\` archive
+for all 5 required games (Nebula Rescue, Halo FPS, Pictionary, Tower Defense, World History Atlas), per
+`docs/PHASE_LANES.md`'s Game History Recovery lane — the hard prerequisite before any Nebula Rescue/Halo
+FPS source edits (`docs/BACKLOG.md` B8).
+
+**Smoke:** Not required — docs/read-only work only. No game source, runtime, or source-archive file was
+touched.
+
+**Agent Contributions:**
+- 🧭 Claude — dispatched 5 parallel `Explore` subagents (read-only, no edit/write tools available to them,
+  so they could not alter the protected archive), one per game, each tasked with reading changelogs/notes/
+  version folders and reporting structured findings. Synthesized all 5 reports personally into
+  `docs/game-history/{nebula-rescue,halo-fps,pictionary,tower-defense,world-history-atlas}.md` +
+  `docs/game-history/README.md`, and preserved 4 additional small source `.txt` files verbatim under
+  `docs/game-history/raw/` (Nebula Rescue's `passover.txt`, Halo's continuation-prompt handoff doc, and
+  World History's `history.txt` + `prompt notes.txt`).
+- Outside agents (🧠 Grok / 🔍 Codex) — not used; the lane spec itself marks them unnecessary since this is
+  Claude reading a local archive directly, not a diff/product-direction review.
+
+**🧭 Claude Synthesis:** The five reports varied sharply in evidence quality — Tower Defense and World
+History Atlas had the strongest trails (authored changelogs / consistent title-and-CDN progression across
+every version); Halo FPS's tree is the largest (~60 files) but only 5 versions have real changelogs, so
+post-v0.5 history was reconstructed from in-file titles/HUD text rather than authored notes; Pictionary had
+no changelogs and no code comments at all, the thinnest evidence of the five. The most load-bearing single
+finding is the Halo v1.7.5.2-vs-v1.7.6 published-label conflict: resolved as a stale-boilerplate-title bug
+(the runtime HUD correctly reads v1.7.6; only the dead `<title>`/one static `<p>` still say v1.7.5.2), the
+same systemic bug recurring independently in two other Halo version clusters — high confidence this is
+cosmetic, not a real fork. For Nebula Rescue, confirmed the protected spinner-tuning win survives intact in
+the v6.4 archive file, but found **no archive evidence explaining Simon's reported slide/ramp break** — the
+archive shows no ramp/rail code changes between v6.3 and v6.4 at all, so this requires hands-on diagnosis
+in the next lane, not further archive reading.
+
+**Work Completed / Evidence:** 5 per-game markdown files + `README.md` written under `docs/game-history/`;
+4 new raw `.txt` preservation files written under `docs/game-history/raw/`; `docs/PROJECT_STATE.md`,
+`docs/PHASE_LANES.md`, and `docs/BACKLOG.md` (B8) updated to reflect completion. Validation performed:
+static read-only inspection of the protected archive (file listings, `diff` for byte-identity checks,
+targeted grep for titles/version strings/changelog content) — **no in-browser/runtime verification was
+in scope for this lane** (it is documentation recovery, not gameplay testing). Source-archive integrity
+confirmed unchanged (read-only throughout; no writes attempted against `..\PROTOTYPE ARCADE\`).
+
+**Git / Commit / Push / Deploy State:** All changes are local working-tree edits only — **not staged, not
+committed, not pushed.** Per the lane's explicit exclusions, stopping here for Simon's review before any
+commit.
+
+**Exact Next Action:** Simon reviews `docs/game-history/README.md` and the 5 per-game files; on approval,
+commit this docs-only lane, then open **Nebula Rescue rescue/hardening** (`docs/BACKLOG.md` B8) using
+`docs/game-history/nebula-rescue.md` as the starting evidence base.
+
+---
+
 ## 2026-07-14 — Live: 7-game arcade homepage shipped
 **Agent Snapshot:** 🧭 Claude (Opus, release execution + live verification; no outside agents this entry).
 

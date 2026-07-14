@@ -76,49 +76,57 @@ and release reports.
 
 ---
 
-## Required report contract  (HARD RULE — v1.1, repairs the earlier softer wording)
+## Required report contract  (HARD RULE — v1.2, corrects v1.1's ordering)
 
 This is a hard rule for **every** meaningful checkpoint, audit, handoff, lane report, implementation report,
-smoke-ready report, and release report. Adapted from `VIBE_CODE_DEFAULT_PROJECT_FOUNDATION_v1.1.md` §7 for
-this project. **This replaces the earlier "only when an outside agent was used" wording** — that
-conditionality is exactly what caused a real regression (2026-07-14): a Claude-solo report omitted the
-detailed contributions section and gave no smoke-test instructions, because the old rule let it.
+smoke-ready report, and release report. Adapted from `VIBE_CODE_DEFAULT_PROJECT_FOUNDATION_v1.2.md` §7 for
+this project. **v1.2 supersedes v1.1 for report formatting.** v1.1 fixed a real regression (2026-07-14: a
+Claude-solo report omitted the detailed contributions section and gave no smoke instructions, because the
+old "only when an outside agent was used" wording let it) — but v1.1 then got the section *order* backward,
+putting the owner-facing TL;DR/smoke/next-action at the top and the detailed evidence in the middle. Simon
+needs the deep record first (for the durable log) and the actionable bit grouped at the **end** (what he
+scrolls to in practice) — v1.2 fixes the order, not the content requirements.
 
 **Required order, unless Simon explicitly asks for a different shape:**
 
 1. `Agent Snapshot`
-2. `TL;DR`
-3. `What Changed / Current State`
-4. `Smoke Test — Do This Now` **or** `Smoke: Not required — docs/read-only work only.`
-5. `Agent Contributions`
-6. `🧭 Claude Synthesis`
-7. `Work Completed / Evidence`
-8. `Git / Commit / Push / Deploy State`
+2. `Agent Contributions`
+3. `🧭 Claude Synthesis`
+4. `What Changed / Current State`
+5. `Work Completed / Evidence`
+6. `Git / Commit / Push / Deploy State`
+7. `TL;DR`
+8. `Quick Smoke — Do This Now` **or** `Smoke: Not required — docs/read-only work only.`
 9. `Exact Next Action`
 
-**Do not omit the smoke block on runnable/visual work. Do not omit the detailed Agent Contributions block
-merely because the compact Snapshot already named agents.**
+**Sections 7–9 are the Bottom Action Brief** — TL;DR, Quick Smoke, and Exact Next Action stay grouped
+together at the end, nothing else interleaved between them.
+
+**Hard rules:**
+- Detailed Agent Contributions must be near the top (section 2), never buried below the implementation summary.
+- TL;DR must be near the bottom (section 7), never at the top.
+- Do not omit the smoke block on runnable/visual work. Do not omit the detailed Agent Contributions block
+  merely because the compact Snapshot already named agents.
+- Quick Smoke must be genuinely short — normally 3–6 bullets, a checklist, not a narrative. Full validation
+  detail (exact steps, devices/viewports, what counts as failure) belongs earlier under Work Completed /
+  Evidence, not repeated in Quick Smoke.
+- Do not make Simon search the report to discover what he needs to test or do next.
 
 ### 1. Agent Snapshot — compact layer
-One line, before the TL;DR: `Agent Snapshot: 🧠 Grok (<brief contribution>) · 🔍 Codex (<brief contribution>) · 🧭 Claude (<model/effort, contribution>)`.
+One line, first: `Agent Snapshot: 🧠 Grok (<brief contribution>) · 🔍 Codex (<brief contribution>) · 🧭 Claude (<model/effort, contribution>)`.
 Only agents that materially contributed to *this* report. A carried-forward contribution may be named only
 if the report states clearly the agent did **not** run again this time, e.g.
 `🧠 Grok (Lane 2A direction carried into this implementation; not rerun)`. Never claim an agent or model ran
 unless it actually did.
 
-### 4. Smoke Test — mandatory for runnable/visual work
-Whenever a lane changes any runnable source, UI, game, page, app behavior, audio, controls, data flow, or
-user-visible output, include a `## Smoke Test — Do This Now` block stating: exact URL/command to open or
-run; exact checkpoint/commit/WIP label being tested; what changed visibly/behaviorally; exact steps; expected
-result per step; what counts as failure/regression; devices/viewports/browsers that matter; known
-limitations of the current validation; what not to do yet (e.g. do not commit/push/deploy/start the next
-lane); and exactly what feedback Simon should return. If the work is docs/read-only only, write plainly:
-`Smoke: Not required — docs/read-only work only.` **Never leave Simon guessing whether he needs to smoke-test.**
-
-### 5. Agent Contributions — detailed layer, **always required, even solo**
-One block per agent that actually ran: why called · what it contributed · important **exact** quote(s) ·
-Accepted / Accepted with modification / Rejected / Parked · transcript path under `docs/agent-runs/`.
-**When no outside agent ran, still include the section:**
+### 2. Agent Contributions — detailed layer, **always required, even solo**
+One block per agent that actually ran: why called · bounded assignment · what it contributed · important
+**exact** quote(s) · Accepted / Accepted with modification / Rejected / Parked · transcript path under
+`docs/agent-runs/`. **When Claude used internal read-only `Explore`/research subagents**, identify how many
+were used, each one's bounded assignment/scope, what evidence each returned, and make explicit that they
+operated *under* Claude and are **not** automatically 🧠 Grok, 🔍 Codex, or 🛠️ Fable — never invent an exact
+quote from one unless its verbatim output was actually preserved. **When no outside agent ran, still include
+the section:**
 ```
 ## Agent Contributions
 - 🧭 Claude — <what was performed as sole editor/integrator>.
@@ -127,13 +135,21 @@ Accepted / Accepted with modification / Rejected / Parked · transcript path und
 Never create empty Grok/Codex/Fable subsections. For carried-forward work, say so explicitly (see above) and
 quote only from the preserved transcript — never a fresh paraphrase dressed as a new quote.
 
-### 6–9. Claude Synthesis / Work Completed / Git State / Exact Next Action
+### 3–6. Claude Synthesis / What Changed / Work Completed / Git State
 **🧭 Claude Synthesis** — where agents agreed/disagreed, what Claude chose, why, what changed, what remains
 uncertain. If no outside agent ran, state Claude's reasoning and why outside review was unnecessary.
+**What Changed / Current State** — the full project-facing summary (durable body, not the TL;DR).
 **Work Completed / Evidence** — files changed, validation (name the precision level — static inspection vs.
 HTTP/serve vs. launch/render vs. interaction vs. functional/gameplay vs. real-device; never overstate one as
 another). **Git / Commit / Push / Deploy State** — local/staged/committed/pushed/deployed, stated separately.
-**Exact Next Action** — one concrete operational instruction, not "continue when ready."
+
+### 7–9. Bottom Action Brief — TL;DR / Quick Smoke / Exact Next Action
+**TL;DR** — 2-4 sentences: what was completed, what's ready, what's not, whether anything was committed/
+pushed/deployed. **Quick Smoke** — a short checklist (3-6 bullets): exact URL/command, checkpoint/commit
+label, the few most important checks, expected result, obvious failure conditions, stop boundary, what
+feedback to return — or `Smoke: Not required — docs/read-only work only.` if nothing runnable changed. Do
+not repeat the long validation narrative here. **Exact Next Action** — one concrete operational instruction,
+not "continue when ready."
 
 Two-tier visibility unchanged: `PROJECT_LOG.md` is the skimmable executive layer; `docs/agent-runs/` holds
 the full evidence.

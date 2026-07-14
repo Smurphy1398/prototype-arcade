@@ -105,12 +105,12 @@ Last updated: **2026-07-13**.
 
 ---
 
-## Game History Recovery  ·  Proposed — **the explicit next lane after Lane 2C is finished/checkpointed**
+## Game History Recovery  ·  ✅ Complete, pending Simon's review (stop before commit)
 
-Not started. Gated behind Simon's acceptance of Lane 2C (currently 🟡 pending his visual review) — this is
-documentation/research, not implementation, but it must not run against a still-uncommitted, still-changing
-homepage lane. Once Lane 2C is checkpointed, this runs **before any hands-on Nebula Rescue or Halo FPS
-source repairs** — that sequencing is a hard prerequisite, not a suggestion (see `docs/BACKLOG.md` B8).
+**Completed 2026-07-14.** Read-only investigation of the protected source archive (`..\PROTOTYPE ARCADE\`)
+for Nebula Rescue, Halo FPS, Pictionary, Tower Defense, and World History Atlas — recovering
+version/checkpoint history before any hands-on Nebula Rescue or Halo FPS source repairs (hard prerequisite,
+`docs/BACKLOG.md` B8).
 
 - **Goal:** recover durable version/checkpoint history from the protected, read-only source archive
   (`..\PROTOTYPE ARCADE` — never edited, renamed, or reorganized) for **Nebula Rescue, Halo FPS, Pictionary,
@@ -149,5 +149,8 @@ source repairs** — that sequencing is a hard prerequisite, not a suggestion (s
 - **🧠 Grok / 🔍 Codex:** unnecessary — this is Claude reading the local archive directly.
 - **Explicit exclusions:** no game source changes, no source-archive changes, no commit/push/deploy. Read-only
   investigation only — stop for Simon's review at the end.
-- **Status:** Proposed, not started. **Next lane:** Nebula Rescue rescue/hardening (`BACKLOG.md` B8) — only
-  after this lane is complete and reviewed.
+- **Status:** ✅ Complete, pending Simon's review (stop before commit). All 5 durable output files +
+  `README.md` written under `docs/game-history/`; 5 source `.txt` files preserved verbatim under
+  `docs/game-history/raw/`. No game source, source-archive, or commit/push/deploy actions taken.
+- **Next lane:** Nebula Rescue rescue/hardening (`BACKLOG.md` B8) — only after Simon reviews this lane's
+  output.

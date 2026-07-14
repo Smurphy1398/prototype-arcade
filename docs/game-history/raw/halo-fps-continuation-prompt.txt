@@ -1,0 +1,68 @@
+Source: `..\PROTOTYPE ARCADE\3d halo fps arena\I'm continuing my HTML/Babylon.js lo....txt` (59 lines,
+verbatim, unmodified). Preserved 2026-07-14 during the Game History Recovery lane — this is the only
+surviving authored project-handoff document for Halo FPS (all other version history exists only as
+per-version `changes.txt` files or folder names), and it names v1.7.6 as the explicit source-of-truth
+build, matching the imported/published lineage.
+
+---
+
+I'm continuing my HTML/Babylon.js low-poly arena FPS project. I uploaded the latest working file, arena-fps-v1-7-6.html. Please read the project handoff below and help me make the next version without breaking the stable movement/stair/HUD systems.
+
+PROJECT HANDOFF — Low-Poly Arena FPS HTML/Babylon.js Prototype
+
+I am building a browser-based low-poly arena FPS inspired by classic Halo/Counter-Strike arena shooters. It is a single HTML file using JavaScript/Babylon.js. The current stable working version is:
+
+arena-fps-v1-7-6.html — Friend Playtest Benchmark
+
+Important: Use the uploaded v1.7.6 file as the source of truth. Do not rebuild from scratch unless absolutely necessary.
+
+Current game features:
+- 3D low-poly FPS arena
+- Working WASD movement, sprint, crouch, jump
+- Stable stair system after a long debugging process
+- Radar/minimap
+- Deathmatch vs bots
+- Scoreboard, kill feed, match timer
+- Pause menu
+- Main menu with mode/loadout/difficulty options
+- Loadout system with primary, secondary, heavy, grenade, equipment slots
+- Weapon switching with number keys and mouse wheel
+- ADS / right-click aiming
+- Rifle, SMG, LMG, pistol, hand cannon, shotgun, sniper, rocket launcher, minigun, flamethrower, heavy sniper
+- Frag grenades with G
+- Equipment with E: smoke, deployable cover, mine depending on class/loadout
+- Pickups: ammo, health/shield, grenade, equipment, heavy weapons
+- Explosive barrels
+- Smoke clouds
+- Dev cheats: K godmode, V noclip, B freeze bots, enabled through settings/dev option
+- Bottom-right debug/status window
+- Changelog/playtest notes under scoreboard
+- Radar legend near radar
+
+Major solved problems:
+- Stairs were buggy for many versions but v1.5.3+ finally fixed the main stair/landing/balcony issue.
+- Do not casually alter the stair/landing/support system unless absolutely necessary.
+- v1.7.6 feels good so far and should be treated as the current benchmark base.
+
+Known remaining issues / notes for next version:
+- Need next polish pass based on v1.7.6.
+- Main goal is to keep making it friend-testable, not to rewrite everything.
+- Avoid breaking HUD/ammo systems again; previous versions broke ammo/HUD when adding features.
+- Avoid touching stairs unless directly necessary.
+- Keep the stable v1.7.6 map and movement foundation.
+
+Design direction:
+- I want this to become a fun, accessible HTML FPS prototype I can send to friends.
+- It should feel like a compact sci-fi arena shooter with bots, loadouts, pickups, grenades, heavy weapons, deployables, and readable HUD feedback.
+- Multiplayer is a future goal, but not yet. The immediate focus is a strong local bot-deathmatch playtest.
+
+Current priorities for future versions:
+- Better bot intelligence, navigation, flanking, and less clumping/sticking on walls.
+- Better weapon balance and unique weapon feel.
+- Better class/loadout identity.
+- Better pickup spread and clearer pickup feedback.
+- Better smoke, deployable cover, mines, and heavy weapon polish.
+- More polished HUD and pause/settings menu.
+- Eventually: bot classes, weapon drops, map select, second map, and later multiplayer experimentation.
+
+Please inspect the uploaded v1.7.6 file before making changes, preserve working systems, and create the next version incrementally.

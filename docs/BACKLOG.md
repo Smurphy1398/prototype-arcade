@@ -75,7 +75,7 @@ Common back-to-arcade nav, pause, and home behavior across games. Revisit once �
 
 ---
 
-### B8 — Nebula Rescue rescue/hardening  · TOP PRIORITY (blocked on Game History Recovery — do not start yet)
+### B8 — Nebula Rescue rescue/hardening  · TOP PRIORITY (blocked on Simon's review of Game History Recovery — do not start yet)
 Simon's direct verdict after watching the Lane 2C build (2026-07-14, verbatim in `RAW_IDEA_INBOX.md`):
 *"the nebula rescue probably needs the most rescue, the slide doesnt work and its glitchy and needs some
 serious work to get it balanced, we just barely got the spinners right."*
@@ -89,9 +89,14 @@ serious work to get it balanced, we just barely got the spinners right."*
   appears (cause unconfirmed — could be genuine load time, the CDN-loaded Three.js dependency, a navigation
   artifact, or a recording pause), a distant camera framing that makes the ball hard to track, and a crowded
   playfield hierarchy. Full notes: `docs/game-history/raw/2026-07-14-video-review.md`.
-- **Hard prerequisite:** do not begin source edits until the **Game History Recovery** lane
-  (`docs/PHASE_LANES.md`) has recovered Nebula Rescue's version/checkpoint history from the source archive —
-  so a rescue pass doesn't accidentally undo the spinner work or repeat an already-abandoned experiment.
+- **Hard prerequisite — satisfied 2026-07-14:** the **Game History Recovery** lane
+  (`docs/PHASE_LANES.md`) has recovered Nebula Rescue's version/checkpoint history from the source archive.
+  See `docs/game-history/nebula-rescue.md` — confirms the protected spinner tuning (v6.3→v6.4 torque/damping
+  changes), finds **no archive evidence explaining the slide/ramp break** (no ramp/rail changes exist
+  between v6.3 and v6.4, so the break likely predates or survived both archived builds — requires hands-on
+  diagnosis, not further archive reading), and documents a rejected "v6.4 Red Spider Cleanup" build (not
+  archived as a file) as the one known abandoned experiment to avoid repeating. **Now blocked only on
+  Simon's review of the recovery output**, not on the recovery work itself.
 - **Non-goals (now):** no Nebula source edits of any kind until history recovery is complete and reviewed.
 
 ### B10 — Homepage accent-color CSS scoping bug  · QUEUED, non-blocking (found by 🔍 Codex, Lane 2C release review, 2026-07-14)

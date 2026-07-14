@@ -1,0 +1,31 @@
+Source: `..\PROTOTYPE ARCADE\world history map\prompt notes.txt` (20 lines, verbatim, unmodified).
+Preserved 2026-07-14 during the Game History Recovery lane. This is the original, unconstrained founding
+vision document for World History Atlas, predating any of the v1–v8 builds — it names the freeroam
+map + year-slider concept, a dedicated American-history/presidential mode (never built), guided narrated
+tours with TTS controls, and Wikipedia as the intended citation source. Useful as evidence of scope that
+was and wasn't carried into the shipped game (the American-history/presidential mode does not appear to
+exist in any surviving version file).
+
+---
+
+Ai prototype - world history map
+
+Here are my notes for a project, what do you think, can you use html to create this;
+
+Interactive map of world history, zoom in/out and navigate history with a year slider starting from earth's evolution to modern day; including but not limited to the evolution of human and civilization, Pangaea to the biblical days, continents, to the ancient civilizations, to the biblical days, BC to AD, from the printing press to modern day information technology, to the modern day map, show the shifts in territories and countries through the years. This should be an informative and interactive experience, a way to seamlessly and chronologically explore history, and map it all together.
+
+Maybe for each year/time periods include a side panel for a summary and list of all important historical events, war/conflicts, disasters, inventions, discoveries, etc. be sure to label the era of that time period(prehistoric/middle ages/modern, etc; be historically accurate and specific)
+
+Allow users to select certain regions and sub regions: continents/countries/territories/etc, and have another side panel for the selected summaries, this should include additional important historical events specific to that region/territories/empire/country. Include pictures of important historical figures, landmarks, civilizations, militaries, inventions, etc.
+
+
+
+Include an separate option on the menu for American history, same idea and layout but with the focus of American history, from ancient america, to the discovery, expedition, conception, then going to and from 1776-2026, be sure to list historical events, and highlight each presidential term and summary of the president and the achievements, accomplishments, and other informative details. Include pictures of the presidents and landmarks.
+
+
+
+The maps should be accurate and look good, it should feel good navigating, and it should contain a lot of information and knowledge and facts, this should be a complete organized interactive visual experience of the worlds history, ancient to modern civilizations, industrialization, and the evolution of information technology. This should follow what is taught in schools, and it is meant to bring everything together so you can visualize exactly how far away each events are from each other and learn about each and any place. It should be organized and structured so it's easy to understand on a surface level but allows you to dive deeper. It would contain a lot of information.
+
+I think there could be in addition to this freeroam map experience there can be actually guided experiences that can automatically take you through a tour of the history of certain regions to automatically exploring certain regions, continents, civilizations and empires, and major wars. Maybe include the option to narrate the tours with subtitles and text to speech(option to disable tts, volume controls, speed, voice type) also make it say the name of any selected region and a button in the summary list to read it to you.
+
+This should look and feel good, I won't go in depth with features but I'm hoping you can get the idea from my notes and can correctly provide what I'm looking for, the information needs to be factual, maybe with citations/links to sources, I think Wikipedia might be the best bet, but I trust you on this project

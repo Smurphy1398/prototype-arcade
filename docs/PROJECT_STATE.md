@@ -8,16 +8,18 @@ Last updated: **2026-07-13**.
 reconciliation is deferred behind this sprint, not dropped — see Known risks below.
 
 ## Current lane
-**Lane 2C — Homepage Arcade Refresh.** Status: **✅ Shipped.** Committed (`af0bc0b`), pushed, and live —
-verified by real rendered visual inspection plus HTTP checks on the public URL. Simon accepted the homepage
-in his own browser; Nebula Rescue now loads in ~5s with no white screen (down from ~24s). 🔍 Codex's final
-release review found no blockers.
+**Game History Recovery.** Status: **✅ Complete, pending Simon's review (stop before commit).** Read-only
+investigation of the protected source archive completed 2026-07-14 for all 5 required games. Durable
+outputs: `docs/game-history/README.md` + `nebula-rescue.md`, `halo-fps.md`, `pictionary.md`,
+`tower-defense.md`, `world-history-atlas.md`, plus 4 newly preserved raw `.txt` source notes under
+`docs/game-history/raw/`. No game source, source-archive, or commit/push/deploy actions taken — docs-only,
+not yet committed.
 
 ## Exact next action
-**Tomorrow's first task: Game History Recovery** (read-only investigation, `docs/PHASE_LANES.md`) — recover
-durable version/checkpoint history for Nebula Rescue, Halo FPS, Pictionary, Tower Defense, and World History
-Atlas from the protected source archive, **before any hands-on Nebula Rescue or Halo FPS source changes.**
-This is a hard prerequisite, not a suggestion (see `docs/BACKLOG.md` B8). Not started tonight.
+**Simon reviews `docs/game-history/` output**, then decide: (a) commit this docs-only lane, and (b) begin
+**Nebula Rescue rescue/hardening** (`docs/BACKLOG.md` B8) using `docs/game-history/nebula-rescue.md`'s
+findings — in particular the 🔒 protected spinner-tuning win (do not regress) and the confirmed-unresolved
+slide/ramp complaint, which the archive does not explain and will require hands-on diagnosis.
 
 ## Published state (live == repo)
 - 🟢🚀 **Live 2026-07-14, source `af0bc0b`:** https://smurphy1398.github.io/prototype-arcade/ — the new
@@ -60,9 +62,9 @@ This is a hard prerequisite, not a suggestion (see `docs/BACKLOG.md` B8). Not st
   2026-07-14 after a Lane 2B 🔍 Codex review caught it; see `docs/agent-runs/2026-07-14-codex-missing-games-import-review.md`.)
 - 🔴 **Nebula Rescue — top-priority rescue candidate** (Simon, 2026-07-14, verbatim in `RAW_IDEA_INBOX.md`):
   slide/ramp broken, general glitchiness, balance needs serious work. **🔒 Protected win: the spinners were
-  just fixed — do not regress them.** See `docs/BACKLOG.md` B8. **Hard prerequisite: no Nebula source edits
-  until the Game History Recovery lane completes** (`docs/PHASE_LANES.md`) — sequenced as the explicit next
-  lane after Lane 2C.
+  just fixed — do not regress them.** See `docs/BACKLOG.md` B8. **Game History Recovery is now complete**
+  (`docs/game-history/`, pending Simon's review) — the prerequisite is satisfied; B8 remains blocked only on
+  Simon's review of the recovery output, not on the recovery work itself.
 - ⚠️ Local MLB clone lacks `roadmap`/`phaselane`/`whatsnext` skills (only `handoff` present); Arcade skills authored fresh from Simon's spec.
 - 🔒 `..\PROTOTYPE ARCADE` source collection is a protected read-only archive; a separate-drive backup also exists.
 
@@ -78,4 +80,7 @@ This is a hard prerequisite, not a suggestion (see `docs/BACKLOG.md` B8). Not st
 ## Agents this session
 **Agents:** 🧭 Claude (Opus, sole editor) · 🧠 Grok (one bounded homepage/product-direction review, Lane 2A) ·
 🔍 Codex (one bounded read-only import review, Lane 2B — 2 real findings, both fixed). No 🛠️ Fable runs.
-This capture pass: 🧭 Claude only (capability probe + docs; no outside agents needed).
+**Game History Recovery pass:** 🧭 Claude (Sonnet) only — used 5 parallel read-only `Explore` subagents
+(no edit/write tools, cannot touch the source archive) to investigate each game's folder concurrently,
+then personally synthesized and wrote all `docs/game-history/` output. No 🧠 Grok/🔍 Codex runs this pass
+(lane spec judged them unnecessary for reading a local archive).
