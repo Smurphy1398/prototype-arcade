@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>True History Atlas | Simon's Prototype Arcade</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(80, 200, 190, 0.16), transparent 35%),
+        linear-gradient(135deg, #0d1413, #151515);
+      color: #f5f5f5;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .back-link {
+      color: #cfcfcf;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .back-link:hover {
+      color: #fff;
+    }
+
+    .hero {
+      background: rgba(20, 20, 20, 0.88);
+      border: 1px solid #333;
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: #1e3a37;
+      color: #cffff8;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 44px;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      color: #d6d6d6;
+      font-size: 18px;
+      max-width: 760px;
+      margin-bottom: 24px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #f5f5f5;
+      color: #111;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .button:hover {
+      background: #ddd;
+    }
+
+    .button.secondary {
+      background: #2a2a2a;
+      color: #f5f5f5;
+      border: 1px solid #444;
+    }
+
+    .button.secondary:hover {
+      background: #383838;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: #181818;
+      border: 1px solid #333;
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin: 0 0 10px;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #d8d8d8;
+    }
+
+    .card p {
+      color: #d8d8d8;
+      margin: 0;
+    }
+
+    .note {
+      margin-top: 20px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .note.warn {
+      color: #e0c98a;
+    }
+
+    footer {
+      margin-top: 32px;
+      color: #777;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <a class="back-link" href="../index.html">← Back to Prototype Arcade</a>
+      <span class="tag">Experimental Build</span>
+    </div>
+
+    <main class="hero">
+      <span class="tag">HTML / Leaflet Interactive Map</span>
+
+      <h1>True History Atlas</h1>
+
+      <p class="subtitle">
+        An interactive world-history map experience — not a traditional game, more of a bonus exploration
+        prototype for browsing historical events and periods on a real map.
+      </p>
+
+      <div class="actions">
+        <a class="button" href="world-history-game.html">Launch Experience</a>
+        <a class="button secondary" href="../index.html">Back to Arcade</a>
+      </div>
+
+      <div class="grid">
+        <section class="card">
+          <h2>Build Info</h2>
+          <p>
+            <strong>Version:</strong> internally labeled "True History Atlas — Friend Test Benchmark"<br>
+            <strong>Status:</strong> Experimental build (bonus prototype)<br>
+            <strong>Platform:</strong> Browser / HTML (Leaflet map library from a CDN, plus live map-tile,
+            historical-boundary, and Wikipedia-summary data fetched at runtime)
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>Controls</h2>
+          <ul>
+            <li>Mouse or touch: pan and zoom the map</li>
+            <li>Click/tap: explore markers and events</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>Known Notes</h2>
+          <ul>
+            <li>Experimental prototype — provisional, not a finished build</li>
+            <li>Bonus/secondary item, not one of the original three arcade launch titles</li>
+            <li><strong>Requires an internet connection</strong> — this build loads the Leaflet map library,
+              map tiles, historical boundary data (GitHub-hosted GeoJSON), and event-summary text/thumbnails
+              (Wikipedia's public API) live over the network</li>
+          </ul>
+        </section>
+      </div>
+
+      <p class="note warn">
+        This experience needs internet access — it loads its map library, map tiles, boundary data, and
+        Wikipedia summaries live and will not fully work offline.
+      </p>
+    </main>
+
+    <footer>
+      Built by Simon Murphy · Prototype Arcade
+    </footer>
+  </div>
+</body>
+</html>

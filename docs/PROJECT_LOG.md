@@ -6,6 +6,40 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-07-14 — Lane 2B: Import Missing Games + 🔍 Codex import review
+**TL;DR:** Imported all 4 missing games (Chess, Nebula Rescue, Pictionary, World History Atlas) as
+landing+game file pairs, byte-verified against their source hashes, honestly labeled Provisional. Ran one
+bounded 🔍 Codex read-only review, which caught and Claude fixed two real documentation errors (Chess/Nebula
+Rescue were wrongly documented as offline-capable; they load Three.js from a CDN). Existing 6 game files and
+`index.html` untouched. Nothing committed yet.
+
+**Agents:** 🔍 Codex (one bounded read-only review — path/link/runtime/dependency audit) · 🧭 Claude (sole editor).
+
+**Captain's synthesis (🧭 Claude):**
+- All 4 imports were byte-copied from the exact Lane 2A-evidenced source candidates and hash-verified
+  identical (no unintentional alteration): Chess `73d677e7`, Nebula Rescue `a5693986`, Pictionary `d729e200`,
+  World History `cb66b407`.
+- 🔍 Codex's review surfaced a genuine error, not a false positive: my landing-page and catalog copy claimed
+  Chess and Nebula Rescue were "inlined/self-contained/no internet required." I verified this directly with
+  `grep` before touching anything — Codex was right. Both load Three.js via ES-module `import` from
+  `cdn.jsdelivr.net`. This also revealed the *original Lane 1 audit* had the same error (its `<script src=...>`
+  grep missed ES-module `importmap`/`import` patterns) — now corrected everywhere it appeared.
+- Codex also caught that World History's documented dependency list was incomplete (missing GitHub-raw
+  GeoJSON and the Wikipedia REST API) — fixed.
+- Codex's third finding (incomplete lane bookkeeping) reflected expected mid-lane sequencing, not a defect —
+  the closing docs pass (this entry) was always the next step.
+- Validation depth is stated precisely: HTTP 200 + byte-content verification + navigation-link verification
+  were performed via a local server; **in-browser render/gameplay testing was not performed this lane** and
+  is not claimed.
+
+**Decision:** Stop before commit. Return the Lane 2B report to Simon; Lane 2C (homepage refresh) is proposed
+next, pending his review of the imports and the Codex-driven corrections.
+
+**Transcript records:** `docs/agent-runs/2026-07-14-codex-missing-games-import-review.md` (Excerpted — full
+substantive findings verbatim, mechanical tool-call log omitted).
+
+---
+
 ## 2026-07-14 — Lane 2A: Arcade Content & Import Audit + 🧠 Grok homepage direction
 **TL;DR:** Reprioritized the roadmap (Arcade Expansion & Homepage Refresh sprint is now current; deep Halo/
 published-build reconciliation deferred, not dropped). Ran a read-only audit reconfirming the 3 live games

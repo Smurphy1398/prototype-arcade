@@ -56,14 +56,19 @@ Last updated: **2026-07-13**.
 - **Status:** ✅ Accepted / committed. **Commit/push/deploy:** committed; push separate/unapproved.
 - **Next lane:** Lane 2B.
 
-### Lane 2B — Import Missing Games  ·  🟡 Active
+### Lane 2B — Import Missing Games  ·  ✅ Complete, pending review (stop before commit)
 - **Goal:** add Chess, Nebula Rescue, Pictionary, World History Atlas using the strongest Provisional
   candidate each, honestly labeled prototype/playtest. No internal-version edits, no source-archive deletions.
 - **Allowed changes:** new `games/<slug>.html` + `games/<slug>-game.html` per game, `docs/GAME_CATALOG.md`, `docs/PROJECT_STATE.md`, `docs/PHASE_LANES.md`, `docs/PROJECT_LOG.md`. **Exclusions:** no `index.html` changes, no deep game-logic rewrites, no existing-URL changes.
-- **🧠 Grok:** unnecessary. **🔍 Codex:** required — one bounded read-only path/link/runtime review after imports; transcript in `docs/agent-runs/`.
-- **Validation:** local HTTP server; every imported game's landing + game URL launches/renders/navigates correctly; existing 6 URLs reconfirmed unchanged.
-- **Status:** 🟡 Active. **Commit/push/deploy:** stop before commit; push/deploy remain separate.
-- **Next lane:** Lane 2C (on Simon's review of imports + Codex findings).
+- **🧠 Grok:** unnecessary. **🔍 Codex:** required — ran one bounded read-only path/link/runtime review;
+  caught 2 real findings (Chess/Nebula Rescue falsely documented as offline-capable — both actually load
+  Three.js from a CDN; World History's dependency list was incomplete) — both verified and fixed. Transcript:
+  `docs/agent-runs/2026-07-14-codex-missing-games-import-review.md`.
+- **Validation:** local HTTP server; all 8 new URLs return 200 with correct titles/non-truncated content; nav
+  hrefs verified to resolve to real files; existing 6 URLs/files confirmed byte-unchanged. **No in-browser
+  render/gameplay smoke performed** (explicitly named as a validation-depth limit, not claimed as done).
+- **Status:** ✅ Complete, pending Simon's review. **Commit/push/deploy:** stop before commit; push/deploy remain separate.
+- **Next lane:** Lane 2C (on Simon's approval of this lane).
 
 ### Lane 2C — Homepage Arcade Refresh  ·  Proposed
 - **Goal:** redesign the homepage as a cohesive arcade using the Claude-selected, Grok-informed direction —

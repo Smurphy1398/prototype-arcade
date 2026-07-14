@@ -78,7 +78,26 @@ and release reports.
 
 ## Report format when an outside agent was used
 
-Whenever 🧠 Grok, 🔍 Codex, or 🛠️ Fable contributes to a lane, 🧭 Claude's final report to Simon must include:
+**Required brief agent snapshot.** Every meaningful checkpoint, audit, handoff, lane report, and release
+report must **begin** with a compact agent/model summary — **before** the TL;DR:
+
+`Agent Snapshot: 🧠 Grok (<brief contribution>) · 🔍 Codex (<brief contribution>) · 🧭 Claude (<model/effort, captain/implementation contribution>)`
+
+- Only include agents that **actually contributed to the work being reported** — not agents that
+  contributed to an earlier lane. A combined multi-lane summary may include several agents, but must
+  identify which lane each one worked on.
+- Never claim an agent or model was used unless it actually ran. Include Claude's real model/effort when known.
+- Examples:
+  - `Agent Snapshot: 🧠 Grok (homepage direction and product challenge) · 🧭 Claude (Opus/High, audit and synthesis)`
+  - `Agent Snapshot: 🔍 Codex (import dependency/path review) · 🧭 Claude (Opus/High, implementation and fixes)`
+  - `Agent Snapshot: 🧭 Claude (Sonnet/Medium, sole editor; no outside agents used)`
+
+This one-liner is the **immediate** summary; the longer **Agent Contributions** section below (quotes,
+disposition, transcript paths, disagreements, synthesis) remains the detailed evidence layer, later in the
+same report. Whenever 🧠 Grok, 🔍 Codex, or 🛠️ Fable contributes to a lane, 🧭 Claude's final report to Simon
+must include, in this order:
+
+**Agent Snapshot** — the one-liner above.
 
 **TL;DR** — the result in plain English.
 

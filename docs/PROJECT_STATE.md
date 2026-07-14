@@ -9,17 +9,16 @@ reconciliation is deferred behind this sprint, not dropped — see Known risks b
 
 ## Current lane
 **Lane 2B — Import Missing Games** (Chess, Nebula Rescue, Pictionary, World History Atlas, one coherent lane).
-Status: **🟡 Active**. 🧭 Claude sole editor. 🔍 Codex gives one bounded read-only import review after the
-diff exists. Lane 2A (audit + 🧠 Grok homepage direction) is ✅ Accepted / committed.
+Status: **Complete, pending Simon's review — stop before commit**. 🧭 Claude sole editor. 🔍 Codex ran one
+bounded read-only import review (caught and Claude fixed 2 real dependency-documentation errors — see
+`docs/agent-runs/2026-07-14-codex-missing-games-import-review.md`). Lane 2A (audit + 🧠 Grok homepage
+direction) is ✅ Accepted / committed.
 
 ## Exact next action
-1. Import all four games (strongest evidence-backed candidate each), landing pages + game files, honest
-   Provisional labeling — no `index.html` changes yet (that's Lane 2C).
-2. Update `GAME_CATALOG.md` + this file + `PHASE_LANES.md` + `PROJECT_LOG.md` with source/target/hash/status per game.
-3. Validate via local HTTP server (launch/render/navigation — not full gameplay) for all 8 new URLs + reconfirm the existing 6 unchanged.
-4. Run one bounded 🔍 Codex read-only import review; record it in `docs/agent-runs/`.
-5. Return the Lane 2B report and **stop before commit** — Lane 2C (homepage refresh) awaits Simon's review of the imports + Codex findings.
-6. Lane 1B (`7d4d512`) and Lane 2A still need a **separate push approval** — not pushed yet.
+1. Simon reviews the 4 imported games + Codex findings/fixes (this report).
+2. On approval: commit Lane 2B (8 new `games/*.html` files + `docs/GAME_CATALOG.md` + this file + `PHASE_LANES.md` + `PROJECT_LOG.md` + the Codex agent-run record).
+3. Then **Lane 2C — homepage refresh** (Claude-selected, Grok-informed "Prototype Cabinet Row" direction) — not started, awaits this review.
+4. Lane 1B (`7d4d512`) and Lane 2A (`2bc6c03`) still need a **separate push approval** — not pushed yet.
 
 ## Published state (live == repo)
 - 🟢 Live & smoke-passed 2026-07-13 (after the docs-only push): https://smurphy1398.github.io/prototype-arcade/ —
@@ -30,20 +29,26 @@ diff exists. Lane 2A (audit + 🧠 Grok homepage direction) is ✅ Accepted / co
 - Halo FPS — ⚠️ published file matches no local build and mislabels its own version (title v1.7.5.2 vs card v1.7.6). Deferred to the Lane 2 hardening pass — does not block this sprint since it doesn't block importing/launching other games.
 - Tower Defense — published ≈ local v6.1 (High).
 - Bob Ross — only meaningful build (High).
-- Chess/Checkers, Nebula Rescue pinball, Pictionary, World History Atlas — local only; **import targets for Lane 2B** (candidates reconfirmed in Lane 2A).
+- Chess/Checkers, Nebula Rescue pinball, Pictionary, World History Atlas — **imported 2026-07-14** (Lane 2B), all Provisional/Playable-or-Experimental Prototype, none Confirmed. In-browser playtest still required for all four.
 
 ## Repo status
 - Lane 1 foundation **committed** (`e9839cc`) and **pushed**; local `main` == `origin/main` at that commit.
 - Lane 1B (workflow docs + `.claude/skills/`) is **committed locally** (`7d4d512`), **not yet pushed**.
-- Lane 2A adds docs-only reprioritization + one `docs/agent-runs/` record. No game/runtime files touched.
-- History: Lane 1B `7d4d512` → Lane 1 `e9839cc docs: establish prototype arcade project foundation` → `0ea750e Add Tower Defense and Bob Ross builds`.
+- Lane 2A (docs reprioritization + Grok record) **committed locally** (`2bc6c03`), **not yet pushed**.
+- Lane 2B (4 game imports + catalog/docs updates) is **complete in the working tree, not yet committed** —
+  awaiting Simon's review of this report.
+- History: Lane 2A `2bc6c03` → Lane 1B `7d4d512` → Lane 1 `e9839cc docs: establish prototype arcade project foundation` → `0ea750e Add Tower Defense and Bob Ross builds`.
 
 ## Known risks / watch items
 - ⚠️ Halo provenance conflict (above) — **deferred, not dropped**; must resolve before Halo can be called Confirmed.
 - ⚠️ `gh` (GitHub CLI) not installed; `github` MCP returning HTTP 400 → GitHub automation unavailable.
-- ⚠️ Halo (Babylon) and World History (Leaflet) depend on CDNs — fine on Pages, broken offline.
+- ⚠️ **5 of 7 games now require internet to fully function** (Halo/Babylon, Chess & Nebula Rescue/Three.js-CDN,
+  World History/Leaflet+GeoJSON+Wikipedia) — fine on GitHub Pages, broken offline; each landing page says so honestly.
+  (Chess/Nebula Rescue's CDN dependency was miscategorized as "inlined" in the original Lane 1 audit — corrected
+  2026-07-14 after a Lane 2B 🔍 Codex review caught it; see `docs/agent-runs/2026-07-14-codex-missing-games-import-review.md`.)
 - ⚠️ Local MLB clone lacks `roadmap`/`phaselane`/`whatsnext` skills (only `handoff` present); Arcade skills authored fresh from Simon's spec.
 - 🔒 `..\PROTOTYPE ARCADE` source collection is a protected read-only archive; a separate-drive backup also exists.
 
 ## Agents this session
-**Agents:** 🧭 Claude (Opus, sole editor) · 🧠 Grok (one bounded homepage/product-direction review, Lane 2A). No 🔍 Codex / 🛠️ Fable runs yet.
+**Agents:** 🧭 Claude (Opus, sole editor) · 🧠 Grok (one bounded homepage/product-direction review, Lane 2A) ·
+🔍 Codex (one bounded read-only import review, Lane 2B — 2 real findings, both fixed). No 🛠️ Fable runs.

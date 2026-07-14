@@ -16,10 +16,15 @@ Seeded from the 2026-07-13 orientation audit (read-only). Hashes are MD5.
 | Halo FPS Arena | Babylon.js (CDN) | ✅ live | ⚠️ Provisional — published file matches no local build | Medium |
 | Tower Defense | Canvas 2D | ✅ live | Provisional (published ≈ local v6.1) | High |
 | Bob Ross Painting Sim | Canvas 2D | ✅ live | Provisional (only meaningful build) | High |
-| 3D Chess + Checkers | Three.js (inlined) | ❌ local only | Provisional — v2.3 vs v2.2 unresolved | Medium |
-| Pinball / Nebula Rescue | Three.js (inlined) | ❌ local only | Provisional — v6.4 | Medium |
-| Pictionary "Draw It!" | Canvas 2D | ❌ local only | Provisional — game vs export files | Medium |
-| World History / True History Atlas | Leaflet (CDN) | ❌ local only (bonus) | Provisional — v8 | Medium |
+| 3D Chess + Checkers | Three.js (inlined) | ✅ **imported 2026-07-14** (Lane 2B) | Provisional — v2.3 chosen over v2.2 (playtest still pending) | Medium |
+| Pinball / Nebula Rescue | Three.js (inlined) | ✅ **imported 2026-07-14** (Lane 2B) | Provisional — v6.4 (playtest still pending) | Medium |
+| Pictionary "Draw It!" | Canvas 2D | ✅ **imported 2026-07-14** (Lane 2B) | Provisional — game file (7), not the exports (playtest still pending) | Medium |
+| World History / True History Atlas | Leaflet (CDN) | ✅ **imported 2026-07-14** (Lane 2B, bonus) | Provisional — v8 (playtest still pending) | Medium |
+
+**Importing ≠ Confirmed.** All four newly imported games are honestly labeled Playable/Experimental
+Prototype on their landing pages — none are claimed as final or canonical. Copies are byte-identical to
+their source files (verified by hash below); nothing in game logic, internal version labels, or the source
+archive was altered.
 
 Published game-file hashes (live == repo, confirmed): `halo-fps-game.html eb9e655c` ·
 `tower-defense-game.html 948f2386` · `bob-ross-game.html 282325ef`.
@@ -57,36 +62,79 @@ derivatives, so the repo and the source archive have diverged.
 - **Runtime:** Canvas 2D, self-contained. **Controls:** mouse/touch paint. Desktop + maybe mobile.
 - **Must test:** playtest save/export. Then Confirm.
 
-## 3D Chess + Checkers  (not published)
-- **Provisional canonical:** `3d chess\v2.3 - Master fast\Chess-Checkers-3D-v2-2-MASTER.html` — hash `73d677e7`, 50,490 B (newest folder, largest, distinct hash).
-- **Alternative:** `3d chess\v2.2 - Master\Chess-Checkers-3D-v2-2-Master.html` — hash `61d008a3`, 49,790 B.
-- **⚠️ Internal-label conflict:** v2.1, v2.2, and v2.3 **all** internally title themselves `Chess 3D + Checkers - v2.0 Premium WebGL`,
-  and the v2.3 folder's file is *named* `...v2-2-MASTER`. Folder/file labels cannot rank them — content differs (distinct hashes).
-- **Runtime:** Three.js **inlined**, self-contained (no external src). **Controls:** mouse click. Desktop + mobile-tolerant.
-- **Must test:** playtest v2.2 vs v2.3 head-to-head, pick the winner. Then Confirm.
+## 3D Chess + Checkers  ✅ imported 2026-07-14
+- **Repository path:** `games/chess.html` (landing) + `games/chess-game.html` (game).
+- **Source path:** `3d chess\v2.3 - Master fast\Chess-Checkers-3D-v2-2-MASTER.html`
+- **Source hash:** `73d677e7` (50,490 B) → **Imported hash:** `73d677e7` (byte-identical, verified).
+- **Version evidence:** internal `<title>` says `Chess 3D + Checkers - v2.0 Premium WebGL`; folder says v2.3.
+  Chosen over v2.2 (`61d008a3`, 49,790 B) as newest/largest/distinct — **not yet playtested head-to-head**.
+- **⚠️ Internal-label conflict (preserved, not resolved):** v2.1, v2.2, and v2.3 **all** internally title
+  themselves `v2.0 Premium WebGL`; the v2.3 file is even *named* `...v2-2-MASTER`. Folder/file labels cannot
+  rank them — content differs by hash. Not rewritten to hide this.
+- **Runtime:** Three.js loaded via ES module `import` from `cdn.jsdelivr.net/npm/three@0.160.0` —
+  **requires internet**, not self-contained. (Corrected 2026-07-14: the earlier Lane 1 audit's "inlined,
+  self-contained" call was wrong — the `<script src=...>` grep used in that audit missed ES-module
+  `importmap`/`import` loading. Caught by the Lane 2B 🔍 Codex review; verified directly before fixing.)
+- **Status:** Provisional — Playable Prototype label on landing page.
+- **Controls:** mouse click/select. **Devices:** desktop + mobile-tolerant (touch works).
+- **Validation performed:** HTTP 200 via local server; content byte-verified against source; nav links
+  (`chess-game.html`, `../index.html`) verified to resolve to existing files. **No in-browser
+  render/gameplay test performed this lane** (see Lane 2B report for validation-depth statement).
+- **Future testing still required:** in-browser playtest; v2.2-vs-v2.3 head-to-head; then Confirm.
 
-## Pinball / Nebula Rescue  (not published)
-- **Provisional canonical:** `3d space pinball game\rescue nebula - v2\Nebula_Rescue_v6_4_Control_Clarity_Nebula_Art_Benchmark.html`
-  — hash `a5693986`, 129,433 B, `<title> Nebula Rescue v6.4 — Control + Clarity + Nebula Art Benchmark` (internal label self-consistent).
-- **⚠️ Version-label conflict:** the three "v6.3 benchmark" files internally title themselves **`Nebula Rescue Pinball v4.9`**.
-  Lineage: legacy **Cosmic Pinball 3D** (`space_pinball` v1→v3) was redesigned into **Nebula Rescue** (v4.9-labeled "v6.3" → v6.4).
-- **Runtime:** Three.js **inlined**, self-contained. **Controls:** keyboard flippers + touch patterns present. Desktop; mobile uncertain.
-- **Must test:** playtest v6.4 for stability ("benchmark" build); confirm it supersedes v6.3. Then Confirm.
+## Pinball / Nebula Rescue  ✅ imported 2026-07-14
+- **Repository path:** `games/nebula-rescue.html` (landing) + `games/nebula-rescue-game.html` (game).
+- **Source path:** `3d space pinball game\rescue nebula - v2\Nebula_Rescue_v6_4_Control_Clarity_Nebula_Art_Benchmark.html`
+- **Source hash:** `a5693986` (129,433 B) → **Imported hash:** `a5693986` (byte-identical, verified).
+- **Version evidence:** internal `<title>` self-consistently says `Nebula Rescue v6.4 — Control + Clarity +
+  Nebula Art Benchmark`.
+- **⚠️ Version-label conflict (preserved, not resolved):** the three "v6.3 benchmark" source files internally
+  title themselves `Nebula Rescue Pinball v4.9`. Lineage: legacy Cosmic Pinball 3D (v1→v3) → Nebula Rescue
+  (v4.9-labeled "v6.3" → this v6.4). Documented honestly on the landing page.
+- **Runtime:** Three.js loaded via ES module `import` from `cdn.jsdelivr.net/npm/three@0.160.0` —
+  **requires internet**, not self-contained (same correction as Chess, above — Codex-caught).
+- **Status:** Provisional — Playable Prototype label on landing page.
+- **Controls:** keyboard flippers; some touch present. **Devices:** desktop primary; mobile uncertain.
+- **Validation performed:** HTTP 200; content byte-verified; nav links verified. **No in-browser
+  render/gameplay test performed this lane.**
+- **Future testing still required:** in-browser playtest for stability; confirm v6.4 truly supersedes v6.3; then Confirm.
 
-## Pictionary "Draw It! Master Party Edition"  (not published)
-- **Provisional canonical:** `pictionary\pictionary_party_game (7).html` — hash `d729e200`, 61,168 B, `<title> Draw It! Master Party Edition`.
-- **Alternative:** `pictionary\pictionary_party_game (6).html` — hash `294e3ec0`, 58,245 B.
-- **⚠️ Not builds:** `pictionary\2026-05-23-mixed.html` (473 KB) and `2026-05-23-dirty-that-was-pretty-good.html` (965 KB)
-  are **gallery exports** (internal title `... Gallery`, embedded image data) — output artifacts/evidence, **not** the game.
-- **Runtime:** Canvas 2D, self-contained. **Controls:** mouse/touch draw. Local/hotseat party edition.
-- **Vision gap:** the idea list wants **multiplayer + AI image-to-image generation**; the current build is a local party edition.
-- **Must test:** playtest (6) vs (7); pick game file, ignore exports. Then Confirm.
+## Pictionary "Draw It! Master Party Edition"  ✅ imported 2026-07-14
+- **Repository path:** `games/pictionary.html` (landing) + `games/pictionary-game.html` (game).
+- **Source path:** `pictionary\pictionary_party_game (7).html`
+- **Source hash:** `d729e200` (61,168 B) → **Imported hash:** `d729e200` (byte-identical, verified).
+- **Version evidence:** internal `<title>` says `Draw It! Master Party Edition`. Chosen over `(6).html`
+  (`294e3ec0`, 58,245 B) as the newer of the two actual game builds.
+- **Not imported (correctly excluded):** `2026-05-23-mixed.html` / `...dirty-that-was-pretty-good.html` —
+  these are gallery **exports** (internal title `... Gallery`, embedded image data), not the game itself.
+- **Runtime:** Canvas 2D, self-contained, no internet required.
+- **Status:** Provisional — Playable Prototype label on landing page. Local/hotseat only.
+- **Controls:** mouse/touch draw. **Devices:** desktop + mobile.
+- **Vision gap (unchanged):** the idea list wants multiplayer + AI image-to-image generation; current build
+  is local/hotseat only — noted honestly on the landing page as a future idea, not a promise.
+- **Validation performed:** HTTP 200; content byte-verified; nav links verified. **No in-browser
+  render/gameplay test performed this lane.**
+- **Future testing still required:** in-browser playtest; (6) vs (7) comparison if desired; then Confirm.
 
-## World History Map / True History Atlas  (bonus — not in the original 3, not published)
-- **Provisional canonical:** `world history map\v8 - clean rebuild\true-atlas-v8.html` — hash `cb66b407`, 68,531 B, `<title> True History Atlas — Friend Test Benchmark`.
-- **Alternatives:** v7.3–v7.6 "…Final Benchmark" siblings.
-- **Runtime:** Leaflet 1.9.4 via `unpkg.com` (needs internet + map tiles). **Controls:** mouse/touch map pan/zoom. Desktop + mobile.
-- **Must test:** playtest map + tile loading online. Then Confirm.
+## World History Map / True History Atlas  ✅ imported 2026-07-14 (bonus)
+- **Repository path:** `games/world-history.html` (landing) + `games/world-history-game.html` (game).
+- **Source path:** `world history map\v8 - clean rebuild\true-atlas-v8.html`
+- **Source hash:** `cb66b407` (68,531 B) → **Imported hash:** `cb66b407` (byte-identical, verified).
+- **Version evidence:** internal `<title>` says `True History Atlas — Friend Test Benchmark`. Chosen over
+  v7.3–v7.6 "…Final Benchmark" siblings as newest.
+- **Runtime:** Leaflet 1.9.4 from `unpkg.com`, **plus** live runtime fetches of historical-boundary GeoJSON
+  from `raw.githubusercontent.com` and event summaries/thumbnails from the Wikipedia REST API
+  (`en.wikipedia.org/api/rest_v1/...`). **Requires internet** for all of the above; will not fully work
+  offline. Documented explicitly and visibly on the landing page (corrected 2026-07-14 — the GeoJSON/Wikipedia
+  fetches were missed in the original landing-page copy; Codex-caught in the Lane 2B review).
+- **Status:** Provisional — labeled **Experimental Build (bonus prototype)**, described as an interactive
+  experience rather than a traditional game, per its non-game nature.
+- **Controls:** mouse/touch pan/zoom. **Devices:** desktop + mobile.
+- **Validation performed:** HTTP 200 for the local file; CDN dependency **not** exercised in this lane's
+  local-server validation (local server has no bearing on whether `unpkg.com` is reachable at runtime — that
+  depends on the visitor's own internet access, same as the live Halo/Babylon.js dependency already published).
+  Content byte-verified; nav links verified. **No in-browser render/gameplay test performed this lane.**
+- **Future testing still required:** in-browser test with live internet access to confirm tiles load; then Confirm.
 
 ---
 
@@ -100,4 +148,10 @@ derivatives, so the repo and the source archive have diverged.
 ## Notes
 - No `.jsx` / `.js` / `.css` / `.json` / `.zip` / fonts / models / textures exist in the collection — everything is
   standalone HTML. Nothing warrants React/Vite. PNGs present are user-saves or dev screenshots, not runtime assets.
-- Games reference no external image/audio files → **no missing-asset risk**; the only external deps are the Babylon and Leaflet CDNs.
+- Games reference no external *image/audio* files → no missing-asset risk in that sense. **External
+  script/data dependencies (updated 2026-07-14, Codex-verified):** Halo → Babylon.js (`cdn.babylonjs.com`);
+  Chess & Nebula Rescue → Three.js via ES module import (`cdn.jsdelivr.net`); World History → Leaflet
+  (`unpkg.com`) + live GeoJSON (`raw.githubusercontent.com`) + Wikipedia REST API. Tower Defense, Bob Ross,
+  and Pictionary remain fully self-contained. **5 of 7 games now require internet access to fully function**
+  — this is fine on GitHub Pages (which is itself served over the internet) but each affected game's landing
+  page says so honestly.
