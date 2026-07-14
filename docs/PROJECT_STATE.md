@@ -8,21 +8,30 @@ Last updated: **2026-07-13**.
 reconciliation is deferred behind this sprint, not dropped — see Known risks below.
 
 ## Current lane
-**Lane 2C — Homepage Arcade Refresh.** Status: **✅ Accepted / committed.** Simon reviewed the live local
-build in his own browser, accepted the homepage, and confirmed Nebula Rescue now loads in ~5 seconds with
-no white screen (previously ~24s blank). 🔍 Codex ran a final release review — no blockers. Proceeding
-through the release sequence: commit → push → verify public site.
+**Lane 2C — Homepage Arcade Refresh.** Status: **✅ Shipped.** Committed (`af0bc0b`), pushed, and live —
+verified by real rendered visual inspection plus HTTP checks on the public URL. Simon accepted the homepage
+in his own browser; Nebula Rescue now loads in ~5s with no white screen (down from ~24s). 🔍 Codex's final
+release review found no blockers.
 
 ## Exact next action
-1. Push `main` to `origin/main`.
-2. Visually verify the public site (headless Chrome, not just HTTP) shows the new 7-game homepage.
-3. Record the live checkpoint in docs, commit + push that too.
-4. **Tomorrow's first task: Game History Recovery** (read-only, `docs/PHASE_LANES.md`) — before any Nebula/Halo source work.
+**Tomorrow's first task: Game History Recovery** (read-only investigation, `docs/PHASE_LANES.md`) — recover
+durable version/checkpoint history for Nebula Rescue, Halo FPS, Pictionary, Tower Defense, and World History
+Atlas from the protected source archive, **before any hands-on Nebula Rescue or Halo FPS source changes.**
+This is a hard prerequisite, not a suggestion (see `docs/BACKLOG.md` B8). Not started tonight.
 
 ## Published state (live == repo)
-- 🟢 Live & smoke-passed 2026-07-13 (after the docs-only push): https://smurphy1398.github.io/prototype-arcade/ —
-  homepage loads; Halo FPS (card v1.7.6), Tower Defense (v6.1), Bob Ross (v0.1) present with Play links; no runtime change (expected).
-- GitHub Pages serves `main` at repo root (inferred; no CNAME/.nojekyll/workflow). Pages build status not directly inspectable (no `gh`/API).
+- 🟢🚀 **Live 2026-07-14, source `af0bc0b`:** https://smurphy1398.github.io/prototype-arcade/ — the new
+  7-game "Prototype Cabinet Row" homepage is live (featured Halo, Floor grid of 6, Bonus/Side Room Atlas).
+  **Verified by actual rendered visual inspection** (headless Chrome screenshots, viewed directly — not HTTP
+  alone) plus HTTP 200 on the homepage and all 7 game URLs. GitHub Pages took ~30–60s after push to
+  redeploy (first check still showed the old 3-card page; second check, after a short wait, showed the new
+  homepage).
+- All 3 pre-existing public game URLs (`games/{halo-fps,tower-defense,bob-ross}.html`) confirmed still valid.
+- GitHub Pages serves `main` at repo root (inferred; no CNAME/.nojekyll/workflow). Pages build status not
+  directly inspectable via API (no `gh`), but deployment is now confirmed by direct visual + HTTP evidence.
+- **Not verified tonight:** in-browser gameplay/interaction for any of the 4 newly imported games on the
+  live production URL — only Simon's local-server check (homepage + Nebula) and this session's local/prod
+  visual + HTTP checks. Deep Nebula Rescue gameplay/physics/balance remains explicitly open.
 
 ## Canonical games (all Provisional — see `GAME_CATALOG.md`; publishing Provisional is OK, mislabeling as Confirmed is not)
 - Halo FPS — ⚠️ published file matches no local build and mislabels its own version (title v1.7.5.2 vs card v1.7.6). Deferred to the Lane 2 hardening pass — does not block this sprint since it doesn't block importing/launching other games.

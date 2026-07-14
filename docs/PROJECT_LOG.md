@@ -6,6 +6,36 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-07-14 — Live: 7-game arcade homepage shipped
+**Agent Snapshot:** 🧭 Claude (Opus, release execution + live verification; no outside agents this entry).
+
+**TL;DR:** The Lane 2C homepage is live at https://smurphy1398.github.io/prototype-arcade/ (source commit
+`af0bc0b`), verified by actual rendered visual inspection (headless Chrome, screenshots viewed directly —
+not HTTP alone) plus HTTP 200 on the homepage and all 7 game URLs. The 3 pre-existing public URLs remain
+valid.
+
+**Verification method:** two production screenshot attempts — the first (immediately after push) still
+showed the old 3-card page (GitHub Pages hadn't redeployed yet); the second (~90s later, with a
+cache-busting query param) showed the new 7-game homepage fully rendered — featured Halo, Floor grid of 6,
+Bonus/Side Room with True History Atlas. Followed by a full-page capture confirming section order and
+content. All 8 URLs (homepage + 7 games) independently confirmed via `curl` to return HTTP 200.
+
+**Preserved facts:**
+- Simon's local acceptance: homepage "looks fine"; Nebula Rescue loads ~5s locally with no white screen.
+- **Deeper Nebula Rescue gameplay, physics, slide/ramp, and balance remain unresolved** — tonight's
+  acceptance covers homepage presentation and imported-game launch smoke only.
+- **Game History Recovery is the next project lane** — not started, hard prerequisite before Nebula/Halo
+  source work.
+- Reporting-format follow-up (short at-a-glance smoke checklist beside the TL;DR) is **deferred** to the
+  later laptop-Claude / Vibe Code foundation review, per Simon's explicit instruction not to revise the
+  contract again tonight.
+
+**Decision:** Ship complete. Committing this checkpoint, pushing, then stopping for the night.
+
+**Transcript records:** none new this entry.
+
+---
+
 ## 2026-07-14 — Lane 2C accepted + final release sequence
 **Agent Snapshot:** 🔍 Codex (final read-only Lane 2C release review) · 🧭 Claude (Opus, integration, commit, release).
 
