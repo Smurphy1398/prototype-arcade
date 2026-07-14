@@ -27,22 +27,53 @@ Last updated: **2026-07-13**.
 - **Status:** ✅ Accepted / committed. **Commit/push/deploy:** committed; **push pending explicit approval**; deploy not applicable (docs-only).
 - **Next lane:** Lane 2 (opens as a new **read-only reconciliation/planning** lane).
 
-## Lane 2 — Published Build Reconciliation  ·  Ready (not started)
+## Lane 2 — Published Build Reconciliation  ·  Deferred (Next, not Now)
 - **Goal:** resolve the Halo v1.7.6-vs-v1.7.5.2 provenance conflict; confirm Tower Defense & Bob Ross canonical; lock hashes in `GAME_CATALOG.md`.
-- **Why now:** fix existing truth before adding new games; smallest-risk real change.
+- **Reprioritized 2026-07-14:** moved behind the Arcade Expansion & Homepage Refresh sprint (Lanes 2A–2D) per
+  Simon's direction — the conflict does not block importing or launching other games, so it doesn't have to
+  block them either. Still required work; not dropped.
 - **Inputs:** live `games/*-game.html`, local candidates, `GAME_CATALOG.md`.
 - **Allowed changes:** possibly `games/halo-fps*.html`, `GAME_CATALOG.md`. **Exclusions:** no new games, no homepage redesign.
 - **🧠 Grok:** unnecessary. **🔍 Codex:** recommended (path/regression).
 - **Validation:** playtest all 3 locally + on a preview.
-- **Status:** Ready. **Commit/push/deploy:** commit appropriate after acceptance; push/deploy separate.
-- **Next lane:** Chess import.
+- **Status:** Ready, sequenced after Lane 2D. **Commit/push/deploy:** commit appropriate after acceptance; push/deploy separate.
+- **Next lane:** game-specific upgrades.
 
-## Later lanes (Proposed — derived from `ROADMAP.md`)
-- **Chess canonicalization & import** — playtest v2.2 vs v2.3; add `games/chess/`. 🔍 Codex recommended.
-- **Nebula Rescue import** — v6.4 stability; add `games/nebula-rescue/`.
-- **Pictionary import** — game file only (ignore gallery exports).
-- **World History Atlas** — decision/import (Leaflet CDN).
-- **Arcade homepage: visual direction** — 🧠 Grok required.
-- **Arcade homepage: implementation** — 🔍 Codex required.
-- **Shared navigation & responsive behavior.**
-- **Halo FPS stabilization.**
+---
+
+## Arcade Expansion & Homepage Refresh Sprint (current objective)
+
+### Lane 2A — Arcade Content & Import Audit  ·  ✅ Accepted / committed
+- **Goal:** read-only audit — reconfirm published games launch, reconfirm the strongest import candidate for
+  each missing game, define the file/URL structure and card metadata schema for adding all four without
+  breaking existing URLs, get one bounded 🧠 Grok homepage/product-direction review.
+- **Why now:** ground Lane 2B/2C in real constraints before touching any files.
+- **Inputs:** `docs/GAME_CATALOG.md`, live site, current `index.html`, source collection (read-only).
+- **Allowed changes:** `docs/{ROADMAP,PHASE_LANES,PROJECT_STATE,BACKLOG,PROJECT_LOG}.md`, `docs/agent-runs/*`. **Exclusions:** no game/runtime files, no `index.html`, no `games/`.
+- **🧠 Grok:** required — one bounded call, transcript preserved verbatim in `docs/agent-runs/2026-07-14-grok-homepage-direction.md`. Direction accepted (Claude-selected, Grok-informed), scoped down for Lane 2C's first pass.
+- **🔍 Codex:** unnecessary (nothing to diff yet).
+- **Validation:** `git status` shows docs-only diff; Grok transcript captured verbatim; live 3-game smoke re-confirmed.
+- **Status:** ✅ Accepted / committed. **Commit/push/deploy:** committed; push separate/unapproved.
+- **Next lane:** Lane 2B.
+
+### Lane 2B — Import Missing Games  ·  🟡 Active
+- **Goal:** add Chess, Nebula Rescue, Pictionary, World History Atlas using the strongest Provisional
+  candidate each, honestly labeled prototype/playtest. No internal-version edits, no source-archive deletions.
+- **Allowed changes:** new `games/<slug>.html` + `games/<slug>-game.html` per game, `docs/GAME_CATALOG.md`, `docs/PROJECT_STATE.md`, `docs/PHASE_LANES.md`, `docs/PROJECT_LOG.md`. **Exclusions:** no `index.html` changes, no deep game-logic rewrites, no existing-URL changes.
+- **🧠 Grok:** unnecessary. **🔍 Codex:** required — one bounded read-only path/link/runtime review after imports; transcript in `docs/agent-runs/`.
+- **Validation:** local HTTP server; every imported game's landing + game URL launches/renders/navigates correctly; existing 6 URLs reconfirmed unchanged.
+- **Status:** 🟡 Active. **Commit/push/deploy:** stop before commit; push/deploy remain separate.
+- **Next lane:** Lane 2C (on Simon's review of imports + Codex findings).
+
+### Lane 2C — Homepage Arcade Refresh  ·  Proposed
+- **Goal:** redesign the homepage as a cohesive arcade using the Claude-selected, Grok-informed direction —
+  hero, featured row, responsive grid, CSS-placeholder cover treatments, status/genre/control badges,
+  prototype labels, documented (unpopulated) future-media hook fields.
+- **Allowed changes:** `index.html` (and shared CSS if extracted). **Exclusions:** no fake screenshots/reviews/player-counts/trailer controls, no React/Vite, existing URLs preserved.
+- **🧠 Grok:** direction already captured in Lane 2A (evidence, not authority). **🔍 Codex:** required — links, responsive, accessibility basics, Pages compatibility, duplication, no accidental runtime changes.
+- **Status:** Proposed. **Next lane:** Lane 2D.
+
+### Lane 2D — Full Arcade Smoke  ·  Proposed
+- **Goal:** verify homepage + all 7 game cards/launches across desktop/tablet-landscape/tablet-portrait/phone;
+  confirm existing 3 URLs still valid; no missing assets/console-blocking errors; report limitations honestly.
+- **Status:** Proposed. **Next lane:** Lane 2 (deferred reconciliation) resumes.

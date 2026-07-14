@@ -6,6 +6,40 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-07-14 — Lane 2A: Arcade Content & Import Audit + 🧠 Grok homepage direction
+**TL;DR:** Reprioritized the roadmap (Arcade Expansion & Homepage Refresh sprint is now current; deep Halo/
+published-build reconciliation deferred, not dropped). Ran a read-only audit reconfirming the 3 live games
+still launch and the strongest import candidate per missing game (already evidence-backed in
+`GAME_CATALOG.md`). Ran one bounded 🧠 Grok text-only homepage/product-direction review. Docs-only; no game
+files or `index.html` touched; nothing committed.
+
+**Agents:** 🧠 Grok (one bounded call — planning/challenge/visual-direction) · 🧭 Claude (sole editor, docs +
+audit + decision).
+
+**Captain's synthesis (🧭 Claude):**
+- Live-site spot check (WebFetch) reconfirmed Halo, Tower Defense, and Bob Ross all still resolve with
+  correct Play links before proposing any import plan.
+- Grok's review (full record: `docs/agent-runs/2026-07-14-grok-homepage-direction.md`) diagnosed the current
+  homepage as honest-but-visually-neutral — *"clean and shippable as a repo homepage, but as an arcade it
+  undersells every game you're about to put on the floor."* Proposed a named, concrete direction
+  ("Prototype Cabinet Row": amber-on-dark palette, CSS-only per-game cover placeholders, one featured slot,
+  unified honest status vocabulary) that answers the "media-ready without media" requirement directly.
+- Grok explicitly separated what to change now vs. what to wait for real assets, and explicitly kept the
+  Halo provenance question out of scope for this lane — matching Simon's sprint boundaries without being told to.
+- 🧭 Claude accepted the direction as the **Claude-selected, Grok-informed** direction (evidence, not
+  automatic authority), with one modification: Lane 2C's first pass will scope to the highest-leverage
+  subset Grok itself flagged (cover placeholders, featured slot, accent/Play hierarchy, card anatomy,
+  responsive rules) rather than all 14 of Grok's "change now" items in a single diff, to keep the lane
+  reviewable. Nothing was rejected. Grok's "wait for real media" list matches the `BACKLOG.md` Arcade Media
+  Library spec and was parked accordingly.
+
+**Decision:** Return the Lane 2A deliverable (this entry + the audit + the import/homepage plan) to Simon and
+stop before any game or homepage edits. Lane 2B/2C/2D await separate approval.
+
+**Transcript records:** `docs/agent-runs/2026-07-14-grok-homepage-direction.md` (Full).
+
+---
+
 ## 2026-07-13 — Lane 1B: status-skills port
 **TL;DR:** Added Arcade-native `/handoff`, `/roadmap`, `/phaselane`, `/whatsnext` skills plus `docs/ROADMAP.md`,
 `docs/PHASE_LANES.md`, and a model/effort routing table in `AGENTS.md`; corrected the stale `PROJECT_STATE.md`

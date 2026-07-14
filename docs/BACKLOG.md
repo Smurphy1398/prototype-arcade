@@ -75,6 +75,26 @@ Common back-to-arcade nav, pause, and home behavior across games. Revisit once �
 
 ---
 
+### B7 — Arcade Media Library  · PARKED (future, not built this sprint)
+Structured spec for real cover art / screenshots / trailers, preserved in full rather than compressed:
+- **Per game:** one custom cover image; one or more screenshots; an optional short trailer/gameplay clip;
+  a poster/fallback image shown before the trailer loads or if it's missing.
+- **Recommended targets:** cover ~16:9 or a defined arcade-card ratio (TBD in Lane 2C once the grid shape is
+  set), reasonable web file-size budget (covers/screenshots optimized, e.g. WebP where practical); trailers
+  short (a few seconds to ~30s) and compressed for web delivery.
+- **Accessibility:** every image needs real alt text; any trailer needs a caption/description; never rely on
+  color alone for status/genre badges.
+- **Loading behavior:** images lazy-load below the fold; trailers **never autoplay with audio**; a poster
+  image must always show before any video interaction.
+- **Where assets live:** a per-game assets folder (exact path decided in Lane 2C alongside the card markup),
+  kept separate from game runtime files so media updates never touch game logic.
+- **How cards declare media:** the card metadata schema from Lane 2A (title, description, version, status,
+  genre, controls, technology, Play link) gains optional fields — cover image, screenshot list, trailer
+  URL, poster image, featured flag — documented now, populated later. Missing fields must **gracefully
+  fall back** to the current CSS-placeholder treatment, never to a broken image icon or empty box.
+- **Non-goals now:** no real assets created this sprint; no autoplay; no fake placeholder media that pretends
+  to be final art.
+
 ## Idea reservoir
 Simon's full raw idea list (Tower Defense v7 notes, RTS, Minecraft-style, survival horror, audio visualizer,
 AI DAW/synth, educational games, Quiplash/Cards-style, Dominos, Boxes, Sudoku/Crossword, Poker/Solitaire/Blackjack,
