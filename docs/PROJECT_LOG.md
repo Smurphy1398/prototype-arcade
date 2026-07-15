@@ -6,6 +6,26 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-07-15 — B8 Nebula Rescue read-only diagnosis complete (docs-only checkpoint)
+**Agent Snapshot:** 🧭 Claude (Opus/High, inline, sole editor) — read-only v6.3↔v6.4 diff/code trace + one
+headless-Chrome load-render check. No 🧠 Grok/🔍 Codex runs this pass.
+
+**TL;DR:** Disproved the Game History Recovery lane's "cleanup may have removed a return rail" lead — the
+`rail`/`habitrail` reference-count drop is prose-only, all ramp/rail/return code is byte-identical between
+v6.3 and v6.4. New statically-confirmed primary finding: the visible ramp tube and the real floor-trigger/
+scripted-glide path are geometrically decoupled objects. In-play reproduction of the exact failure mode is
+still outstanding (headless browser can't drive gameplay past the start screen) — Simon's hands-on smoke is
+the next action. B8 patch lane not opened; spinner tuning confirmed structurally out of scope. Also repaired
+stale `PROJECT_STATE.md` repo-status claims (real `HEAD` was `68cf795`, fully synced, not `f65aac3`/ahead-1
+as previously shown).
+
+**Smoke:** Not required — docs/read-only work only. No `games/nebula-rescue-game.html` or other runnable
+source touched; no source-archive file touched.
+
+Full record: `docs/agent-runs/2026-07-15-claude-nebula-b8-read-only-diagnosis.md`.
+
+---
+
 ## 2026-07-14 — Game History Recovery lane complete (pending review)
 **Agent Snapshot:** 🧭 Claude (Sonnet, sole editor + integrator) — 5 parallel read-only `Explore` subagents
 used to investigate each game's archive folder concurrently; no 🧠 Grok/🔍 Codex runs this pass (lane spec

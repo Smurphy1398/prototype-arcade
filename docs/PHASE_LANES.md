@@ -3,7 +3,7 @@
 The executable layer beneath `ROADMAP.md`. Coherent sprint lanes, lightweight format (from `AGENTS.md`).
 Expected to change often. Not every tiny patch is a lane. If this file and `PROJECT_STATE.md`/`ROADMAP.md`
 disagree about the active lane, that disagreement should be surfaced, not silently resolved.
-Last updated: **2026-07-13**.
+Last updated: **2026-07-15**.
 
 ---
 
@@ -154,3 +154,36 @@ version/checkpoint history before any hands-on Nebula Rescue or Halo FPS source 
   `docs/game-history/raw/`. No game source, source-archive, or commit/push/deploy actions taken.
 - **Next lane:** Nebula Rescue rescue/hardening (`BACKLOG.md` B8) — only after Simon reviews this lane's
   output.
+
+---
+
+## B8 diagnosis — Nebula Rescue read-only slide/ramp investigation  ·  ✅ Complete (docs-only checkpoint)
+
+**Completed 2026-07-15.** Read-only diff/code trace of the v6.3→v6.4 Nebula Rescue source, requested to
+resolve the Game History Recovery lane's open "possible removed return rail" lead before any B8 patch work.
+
+- **Goal:** reproduce (where possible) and statically diagnose the reported slide/ramp break; trace the
+  `rail`/`habitrail` reference-count delta to exact objects/code paths; determine failure category
+  (geometry/collision/positioning/physics/layering/missing-object); protect the spinner tuning; produce a
+  bounded root-cause hypothesis, candidate patch surface, rollback point, and exact smoke test.
+- **Allowed changes (diagnosis pass):** none — read-only investigation only.
+- **Allowed changes (this docs checkpoint):** `docs/agent-runs/2026-07-15-claude-nebula-b8-read-only-diagnosis.md`
+  (new), `docs/game-history/nebula-rescue.md`, `docs/PROJECT_STATE.md`, `docs/PHASE_LANES.md`,
+  `docs/PROJECT_LOG.md`. **Exclusions:** no `games/nebula-rescue-game.html` or any runnable source, no
+  spinner-code changes, no source-archive changes, no build, no deploy.
+- **🧠 Grok / 🔍 Codex:** unnecessary — single-file diff/code trace, no product-direction or independent
+  cross-check question was open.
+- **Result:** the inherited "cleanup may have removed a return rail" lead is **disproven** — the
+  `rail`/`habitrail` reference-count drop is prose-only; all ramp/rail/return code is byte-identical between
+  v6.3 and v6.4. New primary finding: the visible ramp tube and the actual floor-trigger/scripted-glide path
+  are **geometrically decoupled** objects (statically confirmed). Secondary/unconfirmed: an over-eager
+  trigger gate. Headless-Chrome load-render confirmed the game loads/renders cleanly (no real white-screen
+  bug); **in-play gameplay reproduction of the exact failure mode was not achievable headlessly and remains
+  outstanding.**
+- **Validation:** SHA-256 match confirms runtime == archived v6.4; full unified diff read line-by-line (19
+  hunks); every `rail`/`habitrail` occurrence traced in both files; one headless Chrome load-render
+  (30s virtual-time budget).
+- **Status:** ✅ **Diagnosis complete** (read-only). **B8 patch: not started, blocked on Simon's hands-on
+  ramp smoke** (see the diagnosis doc's exact smoke-test section). 🔒 Spinner protected values (torque
+  `Math.min(5.6,1.45+passSpeed*.38)`, clamp ±14) confirmed structurally outside the candidate patch surface.
+- **Next lane:** B8 patch lane — opens only after Simon reports which ramp failure mode he observes.

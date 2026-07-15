@@ -61,20 +61,39 @@ constant sound spam") and is a refinement, not a removal — **Simon has separat
 during future rescue work.**
 
 ## Slide/ramp/rail changes
-Habitrail/return-rail visuals are **essentially unchanged** between v6.3 and v6.4 — no dedicated
-slide-mechanic or ramp/rail geometry *fix* was made. There is, however, a **minor reduction in rail-related
-references** in v6.4, consistent with the lower-playfield cleanup (which hid/removed some duplicate
-objects): raw term counts drop from `rail` 52→50 and `habitrail` 6→4, while `ramp` (29→30) and `slide`
-(2→2) are flat. The only intentional rail-adjacent change is sling repositioning (see below).
+Habitrail/return-rail visuals and code are **byte-identical** between v6.3 and v6.4 — no dedicated
+slide-mechanic or ramp/rail geometry *fix* was made, and (correction below) no rail/habitrail *object* was
+removed either. The only intentional rail-adjacent change is sling repositioning (see below).
 
-**🔎 B8 diagnosis lead:** inspect whether that lower-playfield/sling cleanup inadvertently **removed, hid, or
-altered a return rail or related object near the slide** — the small `rail`/`habitrail` delta is a concrete
-starting point for the reported slide break, not proof of its cause.
+**⚠️ Correction (2026-07-15, B8 read-only diagnosis, `docs/agent-runs/2026-07-15-claude-nebula-b8-read-only-diagnosis.md`):**
+this section originally flagged a small `rail`/`habitrail` reference-count drop (`rail` 52→50, `habitrail`
+6→4) as a possible sign that v6.4's lower-playfield/sling cleanup had removed, hidden, or altered a return
+rail or related object near the slide. A full line-by-line trace of every `rail`/`habitrail` occurrence in
+both files found that **delta is prose-only** — the two dropped `habitrail` mentions are the title/controls
+hint ("...slower visible habitrail returns") and the intro paragraph, both simply rewritten for v6.4's
+control+clarity messaging. Every code reference (`moonHabitrail` curve, `habitrail` mesh, `scene.add`,
+the ramp trigger's `returnCurves.moonHabitrail` call) is present and unchanged in both files. **No return
+rail, habitrail object, or collision geometry was removed, hidden, or altered by the v6.4 cleanup.** The
+original "concrete starting point for the reported slide break" framing is retracted — it is not.
+
+**The accurate conclusion stands:** no dedicated slide-mechanic fix was added in v6.4, and the mechanic is
+identical in both archived builds, so **the break predates or survived both v6.3 and v6.4** — it is not a
+v6.4 regression.
+
+**New diagnosis (statically confirmed by direct code trace, not archive inference):** the visible ramp is a
+purely decorative floating tube (`rampCurve`, never added to the `rails[]` collision array) that the ball —
+a flat puck at a fixed low height — physically passes under. The actual "ramp shot" is an unrelated flat
+floor trigger box that, when hit, snaps the ball onto a *different* curve (`moonHabitrail`) for a scripted
+glide. The visible ramp geometry and the real trigger/scripted-return path are **geometrically decoupled** —
+they are separate objects that only appear connected in the art. This is a plausible root cause for "the
+slide doesn't work," independent of any v6.3→v6.4 change.
 
 **Simon has directly reported the slide/ramp does not work in play** (`RAW_IDEA_INBOX.md`, 2026-07-14). The
-archive does not contradict this — **no dedicated slide-mechanic fix was added in v6.4 that would explain
-the break** — so it likely predates or survived both archived builds. Requires hands-on diagnosis, not
-archive inference.
+archive/diff evidence does not contradict this and now offers a concrete static explanation — but
+**hands-on gameplay reproduction of the actual in-play failure mode is still required before any patch is
+written**; the 2026-07-15 diagnosis pass could not click past the game's start screen in a headless
+browser, so which exact failure mode Simon sees (never triggers / clips through / visibly-wrong glide /
+dumps to drain) remains unconfirmed.
 
 ## Plunger and flipper control changes
 - **Plunger**: no changes found between v6.3 and v6.4.
@@ -162,10 +181,14 @@ rescue pass, layout/collider cleanup should land before new feature/device addit
 Full text preserved at `docs/game-history/raw/nebula-rescue-passover.txt`.
 
 ## What still requires hands-on playtesting
-The slide/ramp break Simon reported directly (not evidenced or contradicted by this archive read), overall
-balance/mission pacing, actual FPS achieved by v6.4, and whether the held-flipper cradle tuning feels
-right in practice.
+The slide/ramp break Simon reported directly — **now narrowed by static diagnosis to a specific candidate
+mechanism (decorative ramp / floor trigger / scripted-glide decoupling, see above), but the actual in-play
+failure mode is still unconfirmed** — plus overall balance/mission pacing, actual FPS achieved by v6.4, and
+whether the held-flipper cradle tuning feels right in practice.
 
 ## Recommended next hardening/rescue lane
-Hands-on playtest of the current v6.4 build focused specifically on the slide/ramp complaint and general
-balance — per `docs/BACKLOG.md` B8 — while explicitly protecting the spinner tuning from regression.
+**B8 read-only diagnosis is complete** (2026-07-15,
+`docs/agent-runs/2026-07-15-claude-nebula-b8-read-only-diagnosis.md`). Next: Simon's hands-on smoke of the
+current v6.4 build, specifically to confirm which ramp failure mode he sees, before any patch is written —
+per `docs/BACKLOG.md` B8 — while explicitly protecting the spinner tuning (torque
+`Math.min(5.6,1.45+passSpeed*.38)`, clamp ±14) from regression.
