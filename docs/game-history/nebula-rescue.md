@@ -61,11 +61,20 @@ constant sound spam") and is a refinement, not a removal — **Simon has separat
 during future rescue work.**
 
 ## Slide/ramp/rail changes
-Habitrail/return-rail visuals unchanged between v6.3 and v6.4. No ramp/rail geometry differences found in
-the diff — the only rail-adjacent change is sling repositioning (see below). **Simon has directly
-reported the slide/ramp does not work in play** (`RAW_IDEA_INBOX.md`, 2026-07-14) — this is not
-contradicted by the archive (no slide-specific fix was ever made between v6.3 and v6.4), so the reported
-break likely predates or survived both archived builds. Requires hands-on diagnosis, not archive inference.
+Habitrail/return-rail visuals are **essentially unchanged** between v6.3 and v6.4 — no dedicated
+slide-mechanic or ramp/rail geometry *fix* was made. There is, however, a **minor reduction in rail-related
+references** in v6.4, consistent with the lower-playfield cleanup (which hid/removed some duplicate
+objects): raw term counts drop from `rail` 52→50 and `habitrail` 6→4, while `ramp` (29→30) and `slide`
+(2→2) are flat. The only intentional rail-adjacent change is sling repositioning (see below).
+
+**🔎 B8 diagnosis lead:** inspect whether that lower-playfield/sling cleanup inadvertently **removed, hid, or
+altered a return rail or related object near the slide** — the small `rail`/`habitrail` delta is a concrete
+starting point for the reported slide break, not proof of its cause.
+
+**Simon has directly reported the slide/ramp does not work in play** (`RAW_IDEA_INBOX.md`, 2026-07-14). The
+archive does not contradict this — **no dedicated slide-mechanic fix was added in v6.4 that would explain
+the break** — so it likely predates or survived both archived builds. Requires hands-on diagnosis, not
+archive inference.
 
 ## Plunger and flipper control changes
 - **Plunger**: no changes found between v6.3 and v6.4.
