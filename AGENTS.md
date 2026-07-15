@@ -76,19 +76,22 @@ and release reports.
 
 ---
 
-## Required report contract  (HARD RULE — v1.2, corrects v1.1's ordering)
+## Required report contract  (HARD RULE — v1.3-informed, corrects v1.1/v1.2 ordering)
 
 This is a hard rule for **every** meaningful checkpoint, audit, handoff, lane report, implementation report,
-smoke-ready report, and release report. Adapted from `VIBE_CODE_DEFAULT_PROJECT_FOUNDATION_v1.2.md` §7 for
-this project. **v1.2 supersedes v1.1 for report formatting.** v1.1 fixed a real regression (2026-07-14: a
-Claude-solo report omitted the detailed contributions section and gave no smoke instructions, because the
-old "only when an outside agent was used" wording let it) — but v1.1 then got the section *order* backward,
-putting the owner-facing TL;DR/smoke/next-action at the top and the detailed evidence in the middle. Simon
-needs the deep record first (for the durable log) and the actionable bit grouped at the **end** (what he
-scrolls to in practice) — v1.2 fixes the order, not the content requirements.
+smoke-ready report, and release report. Selectively adopts `VIBE_CODE_DEFAULT_PROJECT_FOUNDATION_v1.3.md` §7
+for this project — **rules, not files** (the v1.3 blueprint is not copied into this repo; Arcade's own
+`AGENTS.md` stays authoritative). History: v1.1 fixed a real regression (2026-07-14: a Claude-solo report
+omitted the detailed contributions section and gave no smoke instructions) but got the section *order*
+backward; v1.2 fixed the order (deep record first, owner-facing brief last); v1.3 adds a **blockers/status
+line at the very top** and **compact vs full report tiers** (below). Simon reads the top blocker line and the
+bottom action brief first; the detailed evidence lives in the body.
 
 **Required order, unless Simon explicitly asks for a different shape:**
 
+0. **Blockers / Status** — a `⚠️` line (or short blockquote) at the very top: anything that changes Simon's
+   decision (a hard blocker, "not verified — needs your smoke", auth/session not reached, a path/scope
+   caveat). If there are none, write one line: `No blockers.` This top line is **not** the TL;DR.
 1. `Agent Snapshot`
 2. `Agent Contributions`
 3. `🧭 Claude Synthesis`
@@ -103,6 +106,7 @@ scrolls to in practice) — v1.2 fixes the order, not the content requirements.
 together at the end, nothing else interleaved between them.
 
 **Hard rules:**
+- The **top line (0)** is reserved for blockers/status; do not put the TL;DR at the top.
 - Detailed Agent Contributions must be near the top (section 2), never buried below the implementation summary.
 - TL;DR must be near the bottom (section 7), never at the top.
 - Do not omit the smoke block on runnable/visual work. Do not omit the detailed Agent Contributions block
@@ -111,6 +115,19 @@ together at the end, nothing else interleaved between them.
   detail (exact steps, devices/viewports, what counts as failure) belongs earlier under Work Completed /
   Evidence, not repeated in Quick Smoke.
 - Do not make Simon search the report to discover what he needs to test or do next.
+- Never hide auth/validation status anywhere but the top blocker line.
+
+### Report tiers — compact vs full
+Proportionality, never concealment. The tier governs how much structure to spend, not what to disclose —
+the top blocker line, any auth/validation limitation, git state when relevant, and required smoke appear in
+**both** tiers.
+- **Compact report** — for tiny, low-risk, contained work (a one-line CSS/docs fix, a status check, this
+  kind of read-only pointer): a `⚠️`/`No blockers` line, a one-line-per-role Agent Contributions block, what
+  changed, and one exact next action. Do not force the full 0–9 shape onto trivial work.
+- **Full report** — for behavioral, multi-file, trust, release, or handoff work, or any lane with real
+  findings: use the full 0–9 order above.
+- **Default to compact** for low-risk contained work where no outside agent ran; escalate to **full** for
+  behavioral/multi-file/release/handoff work or any lane with real findings.
 
 ### 1. Agent Snapshot — compact layer
 One line, first: `Agent Snapshot: 🧠 Grok (<brief contribution>) · 🔍 Codex (<brief contribution>) · 🧭 Claude (<model/effort, contribution>)`.
@@ -118,6 +135,15 @@ Only agents that materially contributed to *this* report. A carried-forward cont
 if the report states clearly the agent did **not** run again this time, e.g.
 `🧠 Grok (Lane 2A direction carried into this implementation; not rerun)`. Never claim an agent or model ran
 unless it actually did.
+
+**Execution-mode honesty (HARD RULE).** Whenever an agent is named, state *how* it actually ran with one of
+these tokens — never imply a separate or external run that did not happen:
+- `inline` — the main Claude session acting under that role (e.g. Claude as sole editor/integrator).
+- `separate-agent` — a real isolated agent session dispatched by Claude (e.g. an internal read-only
+  `Explore`/research subagent). These operate **under** Claude and are **not** automatically 🧠 Grok / 🔍 Codex /
+  🛠️ Fable — say so (see §2).
+- `external-CLI` — an outside read-only reviewer run through its own tool (e.g. the local Grok or Codex CLI).
+Example: `Agent Snapshot: 🔍 Codex (external-CLI, read-only diff review) · 🧭 Claude (Sonnet/Medium, inline, sole editor)`.
 
 ### 2. Agent Contributions — detailed layer, **always required, even solo**
 One block per agent that actually ran: why called · bounded assignment · what it contributed · important
@@ -153,6 +179,54 @@ not "continue when ready."
 
 Two-tier visibility unchanged: `PROJECT_LOG.md` is the skimmable executive layer; `docs/agent-runs/` holds
 the full evidence.
+
+**Arcade keeps its stronger rules on top of this contract:** durable `docs/agent-runs/` records for every
+*meaningful* 🧠 Grok / 🔍 Codex / 🛠️ Fable run (Arcade does **not** adopt v1.3's "ephemeral by default"
+downgrade — the meaningful-run threshold above still governs); exact-quote discipline ("no verbatim output
+captured" when none exists); per-game history + verbatim raw-source preservation under `docs/game-history/`;
+one active editor per dirty tree; and explicit per-action approval for every irreversible step.
+
+---
+
+## Durable-doc staleness guard  (HARD RULE)
+
+Canonical docs that claim to mirror committed / pushed / deployed / live truth must stay honest without
+forcing a rewrite after every internal edit:
+- **Temporary local WIP** may live in the active lane / `PROJECT_STATE.md`'s current-lane block — it does not
+  require a full canonical-state rewrite yet.
+- **Canonical committed / pushed / deployed / live truth** (`PROJECT_STATE.md` repo-status + published-state
+  blocks, `ROADMAP.md` phase status, `GAME_CATALOG.md` canonical hashes) must be updated **in the same
+  checkpoint/release flow that changed it** — not left for later.
+- **At session startup** (per `CLAUDE.md`), compare those canonical claims against `git HEAD`, branch
+  ahead/behind state, and (when relevant) live-site evidence.
+- **If they disagree**, surface the drift *before* relying on the docs or editing, and schedule a bounded
+  docs catch-up. Never silently rewrite history to hide drift.
+- A canonical doc carries a visible `Last updated:` (and, where it mirrors git, a `Reflects: <commit>`)
+  line so drift is detectable. A doc with no freshness signal is treated as **evidence, not authority**.
+
+---
+
+## Command / permission matrix
+
+The enforceable layer under the prose permission rules. One clear Simon instruction may authorize several
+specifically-named irreversible actions together (e.g. "commit and push"); do not re-ask when authorization
+is already explicit, and never infer authorization that was not given.
+
+| Category | Arcade examples | Policy |
+|---|---|---|
+| Read-only inspect | `git status`/`log`/`diff`, read docs, browse the live site, hash a file | **Allowed** |
+| Non-mutating validation | serve locally (static HTTP server), headless-Chrome screenshot, `curl` a URL | **Allowed when relevant to the active lane.** Report any generated files; don't stage them unless intended. |
+| Docs-only edit | approved `docs/` + workflow files (`AGENTS.md`, `CLAUDE.md`, skills) | **Allowed in a docs lane** |
+| Source patch | approved `index.html` / `games/<slug>*.html` scope | **Allowed in a source lane; stop before commit** |
+| Stage / commit | `git add`, `git commit` | **Explicit Simon authorization** |
+| Push | `git push` | **Explicit Simon authorization (separate from commit)** |
+| Deploy | publish to GitHub Pages (a push to `main` at repo root **is** the deploy) | **Explicit Simon authorization; note that push == deploy here** |
+| Package install / restructure | any npm/global-skill install, framework conversion, repo restructure | **Explicit Simon authorization** |
+| Protected archive | `..\PROTOTYPE ARCADE\` (read-only import archive) | **Forbidden to modify — read-only always** 🔒 |
+| Secrets / destructive | print tokens/keys, delete history/catalog/checkpoints, history rewrite | **Forbidden without explicit approval; never print secrets** |
+
+There is no build step and no test command — all games are standalone HTML. "Run" = open the file or serve
+the folder locally; "deploy" = GitHub Pages serving `main` at repo root.
 
 ---
 

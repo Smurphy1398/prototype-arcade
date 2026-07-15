@@ -1,7 +1,7 @@
 # Project State
 
 _What is true right now._ Update this whenever the truth changes. Keep it short and current.
-Last updated: **2026-07-13**.
+Last updated: **2026-07-14**. Reflects: local `HEAD f65aac3` · `origin/main c9e4c52` · local ahead 1 (unpushed).
 
 ## Current phase
 **Arcade Expansion & Homepage Refresh sprint** (reprioritized 2026-07-14). Deep Halo/published-build
@@ -41,17 +41,23 @@ slide/ramp complaint, which the archive does not explain and will require hands-
 - Bob Ross — only meaningful build (High).
 - Chess/Checkers, Nebula Rescue pinball, Pictionary, World History Atlas — **imported 2026-07-14** (Lane 2B), all Provisional/Playable-or-Experimental Prototype, none Confirmed. In-browser playtest still required for all four.
 
-## Repo status (corrected 2026-07-14, per 🔍 Codex catching this had gone stale)
-- Lane 1 foundation **committed** (`e9839cc`) and **pushed**; that commit is still `origin/main`'s tip.
-- Lane 1B, Lane 2A, and Lane 2B (4 game imports) are all **committed locally**, local `HEAD` = `7d19000`,
-  **not yet pushed** — local `main` is ahead of `origin/main` by 3 commits.
-- Lane 2C (`index.html` refresh) is **implemented and visually accepted by Simon, not yet committed** —
-  proceeding through the final release sequence now.
-- History (newest first): `7d19000 feat: import chess, nebula rescue, pictionary, and world history atlas` →
+## Repo status (refreshed 2026-07-14 — verified against `git`)
+- `origin/main` tip = **`c9e4c52`** (`docs: record seven-game arcade homepage release`) — everything through
+  the Lane 2C homepage ship is **committed and pushed**; the live site reflects this.
+- Local `HEAD` = **`f65aac3`** (`docs: recover game history and checkpoint context`) — the Game History
+  Recovery lane is **committed locally, not yet pushed**. Local `main` is **ahead of `origin/main` by 1
+  commit** (that one unpushed commit is `f65aac3`).
+- Lane 2C (`index.html` refresh) is **committed (`af0bc0b`) and pushed** — accepted by Simon and live (no
+  longer "awaiting acceptance"). Lane 2D full-arcade smoke is **Parked**.
+- Game History Recovery is **docs-only**, committed as `f65aac3`; awaiting Simon's review before push.
+- History (newest first): `f65aac3 docs: recover game history and checkpoint context` →
+  `c9e4c52 docs: record seven-game arcade homepage release` **(= current `origin/main`)** →
+  `af0bc0b feat: refresh prototype arcade homepage` →
+  `9f0c517 docs: checkpoint visual review and reporting workflow` →
+  `7d19000 feat: import chess, nebula rescue, pictionary, and world history atlas` →
   `2bc6c03 docs: prioritize arcade expansion and homepage refresh` →
   `7d4d512 docs: add prototype arcade status skills and roadmap` →
-  `e9839cc docs: establish prototype arcade project foundation` (= current `origin/main`) →
-  `0ea750e Add Tower Defense and Bob Ross builds`.
+  `e9839cc docs: establish prototype arcade project foundation` → `0ea750e Add Tower Defense and Bob Ross builds`.
 
 ## Known risks / watch items
 - ⚠️ Halo provenance conflict (above) — **deferred, not dropped**; must resolve before Halo can be called Confirmed.

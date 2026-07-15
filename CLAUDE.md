@@ -10,7 +10,11 @@ live in **`AGENTS.md`** — read it first and follow it. This file adds only Cla
 1. Read the current truth in order: `docs/PROJECT_STATE.md` (now-truth, current lane, exact next action) →
    `docs/PHASE_LANES.md` (active lane) → `docs/ROADMAP.md` (milestone/priorities) →
    `docs/GAME_CATALOG.md` when canonical-build questions arise. (`AGENTS.md` is already loaded above, incl. model/effort routing.)
-2. Check real state before acting: `git status` and (when relevant) the live site. Do not trust memory of prior state.
+2. Check real state before acting: run `git status` / `git log --oneline -3` and compare the canonical docs'
+   freshness claims (each carries a `Last updated:` / `Reflects: <commit>` line) against actual `git HEAD`,
+   branch ahead/behind state, and (when relevant) the live site — the durable-doc staleness guard in
+   `AGENTS.md`. **If they disagree, surface the drift before relying on the docs or editing; never silently
+   rewrite history to hide it.** Do not trust memory of prior state.
 3. For canonical-build questions, use `docs/GAME_CATALOG.md` — never assume the newest filename or version number is best.
 4. Preserve raw ideas in `docs/RAW_IDEA_INBOX.md`; capture structured specs in `docs/BACKLOG.md`; log decisions and
    agent involvement in `docs/PROJECT_LOG.md` (+ full evidence in `docs/agent-runs/`).
