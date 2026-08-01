@@ -1,0 +1,4 @@
+# The candidate artifact is content-addressed by SHA-256 and MUST be stored byte-exact.
+# Without this, core.autocrlf normalisation changes the published bytes and public
+# SHA verification fails. Do not remove.
+index.html -text

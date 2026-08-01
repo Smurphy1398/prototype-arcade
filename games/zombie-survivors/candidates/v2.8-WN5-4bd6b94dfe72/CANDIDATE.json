@@ -1,0 +1,42 @@
+{
+  "schema": "arcade.candidate_snapshot.v1",
+  "game": "Zombie Survivors",
+  "candidate_version": "v2.8-WN5",
+  "wall": "WN5 — Pose, Room, and Readout",
+  "candidate_sha256": "4bd6b94dfe72d0a41e8abc9949fe3a7a03632c5e46cdc8355413ef48c610bae5",
+  "artifact": "index.html",
+  "byte_identical_to_source": true,
+  "published_at": "2026-08-01",
+
+  "status": "CANDIDATE / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED",
+  "owner_accepted": false,
+
+  "immutability": "This directory is content-addressed by the candidate SHA-256 and is IMMUTABLE. It must never be overwritten. Future candidates get their own directory; this one is preserved for audit and rollback.",
+
+  "verification_status_at_publish": {
+    "honest_summary": "This build has had NO meaningful product bot smoke. No gameplay verification of any kind.",
+    "what_was_proven": [
+      "build self-identifies as v2.8-WN5 (static/serve proof)",
+      "HUD layout geometry measured at six viewport widths (DOM only) — PARTIAL",
+      "Dev Lab tabs / green active state / one-shot flash (DOM only) — PARTIAL"
+    ],
+    "zero_automated_gameplay_proof": ["ZOM-15", "MAP-24", "MAP-25", "MAP-01", "AUD-09", "PERF-02 real freeze behaviour", "combat / zombie pressure", "all 9 SHOULD rows"],
+    "explicitly_not_proof": "booting, standing still, dying, isolated Node VM timing, code landing, clean lane reports, independent code review, ORDER_GUARD passing, zero console errors"
+  },
+
+  "source": {
+    "repo": "Zombie Survivors (source of truth)",
+    "wall_run": "docs/agent-runs/2026-07-31-wall-n5-pose-room-readout",
+    "base_of_record": "WN4 candidate bbbb3ede412bae9ca9497e6a025929ef8012d8cd0263d1e9943d912719ca7220 — NOT owner accepted (WN4 smoked REJECT)"
+  },
+
+  "publishing_rules_honoured": [
+    "copied from a clean Prototype Arcade worktree based on origin/main",
+    "NOT published from the work/nebula-v6.5-restoration feature branch",
+    "candidate bytes are byte-identical to the verified source artifact — nothing injected, so the public SHA-256 can be verified against this value",
+    "no accepted/live path was modified; only new paths were added",
+    "no local paths, private evidence, secrets, transcripts or internal run artifacts published"
+  ],
+
+  "deployment_semantics": "Deployment success does NOT equal product acceptance. This artifact being publicly reachable means only that it was copied and served. owner_accepted remains false until Simon's smoke says otherwise."
+}
