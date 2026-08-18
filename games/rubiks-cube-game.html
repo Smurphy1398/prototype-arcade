@@ -1,0 +1,4050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0d1017">
+  <title>Rubik's Cube</title>
+  <meta name="description" content="A browser Rubik's Cube that teaches you to solve it, then times you like a competition.">
+  <style>
+/* Rubik's Cube — v2 polish.
+ *
+ * v1's cube itself was well styled, but the page around it had NO styling at all: all 13 layout
+ * classes it emitted (.page-header, .move-grid, .action-row, .move, .action, ...) had zero
+ * matching rules, so the controls flowed as inline text. That mismatch is what the owner saw.
+ * This stylesheet dresses the whole page to the same standard as the cube.
+ *
+ * Two v1 traps deliberately avoided:
+ *   1. NO bare [data-face] selector. v1 had one, and because every sticker also carried
+ *      data-face, the page collapsed into a heap until JS stripped the attribute.
+ *   2. NO transition on .cube. v1 transitioned it unconditionally, which would smear every
+ *      drag by 220ms. The camera writes .cube's transform directly; only cubies transition.
+ */
+
+:root {
+  --u: 62px;                       /* cubie size; JS overrides via --unit */
+  --gap: 2px;
+  --radius: 14px;
+
+  --bg: #0d1017;
+  --bg-glow: #171d2b;
+  --surface: #151a24;
+  --surface-2: #1c2230;
+  --line: #2a3244;
+  --text: #e8ecf4;
+  --text-dim: #94a0b8;
+  --accent: #4c8dff;
+  --good: #38d39f;
+
+  /* authentic Rubik's colours */
+  --c-U: #f7f7f5;  /* up    - white  */
+  --c-D: #ffd500;  /* down  - yellow */
+  --c-L: #ff5800;  /* left  - orange */
+  --c-R: #c41e3a;  /* right - red    */
+  --c-F: #009e60;  /* front - green  */
+  --c-B: #0051ba;  /* back  - blue   */
+
+  --turn-ease: cubic-bezier(.34, .9, .4, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+body {
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--bg-glow) 0%, transparent 60%),
+    var(--bg);
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+body.is-ready { opacity: 1; }
+
+.shell {
+  min-height: 100dvh;
+  max-width: 720px;
+  margin: 0 auto;
+  /* notched phones in LANDSCAPE clip left/right, not just top/bottom */
+  padding: max(12px, env(safe-area-inset-top))
+           max(16px, env(safe-area-inset-right))
+           calc(16px + env(safe-area-inset-bottom))
+           max(16px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---- top bar ---------------------------------------------------------- */
+.topbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -.02em;
+}
+.status {
+  margin: 0;
+  font-size: .875rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  transition: color .2s ease;
+}
+.status--good { color: var(--good); font-weight: 600; }
+
+/* ---- the cube stage --------------------------------------------------- */
+.stage {
+  flex: 1 1 auto;
+  min-height: calc(var(--unit, var(--u)) * 5.4);
+  display: grid;
+  place-items: center;
+  perspective: 1400px;
+  perspective-origin: 50% 46%;
+  /* a drag must never scroll the page or trigger pull-to-refresh */
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+.stage:active { cursor: grabbing; }
+
+.scene {
+  width: calc(var(--unit, var(--u)) * 3);
+  height: calc(var(--unit, var(--u)) * 3);
+  transform-style: preserve-3d;
+  display: grid;
+  place-items: center;
+}
+
+/* The camera owns this transform. Nothing else writes it, and it must NOT transition —
+   a transition here would lag every drag frame. */
+.cube {
+  position: relative;
+  width: 0; height: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.cubie {
+  position: absolute;
+  width: var(--unit, var(--u));
+  height: var(--unit, var(--u));
+  margin-left: calc(var(--unit, var(--u)) / -2);
+  margin-top: calc(var(--unit, var(--u)) / -2);
+  transform-style: preserve-3d;
+}
+
+/* the layer a drag would turn, shown before the move commits */
+.cubie.is-preview .facelet {
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, .9),
+    inset 0 2px 6px rgba(255, 255, 255, .1);
+  filter: brightness(1.18);
+}
+
+.facelet {
+  position: absolute;
+  inset: var(--gap);
+  border-radius: 9%;
+  background: #0a0c11;                       /* plastic body shows between stickers */
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, .55),
+    inset 0 2px 6px rgba(255, 255, 255, .1);
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+/* the sheen that makes a flat square read as moulded plastic */
+.facelet-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(150deg, rgba(255, 255, 255, .3) 0%, rgba(255, 255, 255, .06) 38%, transparent 62%);
+  pointer-events: none;
+}
+
+.facelet.c-U { background: var(--c-U); }
+.facelet.c-D { background: var(--c-D); }
+.facelet.c-L { background: var(--c-L); }
+.facelet.c-R { background: var(--c-R); }
+.facelet.c-F { background: var(--c-F); }
+.facelet.c-B { background: var(--c-B); }
+
+/* ---- control panel ---------------------------------------------------- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.legend {
+  float: right;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: .78rem;
+}
+.section-heading--summary {
+  cursor: pointer;
+  list-style: revert;
+  margin-bottom: 12px;
+}
+.settings[open] .section-heading--summary { margin-bottom: 12px; }
+
+.section-heading {
+  margin: 0 0 8px;
+  font-size: .72rem;
+  font-weight: 650;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.row--primary > .btn { flex: 1 1 auto; }
+
+/* every interactive target clears the 44px minimum — v1's were ~37px */
+.btn {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 550;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, transform .06s ease;
+}
+.btn:hover:not(:disabled) { background: #232b3c; border-color: #3a4560; }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn--primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn--primary:hover:not(:disabled) { background: #5b98ff; border-color: #5b98ff; }
+.btn--quiet { color: var(--text-dim); }
+/* 44px is the floor for a touch target; these were 38px, which the review caught
+   contradicting this file's own comment. */
+.btn--small { min-height: 44px; padding: 0 14px; font-size: .85rem; }
+.btn--toggle.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+.chip {
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: .8rem;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: color .15s ease, border-color .15s ease;
+}
+.chip:hover { color: var(--text); border-color: #3a4560; }
+
+/* ---- move grid: an actual grid, unlike v1's bare display:block --------- */
+.move-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* one row per face: name on the left, the two directions on the right. Six choices reading
+   top to bottom beats a 3x3 of twelve small tiles pretending to be a keypad. */
+.move-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 6px;
+  align-items: center;
+  padding: 5px 6px 5px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-left: 4px solid currentColor;
+  border-radius: 10px;
+}
+.move-row.c-U { color: var(--c-U); }
+.move-row.c-D { color: var(--c-D); }
+.move-row.c-L { color: var(--c-L); }
+.move-row.c-R { color: var(--c-R); }
+.move-row.c-F { color: var(--c-F); }
+.move-row.c-B { color: var(--c-B); }
+
+.move-label {
+  text-align: left;
+  background: none;
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+/* The face colours are vivid but several fail contrast as TEXT on a dark surface (blue is
+   about 2:1). The review flagged it, so identity comes from a swatch dot while the text itself
+   stays readable. */
+.move-label::before {
+  content: "";
+  display: inline-block;
+  width: 8px; height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  vertical-align: baseline;
+  background: currentColor;
+}
+.move-label.c-U::before { background: var(--c-U); }
+.move-label.c-D::before { background: var(--c-D); }
+.move-label.c-L::before { background: var(--c-L); }
+.move-label.c-R::before { background: var(--c-R); }
+.move-label.c-F::before { background: var(--c-F); }
+.move-label.c-B::before { background: var(--c-B); }
+
+.move {
+  min-height: 46px;
+  min-width: 62px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #10141d;
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+  font-size: 1.45rem;      /* the arrow is the label, so it needs to read at a glance */
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  cursor: pointer;
+  position: relative;
+  transition: background .12s ease, transform .06s ease;
+}
+.move:hover { background: #1a2130; }
+.move:active { transform: translateY(1px); }
+.move--prime { color: var(--text-dim); }
+
+.move-glyph { font-size: 1.3rem; line-height: 1; }
+/* the notation sits under the arrow: always visible, never the only cue */
+.move-notation {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--text-dim);
+  line-height: 1;
+}
+.move--letters .move-notation { font-size: 1.05rem; color: var(--text); }
+.move--arrows .move-glyph { font-size: 1.45rem; }
+
+.kbd-hint {
+  margin: 10px 0 0;
+  font-size: .76rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+kbd {
+  display: inline-block;
+  min-width: 20px;
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--surface-2);
+  font: inherit;
+  font-size: .72rem;
+  text-align: center;
+}
+
+/* ---- settings --------------------------------------------------------- */
+.field { display: block; margin-bottom: 10px; }
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: .8rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.field-value { font-variant-numeric: tabular-nums; color: var(--text); }
+.select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+}
+/* a slider is dragged, not tapped, but it still needs a finger-sized grab area */
+.range { width: 100%; accent-color: var(--accent); height: 44px; }
+.hint { margin: -4px 0 10px; font-size: .78rem; color: var(--text-dim); }
+
+.version { opacity: .8; font-variant-numeric: tabular-nums; }
+
+.footer {
+  margin-top: auto;
+  padding-top: 4px;
+  text-align: center;
+  font-size: .74rem;
+  color: #8a99b5;   /* was #5c6884 — below 4.5:1 on this background */
+}
+
+
+/* ---- guided solve ------------------------------------------------------ */
+.guide {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+.guide[hidden] { display: none; }
+.guide-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.guide-head .section-heading { margin-bottom: 0; }
+
+/* the seven stages, as a checklist you watch fill in */
+.stage-list {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.stage-item {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  font-size: .82rem;
+  color: var(--text-dim);
+}
+.stage-item.is-done { color: var(--good); }
+.stage-item.is-current {
+  background: rgba(76, 141, 255, .14);
+  color: var(--text);
+  font-weight: 600;
+}
+.stage-mark { text-align: center; font-weight: 700; }
+.stage-count { font-variant-numeric: tabular-nums; font-size: .76rem; opacity: .8; }
+
+/* the next move, given as much room as it deserves */
+.next-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.next-card--done { color: var(--good); font-weight: 600; text-align: center; }
+.next-card--thinking { color: var(--text-dim); text-align: center; }
+.next-kicker {
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.next-move { display: flex; align-items: center; gap: 12px; }
+.next-glyph {
+  font-size: 2rem;
+  line-height: 1;
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  background: #10141d;
+  border: 1px solid var(--line);
+  border-bottom: 3px solid currentColor;
+}
+.next-glyph.c-U { color: var(--c-U); }
+.next-glyph.c-D { color: var(--c-D); }
+.next-glyph.c-L { color: var(--c-L); }
+.next-glyph.c-R { color: var(--c-R); }
+.next-glyph.c-F { color: var(--c-F); }
+.next-glyph.c-B { color: var(--c-B); }
+.next-label { font-size: .95rem; }
+.next-label strong { font-size: 1.15rem; }
+.next-alg {
+  margin-top: 8px;
+  font-size: .78rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.next-remaining {
+  margin-top: 6px;
+  font-size: .75rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.row--guide > .btn { flex: 1 1 auto; }
+.guide-note { margin: 10px 0 0; }
+
+
+/* ---- mode tabs --------------------------------------------------------- */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.tab {
+  min-height: 44px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--text-dim);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.tab:hover { color: var(--text); }
+.tab.is-on { background: var(--accent); color: #fff; }
+
+/* ---- timer ------------------------------------------------------------- */
+.scramble-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.scramble-text {
+  flex: 1 1 240px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: .92rem;
+  letter-spacing: .04em;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px 12px;
+  word-spacing: .35em;
+  line-height: 1.5;
+}
+
+/* the pad is the main event: big, obviously pressable, and it changes colour by state */
+.timer-pad {
+  width: 100%;
+  min-height: 132px;
+  display: grid;
+  place-content: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  transition: background .12s ease, border-color .12s ease, color .12s ease;
+}
+.timer-time {
+  font-size: clamp(2.4rem, 12vw, 3.6rem);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.timer-hint { font-size: .8rem; color: var(--text-dim); }
+.timer-pad--inspecting { background: #1d2740; border-color: #35507f; }
+.timer-pad--inspecting.is-warning { background: #33291a; border-color: #7a5a22; }
+.timer-pad--inspecting.is-danger { background: #3a1f22; border-color: #8a3a42; }
+.timer-pad--ready { background: #143a2b; border-color: var(--good); color: var(--good); }
+.timer-pad--ready .timer-hint { color: var(--good); }
+.timer-pad--solving { background: #101722; border-color: var(--accent); }
+.timer-pad--solving .timer-time { color: var(--accent); }
+
+.row--penalty { margin-top: 10px; }
+.row--penalty > .btn { flex: 1 1 auto; }
+.btn.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 12px;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.stat-label {
+  font-size: .66rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.stat-value { font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+
+.splits { margin-top: 12px; }
+.splits-head, .splits-foot {
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.splits-foot { margin: 8px 0 0; text-transform: none; letter-spacing: 0; font-size: .78rem; }
+.split-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  padding: 4px 8px;
+  font-size: .82rem;
+  border-radius: 6px;
+}
+.split-row:nth-child(odd) { background: rgba(255, 255, 255, .03); }
+.split-name { color: var(--text-dim); }
+.split-delta { font-variant-numeric: tabular-nums; }
+.split-total { font-variant-numeric: tabular-nums; color: var(--text-dim); min-width: 4.5em; text-align: right; }
+
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+.history-head .section-heading { margin-bottom: 0; }
+.history { list-style: none; margin: 8px 0 0; padding: 0; }
+.history-row {
+  display: grid;
+  grid-template-columns: 3em 1fr 3em auto;
+  gap: 8px;
+  align-items: baseline;
+  padding: 6px 8px;
+  border-radius: 7px;
+  font-size: .86rem;
+}
+.history-row:nth-child(odd) { background: rgba(255, 255, 255, .03); }
+.history-row.is-dnf { color: var(--text-dim); text-decoration: line-through; }
+.history-n { color: var(--text-dim); font-size: .76rem; }
+.history-time { font-variant-numeric: tabular-nums; font-weight: 600; }
+.history-pen { color: #ff9c6b; font-size: .76rem; }
+.history-moves { color: var(--text-dim); font-size: .76rem; text-align: right; }
+.history-empty { color: var(--text-dim); font-size: .86rem; padding: 6px 8px; }
+
+/* ---- trainer ----------------------------------------------------------- */
+.chips--groups { margin-left: 0; margin-bottom: 10px; }
+.chip.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.case-card {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.case-card--done { border-color: var(--good); color: var(--good); }
+.case-name { font-size: 1.05rem; font-weight: 650; margin-bottom: 4px; }
+.case-note { font-size: .84rem; color: var(--text-dim); line-height: 1.5; }
+.case-alg {
+  margin-top: 10px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: .95rem;
+  letter-spacing: .04em;
+  word-spacing: .3em;
+  color: var(--accent);
+}
+.case-alg.is-hidden { color: var(--text-dim); font-style: italic; font-family: inherit; letter-spacing: 0; }
+.case-setup { margin-top: 6px; font-size: .74rem; color: var(--text-dim); font-family: ui-monospace, monospace; }
+
+/* ---- settings checkbox ------------------------------------------------- */
+.field--check {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+/* The checkbox glyph stays a sensible size; the TAP TARGET is the whole label, which is what
+   WCAG 2.5.8 actually measures. The label below is padded to clear 44px. */
+.field--check { min-height: 44px; cursor: pointer; }
+.field--check input { width: 24px; height: 24px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+.check-body { font-size: .86rem; }
+.check-body .hint { display: block; margin: 4px 0 0; }
+
+/* speed mode hides the orbit affordance, because the camera is deliberately fixed */
+body.is-speedmode .stage { cursor: default; }
+body.is-speedmode .row--view .chips { opacity: .5; }
+
+/* ---- focus, motion, small screens ------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body { transition: none; }
+  .cubie { transition: none !important; }
+}
+
+@media (max-width: 430px) {
+  .shell { padding-left: 12px; padding-right: 12px; }
+  .title { font-size: 1.15rem; }
+  .move-grid { gap: 6px; }
+  .move { font-size: .95rem; }
+  .row--primary > .btn { flex: 1 1 100%; }
+  .chips { margin-left: 0; }
+}
+
+
+@media (max-width: 430px) {
+  .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tab { font-size: .9rem; min-height: 42px; }
+  .scramble-text { flex-basis: 100%; font-size: .86rem; }
+  .history-row { grid-template-columns: 2.6em 1fr auto; }
+  .history-moves { display: none; }
+}
+
+/* wide screens: cube on the left, controls on the right, both fully visible */
+@media (min-width: 900px) and (min-height: 600px) {
+  .shell {
+    max-width: 1180px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 430px;
+    grid-template-areas:
+      "head  head"
+      "stage panel"
+      "foot  foot";
+    align-items: start;
+    column-gap: 20px;
+  }
+  .topbar { grid-area: head; }
+  .stage { grid-area: stage; position: sticky; top: 16px; min-height: 62vh; }
+  .tabs { grid-area: panel; align-self: start; }
+  .panel { grid-area: panel; margin-top: 62px; max-height: 78vh; overflow-y: auto; }
+  .footer { grid-area: foot; }
+}
+
+/* short landscape phones: keep the cube visible, shrink the chrome */
+@media (max-height: 520px) and (orientation: landscape) {
+  .shell { max-width: none; flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+  .topbar { flex: 1 1 100%; }
+  /* the base min-height (5.4 units ~ 335px) cannot shrink here and forces page scroll */
+  .stage { flex: 1 1 45%; min-height: 0; height: 46vh; }
+  .panel { flex: 1 1 45%; max-height: 82vh; overflow-y: auto; }
+  .footer { flex: 1 1 100%; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <h1 class="title">Rubik&rsquo;s Cube</h1>
+      <p id="status" class="status" role="status" aria-live="polite">Loading&hellip;</p>
+    </header>
+
+    <!-- The cube stage. #cube is the mount AND the drag surface. -->
+    <main class="stage" id="cube" aria-label="Cube. Drag to turn or orbit."></main>
+
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Modes"></nav>
+
+    <section class="panel">
+
+      <!-- PLAY -->
+      <div id="panel-play" role="tabpanel">
+        <div class="row row--primary">
+          <button type="button" id="scramble" class="btn btn--primary">Scramble</button>
+          <button type="button" id="undo" class="btn">Undo turn</button>
+          <button type="button" id="reset" class="btn btn--quiet">Restore solved</button>
+        </div>
+
+        <div class="row row--view">
+          <button type="button" id="reset-view" class="btn btn--small">Recenter camera</button>
+          <button type="button" id="lock" class="btn btn--small btn--toggle" aria-pressed="false">Orbit on</button>
+          <div class="chips" id="view-presets" role="group" aria-label="Snap to view"></div>
+        </div>
+
+        <div class="moves">
+          <h2 class="section-heading">Turns <span class="legend">&#8635; clockwise &middot; &#8634; counter-clockwise</span></h2>
+          <div class="move-grid" id="move-grid" role="group" aria-label="Face turns"></div>
+          <p class="kbd-hint">Point at a button to light up the slice it moves.</p>
+        </div>
+
+        <details class="settings">
+          <summary class="section-heading section-heading--summary">Settings &amp; keyboard</summary>
+          <label class="field">
+            <span class="field-label">Button labels</span>
+            <select id="notation" class="select"></select>
+          </label>
+          <label class="field">
+            <span class="field-label">Drag does</span>
+            <select id="scheme" class="select"></select>
+          </label>
+          <p class="hint" id="scheme-hint"></p>
+          <label class="field">
+            <span class="field-label">Turn speed <output id="speed-value" class="field-value">1.00x</output></span>
+            <input type="range" id="speed" class="range" min="0.5" max="3" step="0.25" value="1">
+          </label>
+          <label class="field field--check">
+            <input type="checkbox" id="speedmode">
+            <span class="check-body">
+              <strong>Speed mode</strong> — lock the camera and use two-hand keys
+              <span class="hint">Competition grip: <kbd>J</kbd>/<kbd>F</kbd> U, <kbd>I</kbd>/<kbd>K</kbd> R,
+              <kbd>D</kbd>/<kbd>E</kbd> L, <kbd>S</kbd>/<kbd>L</kbd> D, <kbd>H</kbd>/<kbd>G</kbd> F,
+              <kbd>W</kbd>/<kbd>O</kbd> B</span>
+            </span>
+          </label>
+          <p class="kbd-hint">
+            <kbd>U</kbd> <kbd>D</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>F</kbd> <kbd>B</kbd> turn a face
+            &middot; <kbd>Shift</kbd> reverses &middot; <kbd>0</kbd> recenter &middot; <kbd>C</kbd> lock camera
+            &middot; <kbd>Space</kbd> timer
+          </p>
+        </details>
+      </div>
+
+      <!-- GUIDE -->
+      <section class="guide" id="guide" role="tabpanel" hidden></section>
+
+      <!-- TIMER -->
+      <div id="panel-timer" class="timer-panel" role="tabpanel" hidden></div>
+
+      <!-- TRAIN -->
+      <div id="panel-train" class="train-panel" role="tabpanel" hidden></div>
+
+    </section>
+
+    <footer class="footer">Prototype Arcade &middot; runs offline, no build step &middot; <span id="version" class="version"></span></footer>
+  </div>
+  <script type="module">
+// Generated by tools/bundle.mjs — do not edit by hand.
+// The source of truth is "v2 - polish/". Re-generate rather than patching this file.
+const __M = {}, __C = {};
+function __req(id) {
+  if (!(id in __C)) __C[id] = __M[id]();
+  return __C[id];
+}
+
+__M["./cube.js"] = function () {
+/**
+ * Deterministic Rubik's Cube (3x3) state model.
+ *
+ * Dependency-free plain ES module. No imports, no build step.
+ *
+ * Orientation (fixed, standard):
+ *   U on top, D on bottom, F toward viewer, B at back, L left, R right.
+ *
+ * Each face is an array of 9 stickers, row-major (0..8), indexed as seen when
+ * looking directly AT that face:
+ *
+ *        0 1 2
+ *        3 4 5
+ *        6 7 8
+ *
+ * Face "up" directions when looking at each face:
+ *   U : looking down from above; row 0 borders B, row 2 borders F,
+ *       col 0 borders L, col 2 borders R.
+ *   D : looking up from below;   row 0 borders F, row 2 borders B,
+ *       col 0 borders L, col 2 borders R.
+ *   F : row 0 borders U, row 2 borders D, col 0 borders L, col 2 borders R.
+ *   B : row 0 borders U, row 2 borders D, col 0 borders R, col 2 borders L.
+ *   L : row 0 borders U, row 2 borders D, col 0 borders B, col 2 borders F.
+ *   R : row 0 borders U, row 2 borders D, col 0 borders F, col 2 borders B.
+ */
+
+/** The six face keys, in canonical order. */
+const FACES = ["U", "D", "L", "R", "F", "B"];
+
+/**
+ * Clockwise rotation of a face's own 9 stickers:
+ *   next[i] = prev[FACE_CW_SRC[i]]
+ * (i.e. the new top-left sticker comes from the old bottom-left, etc.)
+ */
+const FACE_CW_SRC = [6, 3, 0, 7, 4, 1, 8, 5, 2];
+
+/**
+ * Side-strip cycles for each clockwise quarter turn.
+ *
+ * Each entry is an ordered ring of four [face, [i0, i1, i2]] strips. The
+ * stickers of ring[k] move, position-for-position (i0->i0, i1->i1, i2->i2),
+ * onto ring[k + 1]. Index order within a triple encodes the orientation, so
+ * some triples are listed reversed.
+ */
+const SIDE_CYCLES = {
+  // Viewed from above: F -> L -> B -> R -> F (top rows all align directly).
+  U: [["F", [0, 1, 2]], ["L", [0, 1, 2]], ["B", [0, 1, 2]], ["R", [0, 1, 2]]],
+  // Viewed from below: F -> R -> B -> L -> F (bottom rows all align directly).
+  D: [["F", [6, 7, 8]], ["R", [6, 7, 8]], ["B", [6, 7, 8]], ["L", [6, 7, 8]]],
+  // Viewed from the left: U -> F -> D -> B -> U (B strip runs the other way).
+  L: [["U", [0, 3, 6]], ["F", [0, 3, 6]], ["D", [0, 3, 6]], ["B", [8, 5, 2]]],
+  // Viewed from the right: F -> U -> B -> D -> F (B strip runs the other way).
+  R: [["F", [2, 5, 8]], ["U", [2, 5, 8]], ["B", [6, 3, 0]], ["D", [2, 5, 8]]],
+  // Viewed from the front: U -> R -> D -> L -> U.
+  F: [["U", [6, 7, 8]], ["R", [0, 3, 6]], ["D", [2, 1, 0]], ["L", [8, 5, 2]]],
+  // Viewed from the back: U -> L -> D -> R -> U.
+  B: [["U", [2, 1, 0]], ["L", [0, 3, 6]], ["D", [6, 7, 8]], ["R", [8, 5, 2]]],
+};
+
+/** All accepted move strings. */
+const MOVES = ["U", "U'", "D", "D'", "L", "L'", "R", "R'", "F", "F'", "B", "B'"];
+
+/** Deep copy of a cube state (arrays are copied, never shared). */
+function copy(state) {
+  const out = {};
+  for (const f of FACES) out[f] = state[f].slice();
+  return out;
+}
+
+/** @returns {object} a fresh solved cube; each face holds nine of its own code. */
+function solvedCube() {
+  const state = {};
+  for (const f of FACES) state[f] = new Array(9).fill(f);
+  return state;
+}
+
+/** Apply a single clockwise quarter turn of `face`, returning a new state. */
+function turnCW(state, face) {
+  const next = copy(state);
+
+  // 1. Rotate the face's own stickers 90 degrees clockwise.
+  const prevFace = state[face];
+  for (let i = 0; i < 9; i++) next[face][i] = prevFace[FACE_CW_SRC[i]];
+
+  // 2. Cycle the three-sticker strips on the four adjacent faces.
+  const ring = SIDE_CYCLES[face];
+  for (let k = 0; k < 4; k++) {
+    const [srcFace, srcIdx] = ring[k];
+    const [dstFace, dstIdx] = ring[(k + 1) % 4];
+    for (let j = 0; j < 3; j++) {
+      next[dstFace][dstIdx[j]] = state[srcFace][srcIdx[j]];
+    }
+  }
+
+  return next;
+}
+
+/**
+ * Apply `move` to `state` and return a NEW state. Pure: `state` is never
+ * mutated. A prime move is three clockwise quarter turns.
+ *
+ * @param {object} state cube state
+ * @param {string} move one of U U' D D' L L' R R' F F' B B'
+ * @returns {object} new cube state
+ */
+function turn(state, move) {
+  if (!MOVES.includes(move)) {
+    throw new Error(
+      `Unknown move: ${JSON.stringify(move)}. Expected one of: ${MOVES.join(" ")}`
+    );
+  }
+  const face = move[0];
+  const times = move.length === 2 ? 3 : 1; // "X'" == three clockwise turns
+  let out = copy(state);
+  for (let i = 0; i < times; i++) out = turnCW(out, face);
+  return out;
+}
+
+/**
+ * True when `state` is a well-formed cube: exactly the six face keys, each an
+ * array of exactly nine stickers, and each of the six colours appearing
+ * exactly nine times overall. Never throws.
+ */
+function isValid(state) {
+  if (typeof state !== "object" || state === null || Array.isArray(state)) return false;
+
+  const keys = Object.keys(state);
+  if (keys.length !== FACES.length) return false;
+  for (const f of FACES) {
+    if (!Object.prototype.hasOwnProperty.call(state, f)) return false;
+    if (!Array.isArray(state[f]) || state[f].length !== 9) return false;
+  }
+
+  const counts = Object.create(null);
+  for (const f of FACES) counts[f] = 0;
+  for (const f of FACES) {
+    for (const sticker of state[f]) {
+      if (typeof sticker !== "string" || !(sticker in counts)) return false;
+      counts[sticker]++;
+    }
+  }
+  return FACES.every((f) => counts[f] === 9);
+}
+
+/** True when `state` is valid and every face is uniform in its own colour. */
+function isSolved(state) {
+  if (!isValid(state)) return false;
+  return FACES.every((f) => state[f].every((s) => s === f));
+}
+
+return { FACES, solvedCube, turn, isValid, isSolved };
+};
+
+__M["./scramble.js"] = function () {
+/**
+ * Scramble and reset helpers for the Rubik's Cube lab.
+ *
+ * Dependency-free plain ES module; the only import is the state model in
+ * `./cube.js`. Works unchanged in a browser (`<script type="module">`) and
+ * under `node`.
+ *
+ * Design rules that callers can rely on:
+ *   - Purity: the input state is treated as read-only. Every returned state is
+ *     a fresh object, reached only through `turn()`, so it is always valid.
+ *   - Determinism: exactly ONE `rng()` value is drawn per move, in move order.
+ *     The same seeded rng plus the same inputs therefore always produce the
+ *     same `moves` array and the same final state. `Math.random` is only ever
+ *     used as the default when no `rng` is supplied.
+ */
+const { FACES, solvedCube, turn } = __req("./cube.js");
+/**
+ * The 12 legal moves, in canonical order. Nothing else is ever emitted.
+ * Exported as a convenience for callers (menus, tests); frozen so that a
+ * consumer cannot accidentally corrupt the pool scramble() draws from.
+ */
+const MOVES = Object.freeze([
+  "U", "U'", "D", "D'", "L", "L'", "R", "R'", "F", "F'", "B", "B'",
+]);
+
+/** Deep copy of a cube state (arrays are copied, never shared). */
+function copy(state) {
+  const out = {};
+  for (const f of FACES) out[f] = state[f].slice();
+  return out;
+}
+
+/**
+ * Normalise the requested move count.
+ *
+ * Policy (chosen over throwing for shape reasons): a finite number is floored
+ * towards zero and clamped to a minimum of 0, so `7.9` means 7 and `-3` means
+ * 0. Anything that is not a finite number (NaN, Infinity, strings, null, ...)
+ * is a caller bug and throws a clear Error rather than silently scrambling.
+ */
+function normaliseCount(n) {
+  if (typeof n !== "number" || !Number.isFinite(n)) {
+    throw new Error(
+      `scramble: n must be a finite number, got ${JSON.stringify(n)}`
+    );
+  }
+  return Math.max(0, Math.floor(n));
+}
+
+/**
+ * Pick one move from `candidates` using a single `rng()` draw.
+ *
+ * The draw is defensively clamped so a misbehaving rng (returning NaN, a
+ * negative number, or a value >= 1) can never index out of bounds.
+ */
+function pickMove(candidates, rng) {
+  const draw = rng();
+  const unit = typeof draw === "number" ? draw : 0;
+  let index = Math.floor(unit * candidates.length);
+  if (!Number.isFinite(index) || index < 0) index = 0;
+  else if (index >= candidates.length) index = candidates.length - 1;
+  return candidates[index];
+}
+
+/**
+ * Apply `n` random legal moves to `state`, returning the new state and the
+ * moves that produced it.
+ *
+ * Immediately redundant moves are avoided: the same face is never chosen twice
+ * in a row (so no `R` then `R'`, and no `R` then `R`). This is done by
+ * filtering the candidate list BEFORE the rng draw, so exactly one draw is
+ * still consumed per move and determinism is unaffected.
+ *
+ * @param {object} [state] cube state to scramble; defaults to a solved cube.
+ *   Never mutated; the result is always a fresh state.
+ * @param {number} [n=20] number of moves; floored and clamped to >= 0.
+ *   Throws if not a finite number.
+ * @param {function(): number} [rng=Math.random] returns a value in [0, 1).
+ *   Throws if not a function.
+ * @returns {{state: object, moves: string[]}} new state plus the applied moves
+ *   in order (`moves.length === n`).
+ */
+function scramble(state, n = 20, rng = Math.random) {
+  if (typeof rng !== "function") {
+    throw new Error(
+      `scramble: rng must be a function returning a number in [0, 1), got ${typeof rng}`
+    );
+  }
+  const count = normaliseCount(n);
+
+  // Copy up front so `n = 0` still returns a distinct object and the caller's
+  // state is never handed back or touched.
+  let current = state === undefined || state === null ? solvedCube() : copy(state);
+  const moves = [];
+
+  let lastFace = null;
+  for (let i = 0; i < count; i++) {
+    const candidates = lastFace === null
+      ? MOVES
+      : MOVES.filter((m) => m[0] !== lastFace);
+    const move = pickMove(candidates, rng);
+    current = turn(current, move);
+    moves.push(move);
+    lastFace = move[0];
+  }
+
+  return { state: current, moves };
+}
+
+/**
+ * @returns {object} a freshly solved cube, for the Reset control.
+ */
+function resetCube() {
+  return solvedCube();
+}
+
+return { MOVES, scramble, resetCube };
+};
+
+__M["./geometry.js"] = function () {
+// GEOMETRY — the bridge between the proven state model and real 3D cubies.
+//
+// v1 drew six flat planes, so no layer could ever rotate. v2 draws 26 cubies, which means we
+// need an exact, verified correspondence between cube.js's facelet indices and positions in
+// space. This module is that correspondence and nothing else: no DOM, no CSS, no side effects,
+// so it stays unit-testable in plain node.
+//
+// MODEL COORDINATES (right-handed, the way a person describes a cube):
+//   x = +1 right   / -1 left
+//   y = +1 up      / -1 down
+//   z = +1 front   / -1 back
+//
+// CSS COORDINATES DIFFER: CSS +y points DOWN. The conversion lives in one place only —
+// `cssTranslate()` below — so the rest of the codebase can think in ordinary terms.
+//
+// FACELET LAYOUT (cube.js): each face is a row-major 9-array, viewed face-on from outside,
+// with U at the top of the view (and F at the "bottom" of the U view / "top" of the D view).
+// The mapping below was derived from that convention and then CHECKED against cube.js's own
+// SIDE_CYCLES permutation tables — e.g. cube.js says U moves F[0]->L[0] and L[0]->B[0], and
+// rotating this mapping's coordinates reproduces exactly that. See tests/geometry.test.mjs.
+const FACES = ["U", "D", "L", "R", "F", "B"];
+
+// Outward normal of each face, in model coordinates.
+const FACE_NORMALS = {
+  U: [0, 1, 0], D: [0, -1, 0],
+  R: [1, 0, 0], L: [-1, 0, 0],
+  F: [0, 0, 1], B: [0, 0, -1],
+};
+
+// Which coordinate a face's layer pins, and to what value.
+// A move on face X turns every cubie whose `axis` coordinate equals `value`.
+const FACE_LAYER = {
+  U: { axis: "y", value: 1 }, D: { axis: "y", value: -1 },
+  R: { axis: "x", value: 1 }, L: { axis: "x", value: -1 },
+  F: { axis: "z", value: 1 }, B: { axis: "z", value: -1 },
+};
+
+// CSS rotation axis + sign for a CLOCKWISE turn of each face, viewed from outside that face.
+//
+// Derived, not guessed: a clockwise turn seen from the +axis side is a -90 deg rotation about
+// that axis under the right-hand rule in MODEL space. Converting to CSS (which mirrors y)
+// negates the sense for x and z and preserves it for y. The result below is independently
+// corroborated — it is identical to the axis/sign table v1's animate.js arrived at from the
+// CSS geometry, which is a useful cross-check on both.
+const FACE_ROTATION = {
+  U: { axis: "Y", sign: -1 }, D: { axis: "Y", sign: 1 },
+  R: { axis: "X", sign: 1 }, L: { axis: "X", sign: -1 },
+  F: { axis: "Z", sign: 1 }, B: { axis: "Z", sign: -1 },
+};
+
+// ---- facelet index <-> position -----------------------------------------------------
+// For face `face` and index 0..8, the model-space position of the cubie carrying that sticker.
+function faceletToPosition(face, i) {
+  const col = i % 3;
+  const row = (i - col) / 3;
+  switch (face) {
+    case "U": return { x: col - 1, y: 1, z: row - 1 };
+    case "D": return { x: col - 1, y: -1, z: 1 - row };
+    case "F": return { x: col - 1, y: 1 - row, z: 1 };
+    case "B": return { x: 1 - col, y: 1 - row, z: -1 };
+    case "R": return { x: 1, y: 1 - row, z: 1 - col };
+    case "L": return { x: -1, y: 1 - row, z: col - 1 };
+    default: throw new Error(`Unknown face: ${face}`);
+  }
+}
+
+// The exact inverse: which index on `face` belongs to the cubie at (x,y,z).
+// Caller must ensure the cubie actually lies on that face.
+function positionToFacelet(face, { x, y, z }) {
+  switch (face) {
+    case "U": return (x + 1) + 3 * (z + 1);
+    case "D": return (x + 1) + 3 * (1 - z);
+    case "F": return (x + 1) + 3 * (1 - y);
+    case "B": return (1 - x) + 3 * (1 - y);
+    case "R": return (1 - z) + 3 * (1 - y);
+    case "L": return (z + 1) + 3 * (1 - y);
+    default: throw new Error(`Unknown face: ${face}`);
+  }
+}
+
+// ---- the 26 cubies -------------------------------------------------------------------
+// Every (x,y,z) in {-1,0,1}^3 except the invisible core. Each carries one sticker per outward
+// face it touches: 3 for a corner, 2 for an edge, 1 for a centre.
+function buildCubies() {
+  const cubies = [];
+  for (let x = -1; x <= 1; x++) {
+    for (let y = -1; y <= 1; y++) {
+      for (let z = -1; z <= 1; z++) {
+        if (x === 0 && y === 0 && z === 0) continue; // core: never visible
+        const stickers = [];
+        for (const face of FACES) {
+          const [nx, ny, nz] = FACE_NORMALS[face];
+          const onThisFace = (nx !== 0 && x === nx) || (ny !== 0 && y === ny) || (nz !== 0 && z === nz);
+          if (onThisFace) stickers.push({ face, index: positionToFacelet(face, { x, y, z }) });
+        }
+        const kind = stickers.length === 3 ? "corner" : stickers.length === 2 ? "edge" : "centre";
+        cubies.push({ id: `c${x + 1}${y + 1}${z + 1}`, x, y, z, kind, stickers });
+      }
+    }
+  }
+  return cubies;
+}
+
+// Is this cubie part of the layer that `face` turns?
+function inLayer(cubie, face) {
+  const { axis, value } = FACE_LAYER[face];
+  return cubie[axis] === value;
+}
+
+// ---- CSS bridge ----------------------------------------------------------------------
+// The ONE place model coordinates become CSS. CSS +y is down, hence the negation.
+function cssTranslate({ x, y, z }, unitPx) {
+  return `translate3d(${x * unitPx}px, ${-y * unitPx}px, ${z * unitPx}px)`;
+}
+
+// The CSS transform for a layer mid-turn. Applied to each cubie in the layer, it rotates the
+// cubie about the cube's centre — which is exactly what a layer turn is — because the rotation
+// is composed BEFORE the translation.
+function cssLayerTransform(cubie, face, degrees, unitPx) {
+  const { axis, sign } = FACE_ROTATION[face];
+  return `rotate${axis}(${sign * degrees}deg) ${cssTranslate(cubie, unitPx)}`;
+}
+
+// Total turn angle for a move: "R" = 90, "R'" = -90, "R2" = 180.
+function moveAngle(move) {
+  if (move.endsWith("2")) return 180;
+  return move.endsWith("'") ? -90 : 90;
+}
+function moveFace(move) {
+  return move[0];
+}
+
+return { FACES, FACE_NORMALS, FACE_LAYER, FACE_ROTATION, faceletToPosition, positionToFacelet, buildCubies, inLayer, cssTranslate, cssLayerTransform, moveAngle, moveFace };
+};
+
+__M["./render3d.js"] = function () {
+// RENDER3D — builds and paints 26 real cubies.
+//
+// v1 drew six flat planes, which is why no layer could ever rotate and why the cube read as a
+// picture rather than an object. Here each cubie is its own 3D element carrying up to three
+// facelets, so a layer turn is a genuine rotation of nine solids.
+//
+// Two rules kept from v1's renderer because they were right:
+//   * painting is IDEMPOTENT and dirty-checked — repainting an unchanged sticker touches no DOM;
+//   * the module never reads `document` at import time, so it stays node-importable.
+//
+// Performance note (the owner reported v1 "runs a little poorly"): `will-change` is applied
+// only to the cube root and to the layer currently turning, never to all 80 elements at once —
+// blanket `will-change` costs GPU memory and makes things slower, not faster.
+const { buildCubies, cssTranslate } = __req("./geometry.js");
+// Orientation of a facelet inside its cubie. CSS +y is down, so U/D look inverted here.
+const FACELET_TRANSFORM = {
+  U: "rotateX(90deg)",
+  D: "rotateX(-90deg)",
+  F: "",
+  B: "rotateY(180deg)",
+  R: "rotateY(90deg)",
+  L: "rotateY(-90deg)",
+};
+
+const state = {
+  root: null,        // .cube — the element the camera rotates
+  cubies: [],        // [{ model, el, facelets: Map<`${face}${index}`, el> }]
+  painted: new Map(),// `${face}${index}` -> colour code currently in the DOM
+  unitPx: 0,
+};
+function getCubeRoot() { return state.root; }
+function getCubies() { return state.cubies; }
+
+/**
+ * Build the cube DOM inside `mountEl`. Idempotent: calling it again rebuilds cleanly.
+ * @returns {Element} the `.cube` element (what the camera transforms)
+ */
+function mountCube(mountEl, unitPx) {
+  if (!mountEl) throw new Error("mountCube: no mount element");
+  state.unitPx = unitPx;
+  state.painted.clear();
+  state.cubies = [];
+
+  while (mountEl.firstChild) mountEl.removeChild(mountEl.firstChild);
+
+  const scene = document.createElement("div");
+  scene.className = "scene";
+
+  const cube = document.createElement("div");
+  cube.className = "cube";
+
+  for (const model of buildCubies()) {
+    const el = document.createElement("div");
+    el.className = `cubie cubie--${model.kind}`;
+    el.style.transform = cssTranslate(model, unitPx);
+    // hit-testing for drag-to-turn needs the model coordinates back from a DOM node
+    el.__cubieModel = model;
+
+    const facelets = new Map();
+    for (const s of model.stickers) {
+      const f = document.createElement("div");
+      // NOTE: deliberately NOT `data-face` — v1's stylesheet had a bare [data-face] selector
+      // that made every sticker position:absolute and collapsed the page before JS ran.
+      f.className = `facelet facelet--${s.face}`;
+      f.style.transform = `${FACELET_TRANSFORM[s.face]} translateZ(${unitPx / 2}px)`;
+      f.setAttribute("data-facelet", `${s.face}${s.index}`);
+      const shine = document.createElement("span");
+      shine.className = "facelet-shine";
+      f.appendChild(shine);
+      el.appendChild(f);
+      facelets.set(`${s.face}${s.index}`, f);
+    }
+
+    cube.appendChild(el);
+    state.cubies.push({ model, el, facelets });
+  }
+
+  scene.appendChild(cube);
+  mountEl.appendChild(scene);
+  state.root = cube;
+  return cube;
+}
+
+/**
+ * Paint sticker colours from cube state. Dirty-checked: only changed facelets touch the DOM.
+ * @returns {number} how many facelets actually changed
+ */
+function paint(cubeState) {
+  let changed = 0;
+  for (const { facelets } of state.cubies) {
+    for (const [key, el] of facelets) {
+      const face = key[0];
+      const index = Number(key.slice(1));
+      const colour = cubeState[face]?.[index];
+      if (colour === undefined) continue;
+      if (state.painted.get(key) === colour) continue;
+      el.className = `facelet facelet--${face} c-${colour}`;
+      state.painted.set(key, colour);
+      changed++;
+    }
+  }
+  return changed;
+}
+
+/** Resize without rebuilding: reposition every cubie and facelet. */
+function resize(unitPx) {
+  if (unitPx === state.unitPx) return;
+  state.unitPx = unitPx;
+  for (const { model, el, facelets } of state.cubies) {
+    el.style.transform = cssTranslate(model, unitPx);
+    for (const [key, f] of facelets) {
+      f.style.transform = `${FACELET_TRANSFORM[key[0]]} translateZ(${unitPx / 2}px)`;
+    }
+  }
+}
+
+return { getCubeRoot, getCubies, mountCube, paint, resize };
+};
+
+__M["./camera.js"] = function () {
+// CAMERA — free orbit, with a lock.
+//
+// v1 had no camera at all: the viewing angle was a constant in the stylesheet
+// (`rotateX(-28deg) rotateY(-38deg)`) and no file ever wrote a rotation. That is why the cube
+// could not be inspected in 3D and why there was nothing to "reset".
+//
+// Design notes:
+//   * The camera owns the `.cube` element's transform, and NOTHING else writes to it. Layer
+//     turns write to individual cubies. v1's animate.js snapshotted and restored the cube's
+//     transform, which would have stomped any drag mid-turn; keeping the two on separate
+//     elements removes that whole class of bug.
+//   * LOCK is a first-class state, not an afterthought. Locked means drags cannot nudge the
+//     view, which is what makes "drag to turn a layer" unambiguous.
+//   * Pitch is clamped so the cube can never flip upside down and leave you disoriented.
+
+const STORAGE_KEY = "rubik-v2-camera";
+const DEFAULT = { yaw: -38, pitch: -28 }; // v1's angle, kept as the familiar home view
+const PITCH_LIMIT = 85;
+const FRICTION = 0.93;
+const MIN_SPIN = 0.02;
+const VIEW_PRESETS = {
+  home: { yaw: -38, pitch: -28 },
+  front: { yaw: 0, pitch: 0 },
+  up: { yaw: 0, pitch: -89 },
+  right: { yaw: -90, pitch: 0 },
+  back: { yaw: 180, pitch: 0 },
+};
+
+// The snap chips, deliberately excluding `home`: "Recenter camera" already does that, and a
+// review found "Home" sitting in a row of face names read as a seventh face. These use the
+// SAME words as the turn rows — the camera saying "Top" while the turns said "UP" made one
+// idea look like two features.
+const SNAP_VIEWS = ["front", "up", "right", "back"];
+
+const clampPitch = (p) => Math.max(-PITCH_LIMIT, Math.min(PITCH_LIMIT, p));
+const prefersReducedMotion = () => {
+  try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; }
+};
+function createCamera({ cubeEl, onChange } = {}) {
+  let yaw = DEFAULT.yaw;
+  let pitch = DEFAULT.pitch;
+  let locked = false;
+  let spinX = 0, spinY = 0;
+  let spinFrame = null;
+
+  // restore a previous view, but never trust stored junk
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
+    if (saved && Number.isFinite(saved.yaw) && Number.isFinite(saved.pitch)) {
+      yaw = saved.yaw; pitch = clampPitch(saved.pitch); locked = !!saved.locked;
+    }
+  } catch { /* a broken preference must never break the cube */ }
+
+  const persist = () => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ yaw, pitch, locked })); } catch { }
+  };
+
+  function apply() {
+    if (cubeEl) cubeEl.style.transform = `rotateX(${pitch}deg) rotateY(${yaw}deg)`;
+    if (onChange) onChange({ yaw, pitch, locked });
+  }
+
+  function stopSpin() {
+    if (spinFrame !== null) { cancelAnimationFrame(spinFrame); spinFrame = null; }
+    spinX = 0; spinY = 0;
+  }
+
+  function coast() {
+    spinFrame = requestAnimationFrame(() => {
+      if (locked) { stopSpin(); return; }
+      yaw += spinY; pitch = clampPitch(pitch + spinX);
+      spinY *= FRICTION; spinX *= FRICTION;
+      apply();
+      if (Math.abs(spinX) > MIN_SPIN || Math.abs(spinY) > MIN_SPIN) coast();
+      else { spinFrame = null; persist(); }
+    });
+  }
+
+  const api = {
+    get locked() { return locked; },
+    getAngles: () => ({ yaw, pitch }),
+
+    orbitBy(dx, dy) {
+      if (locked) return false;
+      stopSpin();
+      yaw += dx; pitch = clampPitch(pitch + dy);
+      apply();
+      return true;
+    },
+
+    // Called on release with the last observed velocity. Coasting is a feel thing, so it is
+    // skipped entirely when the user has asked for reduced motion.
+    release(vx, vy) {
+      persist();
+      if (locked || prefersReducedMotion()) return;
+      if (Math.abs(vx) < 0.6 && Math.abs(vy) < 0.6) return;
+      spinY = vx; spinX = vy;
+      coast();
+    },
+
+    setLocked(next) {
+      locked = !!next;
+      if (locked) stopSpin();
+      persist();
+      apply();
+      return locked;
+    },
+    toggleLock() { return api.setLocked(!locked); },
+
+    // Reset returns the view home. It deliberately works even while locked — a locked camera
+    // you cannot recentre would be a trap rather than a feature.
+    reset() { return api.snapTo("home"); },
+
+    snapTo(preset) {
+      const target = VIEW_PRESETS[preset] ?? VIEW_PRESETS.home;
+      stopSpin();
+      yaw = target.yaw; pitch = clampPitch(target.pitch);
+      apply();
+      persist();
+      return { yaw, pitch };
+    },
+
+    // Used by the turn animation so a spinning cube does not fight a layer rotation.
+    stopSpin,
+    apply,
+  };
+
+  apply();
+  return api;
+}
+
+return { VIEW_PRESETS, SNAP_VIEWS, createCamera };
+};
+
+__M["./turn3d.js"] = function () {
+// TURN3D — a real animated layer rotation, plus the move queue everything else needs.
+//
+// What v1 did: tipped the WHOLE cube 14 degrees and settled it back. Its own header called it
+// "a cue, not a simulation". No layer ever moved, which is the main reason the cube felt like a
+// picture that flickers rather than an object you are turning.
+//
+// What this does: takes the nine cubies of the layer, rotates them about the cube's centre to a
+// full 90 degrees, and only then commits the move to the state model and repaints. Because the
+// repaint puts the rotated colours onto the cubies now sitting at those positions, resetting the
+// transforms is visually identical to the end of the animation — so there is no flash.
+//
+// Robustness carried over from v1 (it was the one thing that file got right): a run can never
+// hang and can never throw. `transitionend` is backed by a watchdog timer, and every exit path
+// funnels through `finish` exactly once.
+//
+// THE QUEUE is here rather than bolted on later because auto-solve, guided mode, scramble and
+// the tutorial all replay sequences. v1 had none: moves were fire-and-forget, so rapid clicks
+// visually stomped each other.
+const { cssLayerTransform, cssTranslate, inLayer, moveFace, moveAngle } = __req("./geometry.js");
+const DEFAULT_TURN_MS = 260;
+const WATCHDOG_SLACK_MS = 220;
+
+const prefersReducedMotion = () => {
+  try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; }
+};
+
+const nextFrame = (fn) => {
+  if (typeof requestAnimationFrame === "function") return requestAnimationFrame(() => fn());
+  return setTimeout(fn, 16);
+};
+
+/**
+ * @param {object} deps
+ * @param {() => Array} deps.getCubies   live cubie list from render3d
+ * @param {() => number} deps.getUnitPx  current cubie size in px
+ * @param {(move: string) => void} deps.commit  apply the move to state and repaint
+ * @param {() => void} [deps.onIdle]     called when the queue drains
+ */
+function createTurnEngine({ getCubies, getUnitPx, commit, onIdle }) {
+  let speed = 1;            // 1 = normal; higher = faster
+  let running = false;
+  let generation = 0;       // bumped by cancel(); queued items from older generations are void
+  const queue = [];
+
+  function turnDurationMs() {
+    if (prefersReducedMotion()) return 0;
+    return Math.max(0, Math.round(DEFAULT_TURN_MS / speed));
+  }
+
+  // Animate one quarter turn. Never rejects.
+  function animateOne(move) {
+    return new Promise((resolve) => {
+      const face = moveFace(move);
+      const degrees = moveAngle(move);
+      const unitPx = getUnitPx();
+      const layer = getCubies().filter((c) => inLayer(c.model, face));
+      const ms = turnDurationMs();
+
+      if (!layer.length || ms === 0) {
+        commit(move);
+        resolve();
+        return;
+      }
+
+      let done = false;
+      let watchdog = null;
+
+      const finish = () => {
+        if (done) return;
+        done = true;
+        if (watchdog) clearTimeout(watchdog);
+        for (const c of layer) {
+          c.el.removeEventListener("transitionend", onEnd);
+          c.el.style.transition = "";
+          c.el.style.willChange = "";
+        }
+        // Commit FIRST, then reset transforms. The repaint puts the turned colours on the
+        // cubies now occupying those positions, so dropping the rotation is invisible.
+        //
+        // `finish` runs from a timer or an event, so a throw here would escape into nowhere and
+        // the promise would never settle — leaving `drain` stuck with running === true and the
+        // cube permanently unable to turn. The catch in `drain` cannot help; it must be here.
+        try { commit(move); } catch (e) { console.error("commit failed", e); }
+        try { for (const c of layer) c.el.style.transform = cssTranslate(c.model, unitPx); } catch { }
+        resolve();
+      };
+
+      // Only a cubie's OWN transform may end the run. Without the target check any bubbling
+      // transitionend from a child (a sticker, a future hover effect) could finish the move
+      // early and make the layer snap. Reported by the codex review.
+      const onEnd = (e) => { if (e.propertyName === "transform" && e.target === e.currentTarget) finish(); };
+
+      for (const c of layer) {
+        c.el.style.willChange = "transform";
+        c.el.addEventListener("transitionend", onEnd);
+      }
+
+      // The watchdog is armed BEFORE the frame request, never inside it. requestAnimationFrame
+      // does not fire in a backgrounded tab (and is starved under headless virtual time), so a
+      // watchdog scheduled inside the callback would never be set and the move would be lost
+      // with the queue stalled behind it. Timers keep running when frames do not.
+      watchdog = setTimeout(finish, ms + WATCHDOG_SLACK_MS);
+
+      // one frame with the transition armed but the transform unchanged, so the browser
+      // interpolates instead of jumping
+      nextFrame(() => {
+        if (done) return;
+        for (const c of layer) {
+          c.el.style.transition = `transform ${ms}ms cubic-bezier(.34,.9,.4,1)`;
+          c.el.style.transform = cssLayerTransform(c.model, face, degrees, unitPx);
+        }
+      });
+    });
+  }
+
+  async function drain() {
+    if (running) return;
+    running = true;
+    while (queue.length) {
+      const item = queue.shift();
+      // A cancel only voids work queued BEFORE it. Anything enqueued afterwards is real user
+      // intent and must still run — the previous version cleared the whole queue on the way
+      // out, silently eating a click made during the last animation. Reported by codex.
+      if (item.gen !== generation) { item.done(); continue; }
+      try { await animateOne(item.move); }
+      catch { try { commit(item.move); } catch { } }
+      item.done();
+    }
+    running = false;
+    if (onIdle) onIdle();
+  }
+
+  return {
+    get busy() { return running || queue.length > 0; },
+    get pending() { return queue.length; },
+    setSpeed(mult) { speed = Math.max(0.25, Math.min(8, Number(mult) || 1)); return speed; },
+    getSpeed: () => speed,
+
+    /** Queue one move. The promise settles when THAT move is done — not merely when the queue
+     *  next happens to drain, which resolved instantly if a drain was already in flight and let
+     *  callers act on moves that had not run yet. Reported by codex. */
+    enqueue(move) {
+      let done;
+      const p = new Promise((r) => { done = r; });
+      queue.push({ move, gen: generation, done });
+      drain();
+      return p;
+    },
+    enqueueAll(moves) { return Promise.all(moves.map((m) => this.enqueue(m))); },
+
+    /** Void everything queued so far. The in-flight move still completes, so the model and the
+     *  picture can never disagree. Moves enqueued after this call are unaffected. */
+    cancel() { generation++; },
+  };
+}
+
+return { DEFAULT_TURN_MS, createTurnEngine };
+};
+
+__M["./controls.js"] = function () {
+// CONTROLS — four input schemes, because the owner said "make various control options, idk
+// what the best one is". Rather than guess, all four ship and the choice is a setting.
+//
+//   drag-turn   : drag a sticker to turn its layer; drag the background to orbit
+//   orbit-first : drag always orbits; turns come from buttons and keys (pairs with camera lock)
+//   buttons     : always available, always visible — nothing is ever unreachable
+//   keyboard    : letter = clockwise, Shift+letter = anticlockwise
+//
+// HOW DRAG-TO-TURN DECIDES WHICH LAYER:
+// A sticker can be swept about either axis perpendicular to its face's normal. For each
+// candidate we compute the tangent the grabbed point would travel (t = axis x point), project
+// it through the live camera rotation into screen space, and pick whichever best matches the
+// drag. The sign of that match gives the direction. This is why dragging feels right from any
+// viewing angle rather than only from the default one.
+//
+// THREE FIXES FROM THE ADVERSARIAL REVIEW ROUND (all reproduced before fixing):
+//   1. Every face's CENTRE sticker was a dead target. Both perpendicular axes pass through it
+//      with coordinate 0, i.e. middle slices, which this move notation has no name for — so the
+//      largest, most obvious target on each face did nothing at all. Now a centre drag turns
+//      that face, which also makes F reachable by drag while looking straight at it.
+//   2. On a phone the cube fills the stage, so "drag a sticker to turn" left almost no
+//      background to orbit from — the owner's main request. Coarse pointers now default to
+//      orbit-first, and that default is chosen in app.js.
+//   3. A 14px threshold is thumb-jitter on a phone, and the move committed mid-drag with no way
+//      to change your mind. The threshold is now pointer-aware, the layer is PREVIEWED while
+//      dragging, and the move commits on release — so a drag can be aborted by dragging back.
+const { FACE_NORMALS, FACE_LAYER } = __req("./geometry.js");
+const AXES = { x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] };
+const AXIS_INDEX = { x: 0, y: 1, z: 2 };
+const isCoarsePointer = () => {
+  try { return window.matchMedia("(pointer: coarse)").matches; } catch { return false; }
+};
+const dragThresholdPx = () => (isCoarsePointer() ? 40 : 14);
+
+// model -> CSS vector (CSS +y points down)
+const toCss = ([x, y, z]) => [x, -y, z];
+
+function rotateXcss([x, y, z], deg) {
+  const r = (deg * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
+  return [x, y * c - z * s, y * s + z * c];
+}
+function rotateYcss([x, y, z], deg) {
+  const r = (deg * Math.PI) / 180, c = Math.cos(r), s = Math.sin(r);
+  return [x * c + z * s, y, -x * s + z * c];
+}
+// The cube's transform is `rotateX(pitch) rotateY(yaw)`, so a local vector reaches screen
+// space as Rx(pitch) . Ry(yaw) . v
+const toScreen = (v, { yaw, pitch }) => rotateXcss(rotateYcss(v, yaw), pitch);
+
+const cross = (a, b) => [
+  a[1] * b[2] - a[2] * b[1],
+  a[2] * b[0] - a[0] * b[2],
+  a[0] * b[1] - a[1] * b[0],
+];
+const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+
+/**
+ * Work out which move a drag means.
+ * @returns {string|null} a move like "R" or "U'", or null if the drag is too small/ambiguous
+ */
+function resolveDragMove({ face, cubie, dx, dy, angles, threshold = 14 }) {
+  if (Math.hypot(dx, dy) < threshold) return null;
+  const normal = FACE_NORMALS[face];
+  if (!normal || !cubie) return null;
+
+  const point = toCss([cubie.x, cubie.y, cubie.z]);
+  const coordOf = (axisName) => ({ x: cubie.x, y: cubie.y, z: cubie.z }[axisName]);
+  const perpAxes = Object.entries(AXES).filter(([, v]) => Math.abs(dot3(v, normal)) <= 0.5);
+
+  const candidates = [];
+  for (const [axisName, axisVec] of perpAxes) {
+    const coord = coordOf(axisName);
+    if (coord === 0) continue; // a middle slice — no move in this notation
+    const tangent = cross(toCss(axisVec), point);
+    const screen = toScreen(tangent, angles);
+    candidates.push({ axisName, coord, score: dx * screen[0] + dy * screen[1] });
+  }
+
+  // FIX 1 — the centre sticker. Both perpendicular candidates were middle slices, so this
+  // returned null and the biggest target on the face was inert. The move that IS available
+  // here is rotation about the face normal: the face's own turn. There is no lever arm at the
+  // exact centre, so synthesise one along whichever in-face direction converts the drag into
+  // the most decisive torque.
+  if (!candidates.length) {
+    const axisName = Object.keys(AXES).find((a) => Math.abs(normal[AXIS_INDEX[a]]) === 1);
+    let best = null;
+    for (const [, aVec] of perpAxes) {
+      const tangent = cross(toCss(normal), toCss(aVec));
+      const screen = toScreen(tangent, angles);
+      const score = dx * screen[0] + dy * screen[1];
+      if (!best || Math.abs(score) > Math.abs(best.score)) best = { score };
+    }
+    if (!best || best.score === 0) return null;
+    candidates.push({ axisName, coord: normal[AXIS_INDEX[axisName]], score: best.score });
+  }
+
+  const best = candidates.reduce((a, b) => (Math.abs(b.score) > Math.abs(a.score) ? b : a));
+  if (best.score === 0) return null;
+
+  const layerFace = Object.keys(FACE_LAYER).find(
+    (f) => FACE_LAYER[f].axis === best.axisName && FACE_LAYER[f].value === best.coord
+  );
+  if (!layerFace) return null;
+
+  // A positive score means the drag follows +axis rotation. Clockwise-from-outside is the
+  // negative direction on a positive-side face, and vice versa — the same relationship the
+  // geometry module encodes for rendering.
+  const positiveSide = FACE_LAYER[layerFace].value === 1;
+  const clockwise = positiveSide ? best.score < 0 : best.score > 0;
+  return clockwise ? layerFace : `${layerFace}'`;
+}
+
+// SPEED MODE — the two-hand keyboard grip real virtual-cube solvers use.
+//
+// Orbiting and tapping buttons is fine for learning and hopeless for speed: you cannot build
+// finger-trick muscle memory through a pointer. This is the standard home-row-ish layout, with
+// each face on a pair of adjacent keys so the two directions sit under the same finger.
+//
+// It replaces the letter keys rather than adding to them, because "U turns the up face" and
+// "U is unbound, J turns the up face" cannot both be true at once without confusing everyone.
+const SPEED_KEYMAP = {
+  j: "U", f: "U'",
+  i: "R", k: "R'",
+  d: "L", e: "L'",
+  s: "D", l: "D'",
+  h: "F", g: "F'",
+  w: "B", o: "B'",
+};
+
+let speedMode = false;
+const setSpeedMode = (on) => { speedMode = !!on; return speedMode; };
+const isSpeedMode = () => speedMode;
+const SCHEMES = [
+  { id: "drag-turn", label: "Drag a sticker to turn", hint: "Drag a sticker to turn its layer. Drag the background to orbit." },
+  { id: "orbit-first", label: "Drag to look around", hint: "Drag anywhere to orbit the cube. Turn with the buttons or keys." },
+];
+const MOVE_BUTTONS = [
+  { move: "U", name: "Up" }, { move: "D", name: "Down" }, { move: "L", name: "Left" },
+  { move: "R", name: "Right" }, { move: "F", name: "Front" }, { move: "B", name: "Back" },
+];
+
+/**
+ * Wire pointer + keyboard input.
+ * @param {(move:string|null) => void} onPreview highlight the layer a release would turn
+ */
+function attachInput({ stageEl, camera, onMove, onPreview, getScheme, isBusy }) {
+  let drag = null;
+
+  const faceletUnder = (target) => {
+    let el = target;
+    while (el && el !== stageEl) {
+      const key = el.getAttribute?.("data-facelet");
+      if (key) return { face: key[0], key };
+      el = el.parentNode;
+    }
+    return null;
+  };
+
+  const cubieOf = (el) => {
+    let n = el;
+    while (n && n !== stageEl) {
+      if (n.classList?.contains("cubie")) return n;
+      n = n.parentNode;
+    }
+    return null;
+  };
+
+  const onDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    // A second finger must not clobber the gesture already in progress. Previously it
+    // overwrote `drag`, orphaning the first pointer's capture and leaving its preview stuck.
+    if (drag) return;
+    const hit = faceletUnder(e.target);
+    const wantTurn = getScheme() === "drag-turn" && hit && !isBusy();
+
+    drag = {
+      id: e.pointerId, x0: e.clientX, y0: e.clientY, lx: e.clientX, ly: e.clientY,
+      vx: 0, vy: 0, mode: wantTurn ? "turn" : "orbit", hit, candidate: null,
+      threshold: dragThresholdPx(),
+    };
+    if (drag.mode === "turn") {
+      drag.cubie = cubieOf(e.target)?.__cubieModel ?? null;
+      if (!drag.cubie) drag.mode = "orbit";
+    }
+    if (drag.mode === "orbit" && camera.locked) { drag = null; return; }
+    try { stageEl.setPointerCapture(e.pointerId); } catch { }
+    e.preventDefault();
+  };
+
+  const onMoveEvt = (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.lx, dy = e.clientY - drag.ly;
+    drag.vx = dx; drag.vy = dy;
+    drag.lx = e.clientX; drag.ly = e.clientY;
+
+    if (drag.mode === "orbit") {
+      camera.orbitBy(dx * 0.45, -dy * 0.45);
+      e.preventDefault();
+      return;
+    }
+
+    // FIX 3 — preview, do not commit. The move is recomputed on every move event, so dragging
+    // back under the threshold clears it and the gesture is abandoned rather than executed.
+    const next = resolveDragMove({
+      face: drag.hit.face, cubie: drag.cubie,
+      dx: e.clientX - drag.x0, dy: e.clientY - drag.y0,
+      angles: camera.getAngles(), threshold: drag.threshold,
+    });
+    if (next !== drag.candidate) { drag.candidate = next; onPreview?.(next); }
+    e.preventDefault();
+  };
+
+  const endDrag = (e) => {
+    if (!drag || (e && e.pointerId !== drag.id)) return;
+    if (drag.mode === "orbit") camera.release(drag.vx * 0.45, -drag.vy * 0.45);
+    else {
+      onPreview?.(null);
+      if (drag.candidate) onMove(drag.candidate);   // commit on release
+    }
+    try { stageEl.releasePointerCapture(drag.id); } catch { }
+    drag = null;
+  };
+  // `lostpointercapture` matters: capture can be lost without pointerup/pointercancel ever
+  // firing, which left `drag` live and a highlight stranded on the cube forever.
+  const abortDrag = (e) => {
+    if (!drag || (e && e.pointerId !== drag.id)) return;
+    onPreview?.(null);
+    drag = null;
+  };
+  stageEl.addEventListener("pointerdown", onDown);
+  stageEl.addEventListener("pointermove", onMoveEvt);
+  stageEl.addEventListener("pointerup", endDrag);
+  stageEl.addEventListener("pointercancel", endDrag);
+  stageEl.addEventListener("lostpointercapture", abortDrag);
+
+  const onKey = (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target?.tagName ?? "").toLowerCase();
+    if (tag === "input" || tag === "textarea" || tag === "select") return;
+    const k = e.key;
+    if (k.length !== 1) return;
+    const lower = k.toLowerCase();
+    const upper = k.toUpperCase();
+
+    // view keys work in both layouts
+    if (k === "0") { camera.reset(); e.preventDefault(); return; }
+    if (upper === "C" && !speedMode) { camera.toggleLock(); e.preventDefault(); return; }
+
+    if (speedMode) {
+      const move = SPEED_KEYMAP[lower];
+      if (!move) return;
+      if (isBusy()) return;
+      onMove(move);
+      e.preventDefault();
+      return;
+    }
+
+    if ("UDLRFB".includes(upper)) {
+      if (isBusy()) return;
+      onMove(e.shiftKey ? `${upper}'` : upper);
+      e.preventDefault();
+    }
+  };
+  window.addEventListener("keydown", onKey);
+
+  // detach() previously removed only the key listener, leaving every pointer listener bound —
+  // so re-attaching produced duplicate orbiting and duplicate moves.
+  return {
+    detach() {
+      window.removeEventListener("keydown", onKey);
+      stageEl.removeEventListener("pointerdown", onDown);
+      stageEl.removeEventListener("pointermove", onMoveEvt);
+      stageEl.removeEventListener("pointerup", endDrag);
+      stageEl.removeEventListener("pointercancel", endDrag);
+      stageEl.removeEventListener("lostpointercapture", abortDrag);
+      drag = null;
+    },
+  };
+}
+
+return { isCoarsePointer, dragThresholdPx, resolveDragMove, SPEED_KEYMAP, setSpeedMode, isSpeedMode, SCHEMES, MOVE_BUTTONS, attachInput };
+};
+
+__M["./solver.js"] = function () {
+// SOLVER — the layer-by-layer beginner method, solved in stages that can be explained.
+//
+// WHY NOT AN OPTIMAL SOLVER. A Kociemba-style search finds ~20-move solutions, but they look
+// like `D2 F' L2 B` and teach nothing: no human method, no finger tricks, no recognisable
+// cases. This app is a trainer, so the solver has to mirror how a person actually solves —
+// otherwise guided mode can show a move but never say *why*.
+//
+// WHICH COLOUR GOES FIRST. Centres are fixed, so white is permanently on top here and yellow
+// on the bottom. Tutorials usually say "white cross" because they hold white on the bottom;
+// on this cube the bottom is yellow. The method is identical — first layer on the bottom, then
+// the middle, then the top. Only the colour name differs.
+//
+// HOW IT SEARCHES, AND WHY THAT IS SAFE. Each stage is a GOAL PREDICATE, and the solver
+// searches for a short sequence that reaches it, checking every candidate by simulation
+// against the proven cube.js model. The alphabet is not just the 12 quarter turns: it also
+// holds the real algorithms a beginner learns. That keeps the search shallow, lets every
+// emitted move be attributed to a named algorithm, and — importantly — means a mistranscribed
+// algorithm can never produce a wrong "solved" claim. It would simply never satisfy a goal.
+//
+// Each stage carries its OWN alphabet. The last-layer stages need only U turns plus their
+// algorithms, which collapses the branching factor and makes them near-instant.
+const { turn, isSolved } = __req("./cube.js");
+const { buildCubies } = __req("./geometry.js");
+const CUBIES = buildCubies();
+const EDGES = CUBIES.filter((c) => c.kind === "edge");
+const CORNERS = CUBIES.filter((c) => c.kind === "corner");
+
+const D_EDGES = EDGES.filter((c) => c.y === -1);
+const D_CORNERS = CORNERS.filter((c) => c.y === -1);
+const MID_EDGES = EDGES.filter((c) => c.y === 0);
+const U_EDGES = EDGES.filter((c) => c.y === 1);
+const U_CORNERS = CORNERS.filter((c) => c.y === 1);
+
+/** A piece is home when every one of its stickers shows its own face's centre colour. */
+const solvedPiece = (state, cubie) => cubie.stickers.every((s) => state[s.face][s.index] === s.face);
+const countSolved = (state, list) => list.reduce((n, c) => n + (solvedPiece(state, c) ? 1 : 0), 0);
+/** A corner is in its home slot when it carries the right three colours, twisted or not. */
+const inHomeSlot = (state, cubie) => {
+  const have = cubie.stickers.map((s) => state[s.face][s.index]).sort().join("");
+  const want = cubie.stickers.map((s) => s.face).sort().join("");
+  return have === want;
+};
+/** A middle slot holding a middle-layer piece (no top/bottom colour) that is not correct. */
+const blockedWrong = (state) => MID_EDGES.reduce((n, c) => {
+  if (solvedPiece(state, c)) return n;
+  const cols = c.stickers.map((s) => state[s.face][s.index]);
+  return n + (cols.every((k) => k !== "U" && k !== "D") ? 1 : 0);
+}, 0);
+function applySeq(state, moves) {
+  let s = state;
+  for (const m of moves) s = turn(s, m);
+  return s;
+}
+
+const one = (m) => ({ seq: [m], name: m, note: null });
+const QUARTER = ["U", "U'", "D", "D'", "L", "L'", "R", "R'", "F", "F'", "B", "B'"].map(one);
+const U_ONLY = [one("U"), one("U'")];
+
+const A = (seq, name, note) => ({ seq, name, note });
+
+// The triggers a beginner uses to insert a corner: take it out, turn the top, put it back.
+const INSERT_TRIGGERS = [
+  A(["R", "U", "R'"], "R U R'", "lifts a corner out of the bottom-right slot and back"),
+  A(["R", "U'", "R'"], "R U' R'", "same slot, other direction"),
+  A(["R'", "U'", "R"], "R' U' R", "the reverse trigger"),
+  A(["R'", "U", "R"], "R' U R", "the reverse trigger, other way"),
+  A(["L", "U", "L'"], "L U L'", "left-hand trigger"),
+  A(["L", "U'", "L'"], "L U' L'", "left-hand trigger, other way"),
+  A(["L'", "U'", "L"], "L' U' L", "left-hand reverse trigger"),
+  A(["L'", "U", "L"], "L' U L", "left-hand reverse trigger, other way"),
+  A(["F", "U", "F'"], "F U F'", "front trigger"),
+  A(["F'", "U'", "F"], "F' U' F", "front reverse trigger"),
+  A(["R", "U", "R'", "U'"], "R U R' U'", "the sexy move — the trigger everything is built from"),
+  A(["L'", "U'", "L", "U"], "L' U' L U", "the sexy move mirrored"),
+];
+
+const EDGE_INSERTS = [
+  A(["U", "R", "U'", "R'", "U'", "F'", "U", "F"], "right insert", "sends a top edge into the front-right slot"),
+  A(["U'", "L'", "U", "L", "U", "F", "U'", "F'"], "left insert", "sends a top edge into the front-left slot"),
+  A(["U", "F", "U'", "F'", "U'", "L'", "U", "L"], "right insert (front-left)", "the same idea one face round"),
+  A(["U'", "R'", "U", "R", "U", "B", "U'", "B'"], "left insert (back-right)", "the same idea one face round"),
+  A(["U", "B", "U'", "B'", "U'", "R'", "U", "R"], "right insert (back-right)", "the same idea one face round"),
+  A(["U'", "B'", "U", "B", "U", "L", "U'", "L'"], "left insert (back-left)", "the same idea one face round"),
+  A(["U", "L", "U'", "L'", "U'", "B'", "U", "B"], "right insert (back-left)", "the same idea one face round"),
+  A(["U'", "F'", "U", "F", "U", "R", "U'", "R'"], "left insert (front-right)", "the same idea one face round"),
+];
+
+const OLL_CROSS = A(["F", "R", "U", "R'", "U'", "F'"], "F R U R' U' F'", "builds the cross on the top face");
+const U_PERMS = [
+  A(["R", "U'", "R", "U", "R", "U", "R", "U'", "R'", "U'", "R", "R"], "U-perm", "cycles three top edges"),
+  A(["R", "R", "U", "R", "U", "R'", "U'", "R'", "U'", "R'", "U", "R'"], "U-perm reverse", "cycles them the other way"),
+];
+const CORNER_CYCLES = [
+  A(["U", "R", "U'", "L'", "U", "R'", "U'", "L"], "corner 3-cycle", "rotates three top corners between slots"),
+  A(["L'", "U", "R", "U'", "L", "U", "R'", "U'"], "corner 3-cycle reverse", "the same cycle the other way"),
+];
+// R' D' R D twists one corner in place; two applications turn it 120 degrees, four turn it the
+// other way. The bottom layer looks destroyed in between and comes back at the end — which is
+// exactly what a learner needs warning about.
+const TWIST = ["R'", "D'", "R", "D"];
+const TWISTS = [
+  A([...TWIST, ...TWIST], "R' D' R D ×2", "twists the top-front-right corner one way"),
+  A([...TWIST, ...TWIST, ...TWIST, ...TWIST], "R' D' R D ×4", "twists that corner the other way"),
+];
+
+// ---- the stages, in the order a person learns them -----------------------------------
+const STAGES = [
+  {
+    id: "cross", title: "Bottom cross",
+    blurb: "Put the four yellow edges around the bottom centre, each matching the colour of the side it touches.",
+    target: () => D_EDGES, alphabet: QUARTER, maxDepth: 6,
+  },
+  {
+    id: "corners", title: "Bottom corners",
+    blurb: "Drop the four yellow corners into place. That finishes the whole first layer.",
+    target: () => D_CORNERS, alphabet: [...QUARTER, ...INSERT_TRIGGERS], maxDepth: 4,
+  },
+  {
+    id: "middle", title: "Middle layer",
+    blurb: "Send the four middle edges into their slots without disturbing the layer below.",
+    target: () => MID_EDGES, alphabet: [...U_ONLY, ...EDGE_INSERTS], maxDepth: 4,
+    // When every remaining edge is stuck in a middle slot the wrong way round, no move can
+    // increase the count — one has to be kicked up to the top first. Beginners hit exactly
+    // this wall, so the solver models it rather than giving up.
+    unstick: (s, kept, earlier) => ({
+      goal: (t) => blockedWrong(t) < blockedWrong(s) &&
+        kept.every((c) => solvedPiece(t, c)) && earlier.every((c) => solvedPiece(t, c)),
+      alphabet: [...U_ONLY, ...EDGE_INSERTS], maxDepth: 3,
+    }),
+  },
+  {
+    id: "topcross", title: "Top cross",
+    blurb: "Flip the top edges until a white cross appears on top. Where they sit does not matter yet.",
+    goal: (s) => U_EDGES.every((c) => s.U[c.stickers.find((x) => x.face === "U").index] === "U"),
+    alphabet: [...U_ONLY, OLL_CROSS], maxDepth: 6,
+  },
+  {
+    id: "topedges", title: "Top edges",
+    blurb: "Slide those top edges around until each one matches the side it touches.",
+    goal: (s) => U_EDGES.every((c) => solvedPiece(s, c)),
+    alphabet: [...U_ONLY, ...U_PERMS], maxDepth: 5,
+  },
+  {
+    id: "cornerslots", title: "Top corners — position",
+    blurb: "Get each top corner into the right slot. They may still be twisted; that is the last step.",
+    goal: (s) => U_CORNERS.every((c) => inHomeSlot(s, c)),
+    alphabet: [...U_ONLY, ...CORNER_CYCLES], maxDepth: 5,
+  },
+  {
+    id: "cornertwist", title: "Top corners — twist",
+    blurb: "Twist the last corners flat. The cube looks wrecked partway through — keep going, it comes back.",
+    goal: (s) => isSolved(s),
+    alphabet: [...U_ONLY, ...TWISTS], maxDepth: 9,
+  },
+];
+
+// ---- iterative-deepening search over a stage's alphabet -------------------------------
+const MAX_NODES = 3_000_000;
+
+function search(state, goal, alphabet, maxDepth) {
+  if (goal(state)) return [];
+  let nodes = 0;
+  const path = [];
+
+  const dfs = (s, depth, lastFace) => {
+    if (depth === 0) return false;
+    for (const entry of alphabet) {
+      if (++nodes > MAX_NODES) return false;
+      const single = entry.seq.length === 1;
+      // never follow a quarter turn with another on the same face
+      if (single && lastFace && entry.seq[0][0] === lastFace) continue;
+      const next = applySeq(s, entry.seq);
+      path.push(entry);
+      if (goal(next)) return true;
+      if (dfs(next, depth - 1, single ? entry.seq[0][0] : null)) return true;
+      path.pop();
+    }
+    return false;
+  };
+
+  for (let d = 1; d <= maxDepth; d++) {
+    nodes = 0;
+    path.length = 0;
+    if (dfs(state, d, null)) return [...path];
+  }
+  return null;
+}
+
+// Everything a stage must not disturb: all pieces owned by earlier stages.
+function earlierPieces(stageId) {
+  const out = [];
+  for (const st of STAGES) {
+    if (st.id === stageId) break;
+    if (st.target) out.push(...st.target());
+  }
+  // once the top edges are placed they must survive the corner stages too
+  if (stageId === "cornerslots") out.push(...U_EDGES);
+  return out;
+}
+
+/**
+ * Solve `state` with the beginner method.
+ * @returns {{ok, steps, moves, reason?}} each step:
+ *   { move, stage, stageTitle, algorithm, note, index }
+ */
+function solve(state, { onProgress } = {}) {
+  let s = state;
+  const steps = [];
+
+  const emit = (entry, stage) => {
+    for (const move of entry.seq) {
+      steps.push({
+        move, stage: stage.id, stageTitle: stage.title,
+        algorithm: entry.seq.length > 1 ? entry.name : null,
+        note: entry.note, index: steps.length,
+      });
+    }
+    s = applySeq(s, entry.seq);
+  };
+
+  for (const stage of STAGES) {
+    onProgress?.(stage.id);
+    const earlier = earlierPieces(stage.id);
+
+    if (stage.target) {
+      const pieces = stage.target();
+      let guard = 0;
+      while (countSolved(s, pieces) < pieces.length) {
+        if (++guard > pieces.length * 3 + 4) return fail(steps, `stuck on ${stage.title}`);
+        const before = countSolved(s, pieces);
+        const kept = pieces.filter((c) => solvedPiece(s, c));
+        const goal = (t) =>
+          countSolved(t, pieces) > before &&
+          kept.every((c) => solvedPiece(t, c)) &&
+          earlier.every((c) => solvedPiece(t, c));
+
+        let found = search(s, goal, stage.alphabet, stage.maxDepth);
+        if (!found && stage.unstick) {
+          const u = stage.unstick(s, kept, earlier);
+          found = search(s, u.goal, u.alphabet, u.maxDepth);
+        }
+        if (!found) return fail(steps, `no sequence found for ${stage.title}`);
+        for (const entry of found) emit(entry, stage);
+      }
+    } else {
+      const goal = (t) => stage.goal(t) && earlier.every((c) => solvedPiece(t, c));
+      const found = search(s, goal, stage.alphabet, stage.maxDepth);
+      if (!found) return fail(steps, `no sequence found for ${stage.title}`);
+      for (const entry of found) emit(entry, stage);
+    }
+  }
+
+  if (!isSolved(s)) return fail(steps, "ran every stage but the cube is not solved");
+  return { ok: true, steps, moves: steps.map((x) => x.move) };
+}
+
+const fail = (steps, reason) => ({ ok: false, steps, moves: steps.map((x) => x.move), reason });
+
+/** Which stage is this cube currently in? Null when solved. */
+function currentStage(state) {
+  if (isSolved(state)) return null;
+  for (const stage of STAGES) {
+    if (stage.target) {
+      if (countSolved(state, stage.target()) < stage.target().length) return stage;
+    } else if (!stage.goal(state)) return stage;
+  }
+  return null;
+}
+
+/** Per-stage progress, for a checklist UI. */
+function stageProgress(state) {
+  return STAGES.map((stage) => {
+    if (stage.target) {
+      const pieces = stage.target();
+      const done = countSolved(state, pieces);
+      return { id: stage.id, title: stage.title, blurb: stage.blurb, done, total: pieces.length, complete: done === pieces.length };
+    }
+    const complete = stage.goal(state);
+    return { id: stage.id, title: stage.title, blurb: stage.blurb, done: complete ? 1 : 0, total: 1, complete };
+  });
+}
+
+return { applySeq, STAGES, solve, currentStage, stageProgress };
+};
+
+__M["./guide.js"] = function () {
+// GUIDE — the teaching layer. Turns the solver's staged solution into something you can
+// follow one move at a time, with a reason attached to every move.
+//
+// The point is not to solve the cube for you. It is to show you the method: which stage you
+// are in, what that stage is for, which algorithm the next move belongs to, and which slice it
+// is about to turn. Auto-solve exists too, but it plays the same human method rather than a
+// machine-optimal sequence you could never reproduce.
+//
+// PLAN CACHING. `solve()` averages ~250ms and can reach ~2s, so it is never run on every move.
+// A plan is computed once and then FOLLOWED: each committed move that matches the head of the
+// plan simply advances a pointer. The plan is only thrown away when you deviate from it — at
+// which point the next refresh recomputes, behind a "thinking" state so the UI never appears
+// frozen.
+const { solve, stageProgress, currentStage, STAGES } = __req("./solver.js");
+const { isSolved } = __req("./cube.js");
+const PRETTY = { U: "Up", D: "Down", L: "Left", R: "Right", F: "Front", B: "Back" };
+
+function describeMove(move) {
+  const face = PRETTY[move[0]] ?? move[0];
+  return `${face} face, ${move.endsWith("'") ? "counter-clockwise" : "clockwise"}`;
+}
+function createGuide({ root, getState, play, preview, isBusy, onAuto }) {
+  let active = false;
+  let plan = null;       // { steps, idx }
+  let thinking = false;
+  let auto = false;
+
+  const el = {};
+  function build() {
+    root.replaceChildren();
+
+    const head = document.createElement("div");
+    head.className = "guide-head";
+    const h = document.createElement("h2");
+    h.className = "section-heading";
+    h.textContent = "Guided solve";
+    head.appendChild(h);
+    el.close = document.createElement("button");
+    el.close.type = "button";
+    el.close.className = "btn btn--small";
+    el.close.textContent = "Close";
+    el.close.addEventListener("click", () => api.setActive(false));
+    head.appendChild(el.close);
+    root.appendChild(head);
+
+    el.stages = document.createElement("ol");
+    el.stages.className = "stage-list";
+    root.appendChild(el.stages);
+
+    el.card = document.createElement("div");
+    el.card.className = "next-card";
+    root.appendChild(el.card);
+
+    const row = document.createElement("div");
+    row.className = "row row--guide";
+    el.step = mkBtn("Do this move", "btn btn--primary", () => {
+      // Guard against a second click while a move is still animating. Without it, repeated
+      // taps queue moves the plan pointer has not consumed yet; auto-solve then slices from a
+      // stale pointer, replays those moves a second time, and the cube desyncs from the plan.
+      if (isBusy()) return;
+      const s = current();
+      if (s) play(s.move);
+    });
+    el.show = mkBtn("Show me", "btn btn--small", () => {
+      const s = current();
+      preview(s ? s.move : null);
+      // a peek, not a mode: clear it shortly after so it cannot get stuck on
+      clearTimeout(el._peek);
+      el._peek = setTimeout(() => preview(null), 1600);
+    });
+    el.auto = mkBtn("Auto-solve", "btn btn--small", () => api.autoSolve());
+    el.stop = mkBtn("Stop", "btn btn--small btn--quiet", () => api.stop());
+    for (const b of [el.step, el.show, el.auto, el.stop]) row.appendChild(b);
+    root.appendChild(row);
+
+    el.note = document.createElement("p");
+    el.note.className = "hint guide-note";
+    root.appendChild(el.note);
+  }
+
+  const mkBtn = (label, cls, fn) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = cls; b.textContent = label;
+    b.addEventListener("click", fn);
+    return b;
+  };
+
+  const current = () => (plan && plan.idx < plan.steps.length ? plan.steps[plan.idx] : null);
+
+  function renderStages(state) {
+    const progress = stageProgress(state);
+    const active = currentStage(state);
+    el.stages.replaceChildren();
+    for (const st of progress) {
+      const li = document.createElement("li");
+      li.className = `stage-item${st.complete ? " is-done" : ""}${active && active.id === st.id ? " is-current" : ""}`;
+      const mark = document.createElement("span");
+      mark.className = "stage-mark";
+      mark.textContent = st.complete ? "✓" : "";
+      const name = document.createElement("span");
+      name.className = "stage-name";
+      name.textContent = st.title;
+      const count = document.createElement("span");
+      count.className = "stage-count";
+      count.textContent = st.total > 1 ? `${st.done}/${st.total}` : "";
+      li.append(mark, name, count);
+      el.stages.appendChild(li);
+    }
+  }
+
+  function renderCard(state) {
+    el.card.replaceChildren();
+
+    if (isSolved(state)) {
+      el.card.className = "next-card next-card--done";
+      el.card.textContent = "Solved. Scramble it and go again.";
+      el.note.textContent = "";
+      setEnabled(false);
+      return;
+    }
+    if (thinking) {
+      el.card.className = "next-card next-card--thinking";
+      el.card.textContent = "Working out the next steps…";
+      el.note.textContent = "";
+      setEnabled(false);
+      return;
+    }
+    const step = current();
+    if (!step) {
+      el.card.className = "next-card";
+      el.card.textContent = "No plan yet.";
+      setEnabled(false);
+      return;
+    }
+
+    el.card.className = "next-card";
+    const stage = STAGES.find((s) => s.id === step.stage);
+
+    const kicker = document.createElement("div");
+    kicker.className = "next-kicker";
+    kicker.textContent = step.stageTitle;
+
+    const moveRow = document.createElement("div");
+    moveRow.className = "next-move";
+    const glyph = document.createElement("span");
+    glyph.className = `next-glyph c-${step.move[0]}`;
+    glyph.textContent = step.move.endsWith("'") ? "↺" : "↻";
+    const label = document.createElement("span");
+    label.className = "next-label";
+    label.innerHTML = `<strong>${step.move.endsWith("'") ? step.move[0] + "′" : step.move}</strong> — ${describeMove(step.move)}`;
+    moveRow.append(glyph, label);
+
+    el.card.append(kicker, moveRow);
+
+    if (step.algorithm) {
+      const alg = document.createElement("div");
+      alg.className = "next-alg";
+      alg.textContent = `part of ${step.algorithm}`;
+      el.card.appendChild(alg);
+    }
+
+    const remaining = plan.steps.length - plan.idx;
+    const left = document.createElement("div");
+    left.className = "next-remaining";
+    left.textContent = `${remaining} move${remaining === 1 ? "" : "s"} to go`;
+    el.card.appendChild(left);
+
+    el.note.textContent = step.note ? `${step.note}.` : (stage?.blurb ?? "");
+    setEnabled(true);
+  }
+
+  function setEnabled(on) {
+    const busy = isBusy();
+    el.step.disabled = !on || busy;
+    el.show.disabled = !on;
+    el.auto.disabled = !on || auto || busy;
+    el.stop.hidden = !auto;
+  }
+
+  function recompute() {
+    const state = getState();
+    if (isSolved(state)) { plan = null; render(); return; }
+    thinking = true;
+    render();
+    // let the "thinking" state paint before a synchronous search of up to ~2s
+    setTimeout(() => {
+      const result = solve(state);
+      thinking = false;
+      if (result.ok) plan = { steps: result.steps, idx: 0 };
+      else {
+        plan = null;
+        el.note.textContent = `Could not plan a solve: ${result.reason}. Try Restore solved.`;
+      }
+      render();
+    }, 30);
+  }
+
+  function render() {
+    if (!active) return;
+    const state = getState();
+    renderStages(state);
+    renderCard(state);
+  }
+
+  const api = {
+    get active() { return active; },
+
+    setActive(on) {
+      active = !!on;
+      root.hidden = !active;
+      if (active) {
+        if (!plan) recompute();
+        else render();
+      } else {
+        api.stop();
+        preview(null);
+      }
+      return active;
+    },
+
+    /** Called after every committed move so the guide can follow along. */
+    noteMove(move) {
+      if (!active) return;
+      if (plan && plan.idx < plan.steps.length && plan.steps[plan.idx].move === move) {
+        plan.idx++;                       // still on plan — just advance
+        if (plan.idx >= plan.steps.length) {
+          // The plan is spent. If the cube is not actually solved (a deviation earlier in the
+          // run), drop out of auto so onIdle replans instead of silently doing nothing.
+          plan = null;
+          if (auto) { auto = false; onAuto?.(false); }
+        }
+        render();
+        return;
+      }
+      // deviated (a manual turn, an undo, a scramble): the plan is stale
+      plan = null;
+      if (auto) { auto = false; onAuto?.(false); }
+      render();
+      // If the queue is still running, leave replanning to onIdle — planning from a state
+      // that is about to change again would be wasted work and would flicker the card.
+      if (!isBusy()) recompute();
+    },
+
+    /**
+     * The turn queue has drained.
+     *
+     * This exists because of a real dead end: when a move deviates from the plan while the
+     * queue is still running, `noteMove` drops the plan and deliberately skips the recompute
+     * (replanning mid-animation would thrash and would plan from a state that is about to
+     * change anyway). Without this hook nothing ever replanned afterwards, so the guide sat
+     * on "No plan yet." with every button disabled and no way back short of a reset.
+     */
+    onIdle() {
+      if (!active) return;
+      // ALWAYS re-render here. The last render of a move happens inside commit, while the
+      // queue is still draining, so the buttons latch to their disabled state and nothing
+      // else ever re-enables them. Without this the guide looked alive but was unclickable
+      // after the very first move.
+      if (!plan && !thinking) recompute();
+      else render();
+    },
+
+    /** The cube changed wholesale (reset/scramble): drop everything and replan. */
+    invalidate() {
+      plan = null;
+      if (auto) { auto = false; onAuto?.(false); }
+      if (active) recompute();
+    },
+
+    autoSolve() {
+      // Same reason as the step guard: slicing the plan while moves are still in flight would
+      // enqueue work that is already queued.
+      if (!plan || auto || isBusy()) return;
+      auto = true;
+      onAuto?.(true);
+      setEnabled(true);
+      // hand the whole remaining plan to the turn queue; noteMove keeps the pointer in step
+      const moves = plan.steps.slice(plan.idx).map((s) => s.move);
+      play(moves);
+    },
+
+    stop() {
+      if (!auto) return;
+      auto = false;
+      onAuto?.(false);
+      setEnabled(!!current());
+    },
+
+    refresh: render,
+  };
+
+  build();
+  root.hidden = true;
+  return api;
+}
+
+return { createGuide };
+};
+
+__M["./stats.js"] = function () {
+// STATS — WCA averaging, which is not the same as taking the mean.
+//
+// The rules that matter, and that people get wrong:
+//   * An average of N drops the single best AND the single worst, then means the rest.
+//     Ao5 therefore averages 3 solves; Ao12 averages 10.
+//   * A DNF is not a big number — it sorts as the worst. ONE DNF is absorbed by the drop.
+//     TWO or more DNFs make the whole average a DNF, because only one can be dropped.
+//   * A +2 penalty is added to the recorded time; it is not tracked separately for averaging.
+//   * "Best" ignores DNFs entirely. A session of nothing but DNFs has no best time.
+//
+// Times are milliseconds. A solve is { ms, penalty } where penalty is null, "+2" or "DNF".
+const PENALTY = { NONE: null, PLUS2: "+2", DNF: "DNF" };
+
+/** The time that counts for this solve: +2 adds two seconds, DNF has no finite time. */
+function effectiveMs(solve) {
+  if (!solve || typeof solve.ms !== "number") return null;
+  if (solve.penalty === PENALTY.DNF) return Infinity;
+  if (solve.penalty === PENALTY.PLUS2) return solve.ms + 2000;
+  return solve.ms;
+}
+const isDnf = (solve) => solve?.penalty === PENALTY.DNF;
+
+/**
+ * WCA average of the LAST `n` solves.
+ * @returns {number|null|"DNF"} ms, null if there are not yet n solves, or "DNF"
+ */
+function averageOf(solves, n) {
+  if (!Array.isArray(solves) || solves.length < n) return null;
+  const window = solves.slice(-n);
+  const dnfs = window.filter(isDnf).length;
+  if (dnfs > 1) return "DNF";           // only one can be dropped
+
+  const times = window.map(effectiveMs);
+  const sorted = [...times].sort((a, b) => a - b);
+  const middle = sorted.slice(1, -1);   // drop best and worst
+  if (middle.some((t) => !Number.isFinite(t))) return "DNF";
+  return Math.round(middle.reduce((a, b) => a + b, 0) / middle.length);
+}
+
+/** Best single, ignoring DNFs. */
+function bestSingle(solves) {
+  const finite = (solves ?? []).map(effectiveMs).filter((t) => Number.isFinite(t));
+  return finite.length ? Math.min(...finite) : null;
+}
+
+/** The best Ao{n} achieved at any point in the session, not just the current one. */
+function bestAverage(solves, n) {
+  if (!Array.isArray(solves) || solves.length < n) return null;
+  let best = null;
+  for (let end = n; end <= solves.length; end++) {
+    const a = averageOf(solves.slice(0, end), n);
+    if (typeof a === "number" && (best === null || a < best)) best = a;
+  }
+  return best;
+}
+
+/** Mean of every solve in the session. DNF anywhere makes the session mean a DNF. */
+function sessionMean(solves) {
+  if (!solves?.length) return null;
+  const times = solves.map(effectiveMs);
+  if (times.some((t) => !Number.isFinite(t))) return "DNF";
+  return Math.round(times.reduce((a, b) => a + b, 0) / times.length);
+}
+
+/** 12.34 / 1:02.34 — the way a timer displays it. */
+function formatMs(ms) {
+  if (ms === null || ms === undefined) return "—";
+  if (ms === "DNF" || !Number.isFinite(ms)) return "DNF";
+  const total = Math.max(0, Math.round(ms));
+  const minutes = Math.floor(total / 60000);
+  const seconds = Math.floor((total % 60000) / 1000);
+  const hundredths = Math.floor((total % 1000) / 10);
+  const ss = String(seconds).padStart(minutes ? 2 : 1, "0");
+  const hh = String(hundredths).padStart(2, "0");
+  return minutes ? `${minutes}:${ss}.${hh}` : `${ss}.${hh}`;
+}
+
+/** Turns per second, the standard speed measure. */
+function tps(moveCount, ms) {
+  if (!moveCount || !ms || ms <= 0) return null;
+  return moveCount / (ms / 1000);
+}
+function summarise(solves) {
+  return {
+    count: solves?.length ?? 0,
+    best: bestSingle(solves),
+    ao5: averageOf(solves, 5),
+    ao12: averageOf(solves, 12),
+    bestAo5: bestAverage(solves, 5),
+    bestAo12: bestAverage(solves, 12),
+    mean: sessionMean(solves),
+  };
+}
+
+return { PENALTY, effectiveMs, isDnf, averageOf, bestSingle, bestAverage, sessionMean, formatMs, tps, summarise };
+};
+
+__M["./session.js"] = function () {
+// SESSION — the solve history, and the only part of the timer that survives a reload.
+//
+// Storage is injectable so this is testable without a browser, and every read is defensive:
+// a corrupt or half-written entry must never stop the timer working. A broken preference is
+// not worth a broken app.
+//
+// "New session" ARCHIVES rather than erases. Nothing here deletes a solve you actually did —
+// the current session moves aside and a fresh one starts, so a mis-tap costs you nothing.
+const { summarise, effectiveMs, PENALTY } = __req("./stats.js");
+const KEY = "rubik-v2-session";
+const ARCHIVE_KEY = "rubik-v2-session-archive";
+const MAX_ARCHIVES = 20;
+
+const memoryStore = () => {
+  const map = new Map();
+  return {
+    getItem: (k) => (map.has(k) ? map.get(k) : null),
+    setItem: (k, v) => map.set(k, String(v)),
+  };
+};
+
+function safeStorage() {
+  try {
+    const probe = "__rubik_probe__";
+    localStorage.setItem(probe, "1");
+    localStorage.removeItem(probe);
+    return localStorage;
+  } catch {
+    // private mode, disabled storage, or no window at all — the timer still works, it just
+    // will not remember across reloads
+    return memoryStore();
+  }
+}
+function createSession({ storage = safeStorage() } = {}) {
+  let solves = [];
+
+  const read = (key, fallback) => {
+    try {
+      const raw = storage.getItem(key);
+      if (!raw) return fallback;
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : fallback;
+    } catch { return fallback; }
+  };
+
+  const write = (key, value) => {
+    try { storage.setItem(key, JSON.stringify(value)); return true; } catch { return false; }
+  };
+
+  const valid = (s) =>
+    s && typeof s.ms === "number" && Number.isFinite(s.ms) && s.ms >= 0 &&
+    (s.penalty === null || s.penalty === PENALTY.PLUS2 || s.penalty === PENALTY.DNF);
+
+  solves = read(KEY, []).filter(valid);
+
+  const api = {
+    get solves() { return solves; },
+    get count() { return solves.length; },
+
+    /** @returns the stored solve, with an id so the UI can address it later */
+    add(solve) {
+      const entry = {
+        id: `s${solves.length + 1}-${solve.ms}`,
+        ms: solve.ms,
+        penalty: solve.penalty ?? null,
+        scramble: solve.scramble ?? null,
+        moves: solve.moves ?? null,
+        tps: solve.tps ?? null,
+        splits: solve.splits ?? null,
+        inspectionMs: solve.inspectionMs ?? null,
+        at: solve.at ?? null,
+      };
+      if (!valid(entry)) return null;
+      solves = [...solves, entry];
+      write(KEY, solves);
+      return entry;
+    },
+
+    /** Cycle a penalty on an existing solve. Times are never edited, only penalised. */
+    setPenalty(id, penalty) {
+      const next = solves.map((s) => (s.id === id ? { ...s, penalty } : s));
+      if (next.some((s, i) => s !== solves[i])) {
+        solves = next;
+        write(KEY, solves);
+        return true;
+      }
+      return false;
+    },
+
+    last() { return solves.length ? solves[solves.length - 1] : null; },
+    stats() { return summarise(solves); },
+
+    /**
+     * Start a fresh session. The current one is archived, not destroyed — the whole point is
+     * that a stray tap cannot cost you a session's worth of solves.
+     */
+    startNew() {
+      if (!solves.length) return { archived: false };
+      const archive = read(ARCHIVE_KEY, []);
+      archive.push({ endedAt: null, count: solves.length, stats: summarise(solves), solves });
+      write(ARCHIVE_KEY, archive.slice(-MAX_ARCHIVES));
+      solves = [];
+      write(KEY, solves);
+      return { archived: true };
+    },
+
+    archives() { return read(ARCHIVE_KEY, []); },
+
+    /** Personal best across this session AND every archived one. */
+    allTimeBest() {
+      const every = [...solves, ...read(ARCHIVE_KEY, []).flatMap((a) => a.solves ?? [])];
+      const finite = every.map(effectiveMs).filter((t) => Number.isFinite(t));
+      return finite.length ? Math.min(...finite) : null;
+    },
+  };
+
+  return api;
+}
+
+return { createSession };
+};
+
+__M["./timer.js"] = function () {
+// TIMER — the WCA solve cycle, as a state machine with an injectable clock.
+//
+//   idle ──start──▶ inspecting ──hold──▶ ready ──release──▶ solving ──solved──▶ idle
+//
+// The rules encoded here are the competition ones, because a trainer that measures you by
+// house rules teaches you a number you cannot compare to anything:
+//   * inspection is 15 seconds;
+//   * finishing inspection between 15 and 17 seconds is +2;
+//   * past 17 seconds it is a DNF;
+//   * the solve is timed from the moment you release, not from when inspection began.
+//
+// Holding before you start is deliberate. On a real timer you rest both hands on the pad and
+// it goes green when you have held long enough; releasing early just cancels. That hold is
+// what stops a twitchy tap starting a solve you were not ready for.
+//
+// No DOM and no storage in here — a clock goes in, state comes out — so the whole cycle is
+// unit-testable without a browser.
+const { PENALTY } = __req("./stats.js");
+const STATE = {
+  IDLE: "idle",
+  INSPECTING: "inspecting",
+  READY: "ready",
+  SOLVING: "solving",
+};
+const INSPECTION_MS = 15000;
+const PLUS2_AFTER_MS = 15000;
+const DNF_AFTER_MS = 17000;
+const HOLD_MS = 300;
+const WARN_AT_MS = [8000, 12000]; // the spoken warnings in competition
+function createTimer({ now = () => Date.now(), onChange = null } = {}) {
+  let state = STATE.IDLE;
+  // null, not 0 — a clock is allowed to read 0, and using 0 as "not started" made the whole
+  // inspection phase report zero elapsed against any clock that begins at the epoch.
+  let inspectionStart = null;
+  let holdStart = null;
+  let solveStart = null;
+  let solveEnd = null;
+
+  const emit = () => onChange?.(api.snapshot());
+  const set = (s) => { state = s; emit(); };
+
+  /** How long inspection has run. Frozen once the solve starts. */
+  const inspectionElapsed = () => {
+    if (inspectionStart === null) return 0;
+    if (state === STATE.SOLVING || state === STATE.IDLE) {
+      return solveStart === null ? 0 : solveStart - inspectionStart;
+    }
+    return now() - inspectionStart;
+  };
+
+  const solveElapsed = () => {
+    if (state === STATE.SOLVING) return now() - solveStart;
+    return solveEnd !== null && solveStart !== null ? solveEnd - solveStart : 0;
+  };
+
+  /** The penalty earned during inspection, if any. */
+  const inspectionPenalty = (elapsed = inspectionElapsed()) => {
+    if (elapsed > DNF_AFTER_MS) return PENALTY.DNF;
+    if (elapsed > PLUS2_AFTER_MS) return PENALTY.PLUS2;
+    return PENALTY.NONE;
+  };
+
+  const api = {
+    get state() { return state; },
+    get isSolving() { return state === STATE.SOLVING; },
+    get isArmed() { return state === STATE.INSPECTING || state === STATE.READY; },
+
+    /** Begin the 15-second inspection. */
+    startInspection() {
+      if (state !== STATE.IDLE) return false;
+      inspectionStart = now();
+      solveStart = null; solveEnd = null;
+      set(STATE.INSPECTING);
+      return true;
+    },
+
+    /** Press and hold. Goes READY once held long enough. */
+    hold() {
+      if (state !== STATE.INSPECTING) return false;
+      holdStart = now();
+      return true;
+    },
+
+    /** Call on a tick while holding: promotes INSPECTING to READY after HOLD_MS. */
+    pollHold() {
+      if (state === STATE.INSPECTING && holdStart !== null && now() - holdStart >= HOLD_MS) {
+        set(STATE.READY);
+        return true;
+      }
+      return false;
+    },
+
+    /** Let go. From READY this starts the solve; from INSPECTING it was too short a press. */
+    release() {
+      if (state === STATE.READY) {
+        solveStart = now();
+        holdStart = null;
+        set(STATE.SOLVING);
+        return true;
+      }
+      holdStart = null;
+      return false;
+    },
+
+    /**
+     * The cube reached a solved state. Returns the finished solve.
+     * @returns {{ms:number, penalty:string|null, inspectionMs:number}|null}
+     */
+    finish() {
+      if (state !== STATE.SOLVING) return null;
+      solveEnd = now();
+      const inspectionMs = solveStart - inspectionStart;
+      const result = {
+        ms: solveEnd - solveStart,
+        penalty: inspectionPenalty(inspectionMs),
+        inspectionMs,
+      };
+      set(STATE.IDLE);
+      return result;
+    },
+
+    /** Give up on this attempt. Nothing is recorded. */
+    cancel() {
+      inspectionStart = null; holdStart = null; solveStart = null; solveEnd = null;
+      set(STATE.IDLE);
+    },
+
+    snapshot() {
+      const insp = inspectionElapsed();
+      return {
+        state,
+        inspectionMs: insp,
+        inspectionRemainingMs: Math.max(0, INSPECTION_MS - insp),
+        inspectionPenalty: inspectionPenalty(insp),
+        solveMs: solveElapsed(),
+        warning: WARN_AT_MS.filter((w) => insp >= w).pop() ?? null,
+      };
+    },
+
+    // exposed for tests
+    inspectionElapsed, solveElapsed, inspectionPenalty,
+  };
+
+  return api;
+}
+
+return { STATE, INSPECTION_MS, PLUS2_AFTER_MS, DNF_AFTER_MS, HOLD_MS, WARN_AT_MS, createTimer };
+};
+
+__M["./scrambler.js"] = function () {
+// SCRAMBLER — WCA-style scrambles, in the notation a cuber actually reads.
+//
+// The cube model only knows quarter turns (U, U'), but real scrambles are written with half
+// turns too (U2) and that is what every timer, tutorial and competition sheet shows. So this
+// module works in TOKENS — "R", "U2", "F'" — and expands them to quarter turns only at the
+// moment they are applied. You read `R U2 F'`; the cube receives R, U, U, F'.
+//
+// The generation rules are the standard ones:
+//   * never two tokens on the same face in a row (R R2 is just R')
+//   * never A B A on the same axis (R L R is R2 L, written badly)
+// Both make the scramble shorter to read and stop it collapsing into fewer effective moves.
+const SCRAMBLE_FACES = ["U", "D", "L", "R", "F", "B"];
+const SUFFIXES = ["", "'", "2"];
+// faces that share a rotation axis — the pairs that can be reordered freely
+const AXIS = { U: "y", D: "y", L: "x", R: "x", F: "z", B: "z" };
+
+/** "R2" -> ["R","R"], "R'" -> ["R'"], "R" -> ["R"] */
+function expand(token) {
+  const face = token[0];
+  if (token.endsWith("2")) return [face, face];
+  return [token];
+}
+function expandAll(tokens) {
+  const out = [];
+  for (const t of tokens) out.push(...expand(t));
+  return out;
+}
+
+/** Invert a token sequence: reverse the order and flip each direction. A half turn is its own inverse. */
+function invert(tokens) {
+  return [...tokens].reverse().map((t) => {
+    if (t.endsWith("2")) return t;
+    return t.endsWith("'") ? t[0] : `${t}'`;
+  });
+}
+function toNotation(tokens) {
+  return tokens.join(" ");
+}
+
+/** Parse "R U2 F'" into tokens, rejecting anything that is not legal notation. */
+function parseNotation(text) {
+  const tokens = String(text).trim().split(/\s+/).filter(Boolean);
+  for (const t of tokens) {
+    if (!/^[UDLRFB](['2])?$/.test(t)) throw new Error(`Bad move in scramble: ${JSON.stringify(t)}`);
+  }
+  return tokens;
+}
+
+/**
+ * A scramble of `length` tokens.
+ * @returns {{tokens: string[], notation: string, moves: string[]}} moves are quarter turns
+ */
+function randomScramble(length = 20, rng = Math.random) {
+  const tokens = [];
+  let prev = null, beforePrev = null;
+
+  while (tokens.length < length) {
+    const face = SCRAMBLE_FACES[Math.floor(rng() * SCRAMBLE_FACES.length) % SCRAMBLE_FACES.length];
+    if (face === prev) continue;                                   // R then R again
+    if (face === beforePrev && AXIS[face] === AXIS[prev]) continue; // R L R
+    const suffix = SUFFIXES[Math.floor(rng() * SUFFIXES.length) % SUFFIXES.length];
+    tokens.push(face + suffix);
+    beforePrev = prev;
+    prev = face;
+  }
+
+  return { tokens, notation: toNotation(tokens), moves: expandAll(tokens) };
+}
+
+return { SCRAMBLE_FACES, expand, expandAll, invert, toNotation, parseNotation, randomScramble };
+};
+
+__M["./timerui.js"] = function () {
+// TIMER PANEL — the competition cycle, wired to the cube.
+//
+// The flow is the one a real timer uses, and the two separate presses are deliberate:
+//   new scramble  ->  press once (inspection starts)  ->  press and HOLD (goes green)
+//   ->  release (solve starts)  ->  turn the cube  ->  it stops itself when solved
+//
+// Stopping itself is the one place a virtual cube beats a physical one: there is no reaction
+// time between finishing and slapping the pad, because the app knows the exact move that
+// solved it. That also makes the recorded time strictly comparable between attempts.
+//
+// SPLITS come free. The solver already knows the seven stages of the method being taught, so
+// the panel watches `stageProgress` after every move and records when each stage first
+// completes. You find out that your cross is fine and your last layer is where the time goes.
+const { createTimer, STATE, INSPECTION_MS, HOLD_MS } = __req("./timer.js");
+const { randomScramble } = __req("./scrambler.js");
+const { formatMs, tps: calcTps, PENALTY, effectiveMs } = __req("./stats.js");
+const { stageProgress, STAGES } = __req("./solver.js");
+const { isSolved } = __req("./cube.js");
+const HISTORY_SHOWN = 12;
+function createTimerPanel({ root, session, applyScramble, getState, onArmedChange }) {
+  const el = {};
+  let timer = null;
+  let scramble = null;
+  let ticking = null;
+  let spaceDown = false;
+  let solveMoves = 0;
+  let splitMarks = [];
+  let lastSolve = null;
+  let armedNotified = false;
+
+  // ---- DOM ---------------------------------------------------------------------------
+  const mk = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  };
+
+  function build() {
+    root.replaceChildren();
+
+    const scr = mk("div", "scramble-box");
+    el.scramble = mk("code", "scramble-text", "—");
+    el.newScramble = mk("button", "btn btn--small", "New scramble");
+    el.newScramble.type = "button";
+    el.newScramble.addEventListener("click", () => newScramble());
+    scr.append(el.scramble, el.newScramble);
+    root.appendChild(scr);
+
+    el.pad = mk("button", "timer-pad");
+    el.pad.type = "button";
+    el.padTime = mk("div", "timer-time", "0.00");
+    el.padHint = mk("div", "timer-hint", "Scramble, then press and hold");
+    el.pad.append(el.padTime, el.padHint);
+    root.appendChild(el.pad);
+
+    el.penalties = mk("div", "row row--penalty");
+    el.p2 = mk("button", "btn btn--small", "+2");
+    el.pdnf = mk("button", "btn btn--small", "DNF");
+    el.pok = mk("button", "btn btn--small", "No penalty");
+    for (const [b, p] of [[el.p2, PENALTY.PLUS2], [el.pdnf, PENALTY.DNF], [el.pok, PENALTY.NONE]]) {
+      b.type = "button";
+      b.addEventListener("click", () => {
+        if (!lastSolve) return;
+        session.setPenalty(lastSolve.id, p);
+        lastSolve = { ...lastSolve, penalty: p };
+        render();
+      });
+      el.penalties.appendChild(b);
+    }
+    root.appendChild(el.penalties);
+
+    el.stats = mk("div", "stat-grid");
+    root.appendChild(el.stats);
+
+    el.splits = mk("div", "splits");
+    root.appendChild(el.splits);
+
+    const hh = mk("div", "history-head");
+    hh.append(mk("h3", "section-heading", "Solves"));
+    el.newSession = mk("button", "btn btn--small", "New session");
+    el.newSession.type = "button";
+    el.newSession.title = "Archives this session and starts a fresh one. Nothing is deleted.";
+    el.newSession.addEventListener("click", () => {
+      session.startNew();
+      lastSolve = null;
+      render();
+    });
+    hh.appendChild(el.newSession);
+    root.appendChild(hh);
+
+    el.history = mk("ol", "history");
+    root.appendChild(el.history);
+  }
+
+  // ---- scramble ----------------------------------------------------------------------
+  function newScramble() {
+    if (timer.state !== STATE.IDLE) timer.cancel();
+    scramble = randomScramble(20);
+    applyScramble(scramble.moves);
+    solveMoves = 0;
+    splitMarks = [];
+    render();
+  }
+
+  // ---- the solve cycle ---------------------------------------------------------------
+  function beginInspection() {
+    if (!scramble) { newScramble(); return; }
+    if (timer.state !== STATE.IDLE) return;
+    if (isSolved(getState())) { newScramble(); return; }
+    timer.startInspection();
+    startTicking();
+  }
+
+  function press() {
+    if (timer.state === STATE.IDLE) beginInspection();
+    else if (timer.state === STATE.INSPECTING) timer.hold();
+    else if (timer.state === STATE.SOLVING) { /* the cube stops the timer, not the pad */ }
+  }
+
+  function release() {
+    if (timer.state === STATE.READY) {
+      solveMoves = 0;
+      splitMarks = [];
+      timer.release();
+    }
+    // a press too short to arm just falls back to inspecting
+  }
+
+  function startTicking() {
+    if (ticking) return;
+    ticking = setInterval(() => {
+      timer.pollHold();
+      render();
+      if (timer.state === STATE.IDLE) stopTicking();
+    }, 50);
+  }
+  function stopTicking() {
+    if (ticking) { clearInterval(ticking); ticking = null; }
+  }
+
+  /** Called by the app after every committed move while this panel exists. */
+  function onCubeMove(state) {
+    if (timer.state !== STATE.SOLVING) return;
+    solveMoves++;
+
+    // record the first moment each stage completes
+    const progress = stageProgress(state);
+    for (let i = 0; i < progress.length; i++) {
+      if (progress[i].complete && !splitMarks[i]) {
+        splitMarks[i] = timer.snapshot().solveMs;
+      }
+    }
+
+    if (isSolved(state)) finishSolve();
+  }
+
+  function finishSolve() {
+    const result = timer.finish();
+    stopTicking();
+    if (!result) return;
+    const entry = session.add({
+      ...result,
+      scramble: scramble?.notation ?? null,
+      moves: solveMoves,
+      tps: calcTps(solveMoves, result.ms),
+      splits: STAGES.map((s, i) => ({ id: s.id, title: s.title, ms: splitMarks[i] ?? null })),
+    });
+    lastSolve = entry;
+    scramble = null;
+    render();
+  }
+
+  // ---- rendering ---------------------------------------------------------------------
+  function render() {
+    const snap = timer.snapshot();
+    const armed = snap.state !== STATE.IDLE;
+    if (armed !== armedNotified) { armedNotified = armed; onArmedChange?.(armed); }
+
+    el.scramble.textContent = scramble ? scramble.notation : "press New scramble";
+    el.newScramble.disabled = snap.state === STATE.SOLVING;
+
+    root.dataset.timerState = snap.state;
+    el.pad.className = `timer-pad timer-pad--${snap.state}`;
+
+    if (snap.state === STATE.INSPECTING || snap.state === STATE.READY) {
+      const left = Math.ceil(snap.inspectionRemainingMs / 1000);
+      el.padTime.textContent = snap.inspectionMs > INSPECTION_MS ? "+2" : String(left);
+      el.pad.classList.toggle("is-warning", snap.inspectionMs >= 8000);
+      el.pad.classList.toggle("is-danger", snap.inspectionMs >= 12000);
+      el.padHint.textContent = snap.state === STATE.READY
+        ? "release to start"
+        : `inspecting — hold ${Math.round(HOLD_MS / 100) / 10}s to arm`;
+      if (snap.inspectionPenalty) el.padHint.textContent = `inspection over — ${snap.inspectionPenalty}`;
+    } else if (snap.state === STATE.SOLVING) {
+      el.padTime.textContent = formatMs(snap.solveMs);
+      el.padHint.textContent = "turn the cube — it stops when solved";
+    } else {
+      el.padTime.textContent = lastSolve ? formatMs(effectiveMs(lastSolve)) : "0.00";
+      el.padHint.textContent = scramble ? "press and hold to inspect" : "get a scramble first";
+    }
+
+    const canPenalise = !!lastSolve && snap.state === STATE.IDLE;
+    for (const b of [el.p2, el.pdnf, el.pok]) b.disabled = !canPenalise;
+    el.p2.classList.toggle("is-on", lastSolve?.penalty === PENALTY.PLUS2);
+    el.pdnf.classList.toggle("is-on", lastSolve?.penalty === PENALTY.DNF);
+    el.pok.classList.toggle("is-on", canPenalise && !lastSolve?.penalty);
+
+    renderStats();
+    renderSplits();
+    renderHistory();
+  }
+
+  function statTile(label, value) {
+    const t = mk("div", "stat");
+    t.append(mk("span", "stat-label", label), mk("span", "stat-value", value));
+    return t;
+  }
+
+  function renderStats() {
+    const s = session.stats();
+    const pb = session.allTimeBest();
+    el.stats.replaceChildren(
+      statTile("solves", String(s.count)),
+      statTile("best", formatMs(s.best)),
+      statTile("Ao5", formatMs(s.ao5)),
+      statTile("Ao12", formatMs(s.ao12)),
+      statTile("best Ao5", formatMs(s.bestAo5)),
+      statTile("all-time PB", formatMs(pb)),
+    );
+  }
+
+  function renderSplits() {
+    el.splits.replaceChildren();
+    if (!lastSolve?.splits) return;
+    const head = mk("div", "splits-head", "where the time went");
+    el.splits.appendChild(head);
+    let prev = 0;
+    for (const sp of lastSolve.splits) {
+      if (sp.ms === null) continue;
+      const row = mk("div", "split-row");
+      row.append(
+        mk("span", "split-name", sp.title),
+        mk("span", "split-delta", formatMs(sp.ms - prev)),
+        mk("span", "split-total", formatMs(sp.ms)),
+      );
+      el.splits.appendChild(row);
+      prev = sp.ms;
+    }
+    if (lastSolve.tps) {
+      const foot = mk("div", "splits-foot",
+        `${lastSolve.moves} moves · ${lastSolve.tps.toFixed(2)} turns/sec`);
+      el.splits.appendChild(foot);
+    }
+  }
+
+  function renderHistory() {
+    el.history.replaceChildren();
+    const all = session.solves;
+    const recent = all.slice(-HISTORY_SHOWN).reverse();
+    if (!recent.length) {
+      el.history.appendChild(mk("li", "history-empty", "No solves yet."));
+      return;
+    }
+    for (const s of recent) {
+      const li = mk("li", `history-row${s.penalty === PENALTY.DNF ? " is-dnf" : ""}`);
+      li.append(
+        mk("span", "history-n", `#${all.indexOf(s) + 1}`),
+        mk("span", "history-time", formatMs(effectiveMs(s))),
+        mk("span", "history-pen", s.penalty ?? ""),
+        mk("span", "history-moves", s.moves ? `${s.moves} moves` : ""),
+      );
+      el.history.appendChild(li);
+    }
+  }
+
+  // ---- input --------------------------------------------------------------------------
+  const onKeyDown = (e) => {
+    if (root.hidden) return;
+    if (e.code !== "Space") return;
+    const tag = (e.target?.tagName ?? "").toLowerCase();
+    if (tag === "input" || tag === "textarea" || tag === "select" || tag === "button") return;
+    e.preventDefault();
+    if (spaceDown) return;      // keydown repeats while held
+    spaceDown = true;
+    press();
+    startTicking();
+  };
+  const onKeyUp = (e) => {
+    if (e.code !== "Space") return;
+    spaceDown = false;
+    release();
+  };
+
+  const api = {
+    mount() {
+      timer = createTimer({ onChange: () => render() });
+      build();
+      el.pad.addEventListener("pointerdown", (e) => { e.preventDefault(); press(); startTicking(); });
+      el.pad.addEventListener("pointerup", (e) => { e.preventDefault(); release(); });
+      el.pad.addEventListener("pointercancel", () => release());
+      window.addEventListener("keydown", onKeyDown);
+      window.addEventListener("keyup", onKeyUp);
+      render();
+      return api;
+    },
+    onCubeMove,
+    render,
+    get armed() { return timer && timer.state !== STATE.IDLE; },
+    /** Leaving the tab mid-attempt must not leave a stray timer running. */
+    suspend() { if (timer && timer.state !== STATE.IDLE) timer.cancel(); stopTicking(); },
+    detach() {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+      stopTicking();
+    },
+  };
+  return api;
+}
+
+return { createTimerPanel };
+};
+
+__M["./trainer.js"] = function () {
+// TRAINER — 2-look OLL and PLL case drilling.
+//
+// Why 2-look and not the full 78: memorising 57 OLL cases is where most people stall and quit.
+// 2-look gets you comfortably under 20 seconds with a fraction of the memory load, and every
+// case here is one you will keep using afterwards.
+//
+// HOW A CASE IS BUILT, AND WHY IT CANNOT LIE. Each case is defined by the ALGORITHM that solves
+// it. The drill position is generated by applying that algorithm's inverse to a solved cube —
+// so the case and the algorithm cannot drift apart by construction, and `verifyCase` proves it
+// by simulation. If an algorithm here were mistranscribed, its test fails; it can never quietly
+// teach you the wrong moves.
+//
+// NOTATION LIMIT, STATED HONESTLY. The cube model has outer quarter turns only — no slice
+// moves (M, E, S) and no wide turns (r, u, f). The classic H-perm and Z-perm are normally
+// written with M-slices, so H-perm appears here in its longer slice-free form and Z-perm is
+// absent rather than approximated. That is a limit of this cube's move set, not an oversight.
+const { solvedCube, turn, isSolved } = __req("./cube.js");
+const { expandAll, invert } = __req("./scrambler.js");
+const GROUPS = [
+  { id: "oll-edges", title: "OLL step 1 — the top cross", blurb: "Orient the top edges. Three cases and you always have a cross." },
+  { id: "oll-corners", title: "OLL step 2 — the top face", blurb: "Orient the corners so the whole top face is one colour." },
+  { id: "pll-corners", title: "PLL step 1 — corners home", blurb: "Move the corners to their right slots. Two cases." },
+  { id: "pll-edges", title: "PLL step 2 — edges home", blurb: "Cycle the last edges into place and the cube is done." },
+];
+
+const C = (id, group, name, alg, note) => ({ id, group, name, alg: alg.trim().split(/\s+/), note });
+const CASES = [
+  // ---- OLL step 1: orient the last-layer edges ------------------------------------
+  C("oll-line", "oll-edges", "Line", "F R U R' U' F'",
+    "Two edges already oriented, in a bar. Hold the bar horizontal."),
+  C("oll-l", "oll-edges", "L shape", "F U R U' R' F'",
+    "Two oriented edges meeting at a corner. Hold the L in the top-left."),
+  C("oll-dot", "oll-edges", "Dot", "F R U R' U' F' U U F U R U' R' F'",
+    "No edges oriented at all. It is the Line algorithm, U2, then the L algorithm — the U2 " +
+    "matters, because without it the F' and F cancel and the whole thing collapses to nothing."),
+
+  // ---- OLL step 2: orient the last-layer corners -----------------------------------
+  C("oll-sune", "oll-corners", "Sune", "R U R' U R U U R'",
+    "One corner already oriented, sitting at the front-left. The workhorse case."),
+  C("oll-antisune", "oll-corners", "Anti-sune", "R U U R' U' R U' R'",
+    "One corner oriented, at the front-right. Sune's mirror."),
+  C("oll-h", "oll-corners", "H / double sune", "R U R' U R U' R' U R U U R'",
+    "No corners oriented, two facing each way. Sune twice, essentially."),
+  C("oll-pi", "oll-corners", "Pi", "R U U R R U' R R U' R R U U R",
+    "No corners oriented, the awkward one. Learn it last."),
+  C("oll-headlights", "oll-corners", "Headlights", "R R D R' U U R D' R' U U R'",
+    "Two corners oriented on the same side — they look like headlights."),
+  C("oll-l-corner", "oll-corners", "L / bowtie", "R U R' U R U' R' U R U' R' U R U U R'",
+    "Two oriented corners, but arranged differently from headlights. Written with outer turns " +
+    "only, which makes it longer than the usual version — this cube has no wide or slice moves."),
+
+  // ---- PLL step 1: permute the corners ---------------------------------------------
+  C("pll-t", "pll-corners", "Adjacent swap (T-perm)", "R U R' U' R' F R R U' R' U' R U R' F'",
+    "Two corners next to each other need swapping. The most used algorithm in cubing."),
+  C("pll-y", "pll-corners", "Diagonal swap (Y-perm)", "F R U' R' U' R U R' F' R U R' U' R' F R F'",
+    "The two corners to swap are diagonally opposite."),
+
+  // ---- PLL step 2: permute the edges ------------------------------------------------
+  C("pll-ua", "pll-edges", "Ua-perm", "R U' R U R U R U' R' U' R R",
+    "Three edges cycle anticlockwise. One edge is already home."),
+  C("pll-ub", "pll-edges", "Ub-perm", "R R U R U R' U' R' U' R' U R'",
+    "Three edges cycle clockwise. Ua's mirror."),
+  C("pll-h", "pll-edges", "H-perm", "R R U U R U U R R U U R R U U R U U R R",
+    "All four edges swap in pairs. Written the long way here — the usual version needs slice moves this cube does not have."),
+];
+const caseById = (id) => CASES.find((c) => c.id === id) ?? null;
+const casesInGroup = (group) => CASES.filter((c) => c.group === group);
+
+/** The moves that PUT the cube into this case, from solved. */
+function setupFor(caseDef) {
+  return invert(caseDef.alg);
+}
+
+/** The cube state for this case's drill position. */
+function stateFor(caseDef) {
+  let s = solvedCube();
+  for (const m of expandAll(setupFor(caseDef))) s = turn(s, m);
+  return s;
+}
+
+/** Does this case's algorithm actually solve its own drill position? */
+function verifyCase(caseDef) {
+  let s = stateFor(caseDef);
+  if (isSolved(s)) return { ok: false, reason: "the setup left the cube solved — nothing to drill" };
+  for (const m of expandAll(caseDef.alg)) s = turn(s, m);
+  return isSolved(s) ? { ok: true } : { ok: false, reason: "the algorithm does not solve its own case" };
+}
+
+/**
+ * The last layer is the only thing a case may disturb. Everything below it must already be
+ * solved in the drill position, or you would be practising the wrong skill.
+ */
+function disturbsOnlyLastLayer(caseDef) {
+  const s = stateFor(caseDef);
+  const solved = solvedCube();
+  for (const face of ["D", "L", "R", "F", "B"]) {
+    for (let i = 0; i < 9; i++) {
+      const isTopRow = face !== "D" && i < 3;   // the last-layer band on the sides
+      if (isTopRow) continue;
+      if (s[face][i] !== solved[face][i]) return false;
+    }
+  }
+  return true;
+}
+function randomCase(group = null, rng = Math.random) {
+  const pool = group ? casesInGroup(group) : CASES;
+  return pool[Math.floor(rng() * pool.length) % pool.length];
+}
+
+return { GROUPS, CASES, caseById, casesInGroup, setupFor, stateFor, verifyCase, disturbsOnlyLastLayer, randomCase };
+};
+
+__M["./trainerui.js"] = function () {
+// TRAINER PANEL — drill one last-layer case at a time.
+//
+// Recognition is the skill being trained, not execution. So the algorithm is HIDDEN by default
+// and the clock starts the moment the case appears: what you are practising is seeing the case
+// and knowing which algorithm it is. Revealing the algorithm is allowed and is recorded as a
+// look, because a drill you can quietly cheat at teaches you nothing.
+const { GROUPS, casesInGroup, randomCase, stateFor, setupFor } = __req("./trainer.js");
+const { expandAll } = __req("./scrambler.js");
+const { formatMs } = __req("./stats.js");
+const { isSolved } = __req("./cube.js");
+function createTrainerPanel({ root, applyState, playMoves, getState }) {
+  const el = {};
+  let group = GROUPS[0].id;
+  let current = null;
+  let shownAt = 0;
+  let revealed = false;
+  let tally = { attempts: 0, unaided: 0, best: null };
+
+  const mk = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  };
+
+  function build() {
+    root.replaceChildren();
+
+    el.groups = mk("div", "chips chips--groups");
+    for (const g of GROUPS) {
+      const b = mk("button", "chip", g.title.replace(/^(OLL|PLL) step \d+ — /, ""));
+      b.type = "button";
+      b.title = g.blurb;
+      b.dataset.group = g.id;
+      b.addEventListener("click", () => { group = g.id; nextCase(); });
+      el.groups.appendChild(b);
+    }
+    root.appendChild(el.groups);
+
+    el.blurb = mk("p", "hint");
+    root.appendChild(el.blurb);
+
+    el.card = mk("div", "case-card");
+    root.appendChild(el.card);
+
+    const row = mk("div", "row row--guide");
+    el.next = mk("button", "btn btn--primary", "Show me a case");
+    el.next.type = "button";
+    el.next.addEventListener("click", () => nextCase());
+    el.reveal = mk("button", "btn btn--small", "Reveal algorithm");
+    el.reveal.type = "button";
+    el.reveal.addEventListener("click", () => { revealed = true; render(); });
+    el.play = mk("button", "btn btn--small", "Play it");
+    el.play.type = "button";
+    el.play.addEventListener("click", () => {
+      if (!current) return;
+      revealed = true;
+      playMoves(expandAll(current.alg));
+      render();
+    });
+    row.append(el.next, el.reveal, el.play);
+    root.appendChild(row);
+
+    el.tally = mk("div", "stat-grid");
+    root.appendChild(el.tally);
+  }
+
+  function nextCase() {
+    current = randomCase(group);
+    revealed = false;
+    applyState(stateFor(current));
+    shownAt = Date.now();
+    render();
+  }
+
+  /** Called after every committed move. */
+  function onCubeMove(state) {
+    if (!current) return;
+    if (!isSolved(state)) return;
+    const ms = Date.now() - shownAt;
+    tally.attempts++;
+    if (!revealed) {
+      tally.unaided++;
+      if (tally.best === null || ms < tally.best) tally.best = ms;
+    }
+    const solved = current;
+    current = null;
+    render(`Solved ${solved.name} in ${formatMs(ms)}${revealed ? " (algorithm shown)" : ""}`);
+  }
+
+  function render(flash) {
+    for (const b of el.groups.querySelectorAll(".chip")) {
+      b.classList.toggle("is-on", b.dataset.group === group);
+    }
+    el.blurb.textContent = GROUPS.find((g) => g.id === group)?.blurb ?? "";
+
+    el.card.replaceChildren();
+    if (flash) {
+      el.card.className = "case-card case-card--done";
+      el.card.append(mk("div", "case-name", flash));
+    } else if (!current) {
+      el.card.className = "case-card";
+      el.card.append(
+        mk("div", "case-name", `${casesInGroup(group).length} cases in this group`),
+        mk("div", "case-note", "The cube is set to one case at a time. Recognise it, then solve it."),
+      );
+    } else {
+      el.card.className = "case-card";
+      el.card.append(mk("div", "case-name", current.name));
+      el.card.append(mk("div", "case-note", current.note));
+      const alg = mk("div", "case-alg");
+      alg.textContent = revealed ? current.alg.join(" ") : "algorithm hidden — recognise it first";
+      alg.classList.toggle("is-hidden", !revealed);
+      el.card.append(alg);
+      if (revealed) {
+        el.card.append(mk("div", "case-setup", `set up from solved with: ${setupFor(current).join(" ")}`));
+      }
+    }
+
+    el.reveal.disabled = !current || revealed;
+    el.play.disabled = !current;
+    el.next.textContent = current ? "Different case" : "Show me a case";
+
+    el.tally.replaceChildren();
+    const tile = (label, value) => {
+      const t = mk("div", "stat");
+      t.append(mk("span", "stat-label", label), mk("span", "stat-value", value));
+      return t;
+    };
+    el.tally.append(
+      tile("attempts", String(tally.attempts)),
+      tile("unaided", String(tally.unaided)),
+      tile("best", formatMs(tally.best)),
+    );
+  }
+
+  return {
+    mount() { build(); render(); return this; },
+    onCubeMove,
+    render,
+    suspend() { current = null; render(); },
+  };
+}
+
+return { createTrainerPanel };
+};
+
+__M["./version.js"] = function () {
+// VERSION — the single canonical release identifier for this project.
+//
+// Everything that displays or publishes a version reads it from here: the footer label in the
+// app, the Arcade landing page, and the release record in ../../CHANGELOG.md. `version.test.mjs`
+// asserts that this constant and the newest changelog heading agree, so the two cannot drift —
+// a version that says one thing while the changelog says another is worse than no version.
+//
+// Semantics: v1 and v2 were already the project's own generation names before this was
+// formalised (see the "v1 - zss recovery mock" and "v2 - polish" directories), so the finished
+// v2 is recorded as 2.0.0 rather than inventing a number that contradicts existing truth.
+const VERSION = "2.0.0";
+const RELEASED = "2026-08-18";
+const RELEASE_NAME = "guided solve + timer";
+
+/** "v2.0.0 — guided solve + timer" */
+const versionLabel = () => `v${VERSION} — ${RELEASE_NAME}`;
+
+return { VERSION, RELEASED, RELEASE_NAME, versionLabel };
+};
+
+__M["./app.js"] = function () {
+// APP — wiring for four modes: play, guide, timer, train.
+//
+// Kept from v1 because it was a considered fix, not an accident: the model commits BEFORE the
+// animation is considered done, so a stalled animation can never silently lose a turn. Every
+// move goes through a queue — v1 fired them off unsequenced, so fast clicks stomped each other.
+//
+// TWO STRUCTURAL RULES, both from review findings:
+//   * Static controls are wired ONCE (`wireStaticControls`); only the move grid is rebuilt
+//     (`buildMoveGrid`). Rewiring everything on each rebuild stacked duplicate listeners, so
+//     one tap could toggle the camera lock several times and appear to do nothing.
+//   * The layer preview has a single OWNER. Hover, focus and drag all competed for one global
+//     highlight, so one control's `blur` could wipe another's newer preview.
+//
+// MODES are tabs rather than a growing pile of buttons: the panel had reached the point where
+// a reviewer called it "a cockpit, not a cube". Exactly one panel is visible at a time, and
+// leaving a mode suspends it — a timer left running in a hidden tab is a bug waiting to happen.
+const { solvedCube, turn, isSolved } = __req("./cube.js");
+const { scramble } = __req("./scramble.js");
+const { mountCube, paint, resize, getCubies } = __req("./render3d.js");
+const { inLayer } = __req("./geometry.js");
+const { createCamera, SNAP_VIEWS } = __req("./camera.js");
+const { createTurnEngine } = __req("./turn3d.js");
+const { attachInput, MOVE_BUTTONS, SCHEMES, isCoarsePointer, setSpeedMode } = __req("./controls.js");
+const { createGuide } = __req("./guide.js");
+const { createSession } = __req("./session.js");
+const { createTimerPanel } = __req("./timerui.js");
+const { createTrainerPanel } = __req("./trainerui.js");
+const { versionLabel } = __req("./version.js");
+const SCRAMBLE_LENGTH = 20;
+const SCHEME_KEY = "rubik-v2-scheme";
+const NOTATION_KEY = "rubik-v2-notation";
+const MODE_KEY = "rubik-v2-mode";
+const SPEEDMODE_KEY = "rubik-v2-speedmode";
+
+const NOTATIONS = [
+  { id: "both", label: "Arrows + letters" },
+  { id: "arrows", label: "Arrows only" },
+  { id: "letters", label: "Singmaster letters" },
+];
+
+const MODES = [
+  { id: "play", label: "Play", panel: "panel-play" },
+  { id: "guide", label: "Guide", panel: "guide" },
+  { id: "timer", label: "Timer", panel: "panel-timer" },
+  { id: "train", label: "Train", panel: "panel-train" },
+];
+
+let state = solvedCube();
+let history = [];
+let camera = null;
+let engine = null;
+let guide = null;
+let session = null;
+let timerPanel = null;
+let trainPanel = null;
+let mode = "play";
+let scheme = isCoarsePointer() ? "orbit-first" : "drag-turn";
+let notation = "both";
+let speedMode = false;
+
+const $ = (id) => document.getElementById(id);
+
+function unitPxForViewport() {
+  const w = window.innerWidth, h = window.innerHeight;
+  return Math.max(34, Math.min(84, Math.round(Math.min(w * 0.82, h * 0.46) / 3.6)));
+}
+
+function setStatus(text, kind = "") {
+  const el = $("status");
+  if (!el) return;
+  el.textContent = text;
+  el.className = `status${kind ? ` status--${kind}` : ""}`;
+}
+
+function refreshStatus() {
+  const n = history.length;
+  const solved = isSolved(state);
+  setStatus(`${n} move${n === 1 ? "" : "s"} — ${solved ? "solved" : "not solved"}`,
+    solved && n > 0 ? "good" : "");
+  const undoBtn = $("undo");
+  if (undoBtn) undoBtn.disabled = history.length === 0 || engine.busy;
+}
+
+// ---- the layer highlight, with a single owner --------------------------------------
+let previewed = [];
+let previewOwner = null;
+function previewLayer(move, owner = "drag") {
+  if (move === null && previewOwner !== null && previewOwner !== owner) return;
+  for (const c of previewed) c.el.classList.remove("is-preview");
+  previewed = [];
+  previewOwner = move ? owner : null;
+  if (!move) return;
+  const face = move[0];
+  for (const c of getCubies()) {
+    if (inLayer(c.model, face)) { c.el.classList.add("is-preview"); previewed.push(c); }
+  }
+}
+const clearPreview = () => { previewOwner = null; previewLayer(null, null); };
+
+// ---- moves ---------------------------------------------------------------------------
+let pendingUndos = 0;
+function commitMove(move) {
+  state = turn(state, move);
+  if (pendingUndos > 0) { pendingUndos--; history.pop(); }
+  else history.push(move);
+  paint(state);
+  refreshStatus();
+  guide?.noteMove(move);
+  if (mode === "timer") timerPanel?.onCubeMove(state);
+  if (mode === "train") trainPanel?.onCubeMove(state);
+}
+
+const play = (move) => {
+  if (!move) return;
+  if (Array.isArray(move)) engine.enqueueAll(move);
+  else engine.enqueue(move);
+};
+const inverse = (m) => (m.endsWith("'") ? m[0] : `${m}'`);
+
+function undo() {
+  if (!history.length || engine.busy) return;
+  pendingUndos++;
+  engine.enqueue(inverse(history[history.length - 1]));
+}
+
+function doScramble() {
+  if (engine.busy) return;
+  const { moves } = scramble(state, SCRAMBLE_LENGTH);
+  setStatus(`scrambling — ${moves.length} moves`);
+  engine.enqueueAll(moves).then(() => guide?.invalidate());
+}
+
+function restoreSolved() {
+  engine.cancel();
+  pendingUndos = 0;
+  state = solvedCube();
+  history = [];
+  clearPreview();
+  paint(state);
+  refreshStatus();
+  guide?.invalidate();
+}
+
+/**
+ * Put the cube into a state immediately, with no animation and no history.
+ * The timer and the trainer both need this: a scramble you watch play out is a scramble you
+ * have already started inspecting, and a drill case should simply be there.
+ */
+function applyInstant(movesOrState) {
+  engine.cancel();
+  pendingUndos = 0;
+  clearPreview();
+  if (Array.isArray(movesOrState)) {
+    let s = state;
+    for (const m of movesOrState) s = turn(s, m);
+    state = s;
+  } else {
+    state = movesOrState;
+  }
+  history = [];
+  paint(state);
+  refreshStatus();
+  guide?.invalidate();
+}
+
+// ---- the move grid (the only part that is ever rebuilt) ------------------------------
+function buildMoveGrid() {
+  const grid = $("move-grid");
+  if (!grid) return;
+  clearPreview();
+  grid.replaceChildren();
+
+  for (const { move, name } of MOVE_BUTTONS) {
+    const row = document.createElement("div");
+    row.className = `move-row c-${move}`;
+
+    const label = document.createElement("span");
+    label.className = `move-label c-${move}`;
+    label.textContent = name;
+    row.appendChild(label);
+
+    for (const m of [move, `${move}'`]) {
+      const anti = m.endsWith("'");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = `move c-${move} move--${notation}${anti ? " move--prime" : ""}`;
+      b.dataset.move = m;
+      if (notation !== "letters") {
+        const g = document.createElement("span");
+        g.className = "move-glyph";
+        g.textContent = anti ? "↺" : "↻";
+        b.appendChild(g);
+      }
+      if (notation !== "arrows") {
+        const n = document.createElement("span");
+        n.className = "move-notation";
+        n.textContent = anti ? `${move}′` : move;
+        b.appendChild(n);
+      }
+      b.setAttribute("aria-label", `Turn the ${name.toLowerCase()} face ${anti ? "counter-clockwise" : "clockwise"}`);
+      b.title = b.getAttribute("aria-label");
+      b.addEventListener("click", () => play(m));
+      const show = () => { if (!engine.busy) previewLayer(m, `btn:${m}`); };
+      const hide = () => previewLayer(null, `btn:${m}`);
+      b.addEventListener("pointerenter", show);
+      b.addEventListener("pointerleave", hide);
+      b.addEventListener("focus", show);
+      b.addEventListener("blur", hide);
+      row.appendChild(b);
+    }
+    grid.appendChild(row);
+  }
+}
+
+// ---- modes ----------------------------------------------------------------------------
+function buildTabs() {
+  const tabs = $("tabs");
+  if (!tabs) return;
+  tabs.replaceChildren();
+  for (const m of MODES) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "tab";
+    b.id = `tab-${m.id}`;
+    b.dataset.mode = m.id;
+    b.textContent = m.label;
+    b.setAttribute("role", "tab");
+    b.addEventListener("click", () => setMode(m.id));
+    tabs.appendChild(b);
+  }
+}
+
+function setMode(next) {
+  if (!MODES.some((m) => m.id === next)) next = "play";
+  // leaving a mode must shut it down: a timer counting in a hidden tab, or a drill case still
+  // armed, would both surprise you when you came back
+  if (mode === "timer" && next !== "timer") timerPanel?.suspend();
+  if (mode === "train" && next !== "train") trainPanel?.suspend();
+  mode = next;
+  try { localStorage.setItem(MODE_KEY, mode); } catch { }
+
+  for (const m of MODES) {
+    const panel = $(m.panel);
+    if (panel) panel.hidden = m.id !== mode;
+    const tab = $(`tab-${m.id}`);
+    if (tab) {
+      tab.classList.toggle("is-on", m.id === mode);
+      tab.setAttribute("aria-selected", String(m.id === mode));
+    }
+  }
+  guide?.setActive(mode === "guide");
+  if (mode === "timer") timerPanel?.render();
+  if (mode === "train") trainPanel?.render();
+}
+
+// ---- everything else, wired exactly once ---------------------------------------------
+function wireStaticControls() {
+  $("scramble")?.addEventListener("click", doScramble);
+  $("reset")?.addEventListener("click", restoreSolved);
+  $("undo")?.addEventListener("click", undo);
+  $("reset-view")?.addEventListener("click", () => camera.reset());
+
+  const lock = $("lock");
+  if (lock) {
+    const sync = () => {
+      lock.setAttribute("aria-pressed", String(camera.locked));
+      lock.textContent = camera.locked ? "Orbit locked" : "Orbit on";
+      lock.classList.toggle("is-on", camera.locked);
+    };
+    lock.addEventListener("click", () => { camera.toggleLock(); sync(); });
+    sync();
+  }
+
+  const views = $("view-presets");
+  if (views) {
+    views.replaceChildren();
+    for (const name of SNAP_VIEWS) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.textContent = name;
+      b.addEventListener("click", () => camera.snapTo(name));
+      views.appendChild(b);
+    }
+  }
+
+  const sel = $("scheme");
+  if (sel) {
+    sel.replaceChildren();
+    for (const s of SCHEMES) {
+      const o = document.createElement("option");
+      o.value = s.id; o.textContent = s.label;
+      sel.appendChild(o);
+    }
+    sel.value = scheme;
+    const applyScheme = () => {
+      scheme = sel.value;
+      try { localStorage.setItem(SCHEME_KEY, scheme); } catch { }
+      const h = $("scheme-hint");
+      if (h) h.textContent = SCHEMES.find((s) => s.id === scheme)?.hint ?? "";
+    };
+    sel.addEventListener("change", applyScheme);
+    applyScheme();
+  }
+
+  const nsel = $("notation");
+  if (nsel) {
+    nsel.replaceChildren();
+    for (const n of NOTATIONS) {
+      const o = document.createElement("option");
+      o.value = n.id; o.textContent = n.label;
+      nsel.appendChild(o);
+    }
+    nsel.value = notation;
+    nsel.addEventListener("change", () => {
+      notation = nsel.value;
+      try { localStorage.setItem(NOTATION_KEY, notation); } catch { }
+      buildMoveGrid();
+    });
+  }
+
+  const speed = $("speed");
+  if (speed) {
+    const applySpeed = () => {
+      const mult = Number(speed.value);
+      engine.setSpeed(mult);
+      const out = $("speed-value");
+      if (out) out.textContent = `${mult.toFixed(2)}x`;
+    };
+    speed.addEventListener("input", applySpeed);
+    applySpeed();
+  }
+
+  const sm = $("speedmode");
+  if (sm) {
+    sm.checked = speedMode;
+    const applySpeedMode = () => {
+      speedMode = sm.checked;
+      try { localStorage.setItem(SPEEDMODE_KEY, speedMode ? "1" : "0"); } catch { }
+      setSpeedMode(speedMode);
+      // a fixed, known angle is the whole point: you learn one view and stop re-orienting
+      if (speedMode) { camera.snapTo("home"); camera.setLocked(true); }
+      else camera.setLocked(false);
+      $("lock")?.dispatchEvent(new Event("sync-request"));
+      const lockBtn = $("lock");
+      if (lockBtn) {
+        lockBtn.setAttribute("aria-pressed", String(camera.locked));
+        lockBtn.textContent = camera.locked ? "Orbit locked" : "Orbit on";
+        lockBtn.classList.toggle("is-on", camera.locked);
+      }
+      document.body.classList.toggle("is-speedmode", speedMode);
+    };
+    sm.addEventListener("change", applySpeedMode);
+    if (speedMode) applySpeedMode();
+  }
+}
+
+function start() {
+  const mount = $("cube");
+  if (!mount) { console.error("no #cube mount element"); return; }
+
+  try {
+    scheme = localStorage.getItem(SCHEME_KEY) || scheme;
+    notation = localStorage.getItem(NOTATION_KEY) || notation;
+    speedMode = localStorage.getItem(SPEEDMODE_KEY) === "1";
+  } catch { }
+
+  const unit = unitPxForViewport();
+  const cubeEl = mountCube(mount, unit);
+  document.documentElement.style.setProperty("--unit", `${unit}px`);
+
+  camera = createCamera({ cubeEl });
+  engine = createTurnEngine({
+    getCubies,
+    getUnitPx: () => unitPxForViewport(),
+    commit: commitMove,
+    onIdle: () => { refreshStatus(); guide?.onIdle(); },
+  });
+
+  guide = createGuide({
+    root: $("guide"),
+    getState: () => state,
+    play,
+    preview: (m) => previewLayer(m, "guide"),
+    isBusy: () => engine.busy,
+    onAuto: () => { },
+  });
+
+  session = createSession();
+  timerPanel = createTimerPanel({
+    root: $("panel-timer"),
+    session,
+    applyScramble: (moves) => applyInstant(moves),
+    getState: () => state,
+    onArmedChange: (armed) => document.body.classList.toggle("is-timing", armed),
+  }).mount();
+
+  trainPanel = createTrainerPanel({
+    root: $("panel-train"),
+    applyState: (s) => applyInstant(s),
+    playMoves: (moves) => play(moves),
+    getState: () => state,
+  }).mount();
+
+  paint(state);
+  buildTabs();
+  wireStaticControls();
+  buildMoveGrid();
+  refreshStatus();
+
+  attachInput({
+    stageEl: mount,
+    camera,
+    onMove: play,
+    onPreview: (m) => previewLayer(m, "drag"),
+    getScheme: () => scheme,
+    isBusy: () => engine.busy,
+  });
+
+  let saved = "play";
+  try { saved = localStorage.getItem(MODE_KEY) || "play"; } catch { }
+  setMode(saved);
+
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const u = unitPxForViewport();
+      resize(u);
+      document.documentElement.style.setProperty("--unit", `${u}px`);
+    }, 120);
+  });
+
+  // the visible release label, read from the one canonical constant
+  const ver = $("version");
+  if (ver) ver.textContent = versionLabel();
+
+  document.body.classList.add("is-ready");
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+else start();
+
+return {  };
+};
+
+__req("./app.js");
+  </script>
+</body>
+</html>
