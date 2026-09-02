@@ -1,0 +1,28 @@
+{
+  "leaf": "crowbar",
+  "id": "weapon.held.crowbar",
+  "wepName": "Crowbar",
+  "kind": "melee",
+  "place": "melee",
+  "muzzle": [0.02, 0.16, -0.34],
+  "rootPos": [0.18, -0.28, -0.58],
+  "rootRot": [0.72, 0.10, -0.52],
+  "mag": null,
+  "notes": "IJ1-W1C try3: lower-right diagonal, thick hex shaft, clear L-bend + V-fork. Dull steel (steel/steelDark/steelEdge). Not neon pole.",
+  "parts": [
+    { "type": "cylZ", "rTop": 0.013, "rBot": 0.016, "len": 0.38, "mat": "steel", "x": 0, "y": 0, "z": -0.32, "seg": 6 },
+    { "type": "box", "sx": 0.006, "sy": 0.026, "sz": 0.36, "mat": "steelDark", "x": 0, "y": 0, "z": -0.32 },
+    { "type": "box", "sx": 0.026, "sy": 0.006, "sz": 0.36, "mat": "steelDark", "x": 0, "y": 0, "z": -0.32 },
+
+    { "type": "cylZ", "rTop": 0.022, "rBot": 0.020, "len": 0.12, "mat": "grip", "x": 0, "y": 0, "z": -0.10, "seg": 8 },
+    { "type": "cylZ", "rTop": 0.017, "rBot": 0.016, "len": 0.026, "mat": "steelDark", "x": 0, "y": 0, "z": -0.18, "seg": 6 },
+    { "type": "box", "sx": 0.038, "sy": 0.009, "sz": 0.060, "mat": "steel", "x": 0, "y": 0.0, "z": -0.032, "rx": -0.12 },
+
+    { "type": "box", "sx": 0.024, "sy": 0.022, "sz": 0.030, "mat": "steel", "x": 0, "y": 0.012, "z": -0.50 },
+    { "type": "box", "sx": 0.022, "sy": 0.062, "sz": 0.022, "mat": "steel", "x": 0, "y": 0.046, "z": -0.515 },
+    { "type": "box", "sx": 0.068, "sy": 0.014, "sz": 0.032, "mat": "steel", "x": 0, "y": 0.082, "z": -0.532 },
+    { "type": "box", "sx": 0.018, "sy": 0.012, "sz": 0.070, "mat": "steelEdge", "x": -0.024, "y": 0.082, "z": -0.59 },
+    { "type": "box", "sx": 0.018, "sy": 0.012, "sz": 0.070, "mat": "steelEdge", "x": 0.024, "y": 0.082, "z": -0.59 },
+    { "type": "box", "sx": 0.016, "sy": 0.010, "sz": 0.022, "mat": "steelDark", "x": 0, "y": 0.082, "z": -0.55 }
+  ]
+}

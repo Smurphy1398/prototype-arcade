@@ -1,0 +1,23 @@
+{
+  "pack_id": "zss.zombie.heads.z10",
+  "purpose": "NF4 L4 Z10 \u2014 head silhouette contact sheet (runtime morphs existing geos)",
+  "license": "project-owned original procedural generation",
+  "source": "original work \u2014 v2.0-ec/tools/gen-zombie-decay-classes.py (head sheet section)",
+  "source_url": null,
+  "variants": [
+    "block",
+    "long",
+    "wide",
+    "small",
+    "heavy_brow",
+    "weak_jaw"
+  ],
+  "contact_sheet": {
+    "path": "assets/skins/zombies/HEAD_CONTACT_SHEET.png",
+    "format": "PNG RGBA",
+    "dimensions": "426x76",
+    "sha256": "df96d0c9cda4b3dcd2267eac19cbe3da7adede8ab7b7654ef6b873a69ab22580"
+  },
+  "runtime": "applyZombieHeadVariant in entities.js \u2014 scales head/brow/jaw; clothing remains P21 pack",
+  "clothing_contact_sheet": "assets/skins/zombies/CONTACT_SHEET.png"
+}

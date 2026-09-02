@@ -1,0 +1,1202 @@
+{
+  "packageId": "P22",
+  "title": "ZSS free SFX import - tight event coverage set",
+  "created": "2026-07-25",
+  "basePath": "v2.0-ec/assets/sfx/",
+  "loudnessNote": "ffmpeg loudnorm I=-16 LUFS, TP=-1.5, alimiter; mono 44.1k ogg q:a=4",
+  "packs": {
+    "wn3-aud18-owner-recordings": {
+      "name": "Owner-owned real firearm recordings (wn3-aud18)",
+      "sourceUrl": "ZSS-audio-sourcing/wn3-aud18/extracted/Prepared SFX Library/Prepared Master Sheet.csv",
+      "license": "owner-owned"
+    },
+    "kenney-impact": {
+      "name": "Kenney Impact Sounds",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0",
+      "licenseFile": "packs/kenney-impact/LICENSE.txt"
+    },
+    "kenney-rpg": {
+      "name": "Kenney RPG Audio",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0",
+      "licenseFile": "packs/kenney-rpg/LICENSE.txt"
+    },
+    "kenney-ui": {
+      "name": "Kenney UI Audio",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0",
+      "licenseFile": "packs/kenney-ui/LICENSE.txt"
+    },
+    "kenney-digital": {
+      "name": "Kenney Digital Audio",
+      "sourceUrl": "https://kenney.nl/assets/digital-audio",
+      "license": "CC0-1.0",
+      "licenseFile": "packs/kenney-digital/LICENSE.txt"
+    },
+    "free-firearm": {
+      "name": "The Free Firearm Sound Library",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0",
+      "licenseFile": "packs/free-firearm/LICENSE.txt"
+    },
+    "qubodup-ghost": {
+      "name": "Ghost Monster Voice Moaning & Growling (qubodup)",
+      "sourceUrl": "https://opengameart.org/content/ghost-monster-voice-moaning-growling",
+      "license": "CC0-1.0",
+      "licenseFile": "packs/qubodup-ghost/LICENSE.txt"
+    },
+    "rubberduck-loops": {
+      "name": "30 CC0 SFX loops (rubberduck) — rain",
+      "sourceUrl": "https://opengameart.org/content/30-cc0-sfx-loops",
+      "license": "CC0-1.0",
+      "licenseFile": "packs/rubberduck-loops/LICENSE.txt"
+    },
+    "zss-procedural": {
+      "name": "ZSS procedural (offline synthesis, no network)",
+      "sourceUrl": "LOCAL: v2.0-ec/assets/sfx/gun/reload_shell_insert.gen.mjs",
+      "license": "CC0-1.0",
+      "licenseFile": null
+    },
+    "l4d2-zombie-voice-prototype": {
+      "name": "Valve Left 4 Dead 2 infected voice corpus (PROTOTYPE-ONLY, owner-authorized 2026-08-23)",
+      "sourceUrl": "SIMONS FILES/3rd party reference sounds/SOUNDS-SOURCE/l4d2/sound/npc/infected/",
+      "license": "VALVE_PROTO_NOT_RELEASE",
+      "licenseFile": "zombie-prototype-l4d2/README_PROTOTYPE_ONLY.md",
+      "status": "PROTOTYPE-ONLY / NOT CLEARED FOR DISTRIBUTION / REPLACE BEFORE SHIPPING",
+      "note": "NOT counted in fileCount/files[] below (that list is the shipped-safe baseline). Gated behind AR_ZOMBIE_VOICE_PROTO_EAR in audio-runtime.js — see the README for the isolation/replace-before-shipping contract."
+    }
+  },
+  "fileCount": 78,
+  "files": [
+    {
+      "path": "gun/fire_rifle_m4a1_crack.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "m4a1_rifle",
+      "format": "ogg",
+      "durationSec": 0.95,
+      "bytes": 12019,
+      "sha256": "1de42419282e55083202eeb5e67a32b882fc66668755d1d12a47f1aa7d425a7b",
+      "pack": "wn3-aud18-owner-recordings",
+      "sourceUrl": "extracted/Prepared SFX Library/AR-15/D_24P.wav",
+      "license": "owner-owned",
+      "t5Note": "T5 fire-pair split (plan §5/§9): was fire_rifle_m16_crack.wav, identical to m16_rifle. Real AR-15 master, different take (mid distance) than M16's (near distance)."
+    },
+    {
+      "path": "gun/fire_smg_mac_burst.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "mac_smg",
+      "format": "ogg",
+      "durationSec": 1.0,
+      "bytes": 12035,
+      "sha256": "456b825cda2aed6d42b2288b78f7dc0d0258041d8b80661999dbbbd74fe691e9",
+      "pack": "wn3-aud18-owner-recordings",
+      "sourceUrl": "extracted/Prepared SFX Library/Carl Gustav M45/G_31P.wav",
+      "license": "owner-owned",
+      "t5Note": "T5 fire-pair split: was fire_smg_02.wav, identical primary to mp_carbine. Real Carl Gustav M45 (Swedish K) open-bolt 9mm SMG master — exact class match."
+    },
+    {
+      "path": "gun/fire_smg_mp5_burst.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "mp_carbine",
+      "format": "ogg",
+      "durationSec": 1.0,
+      "bytes": 12009,
+      "sha256": "a64e69a93951da48a5eae4c5a749973a38d92d213ba1665275c45f86298ade0f",
+      "pack": "wn3-aud18-owner-recordings",
+      "sourceUrl": "extracted/Prepared SFX Library/PPSh/P_30P.wav",
+      "license": "owner-owned",
+      "t5Note": "T5 fire-pair split: was fire_smg_02.wav, identical to mac_smg. Real PPSh open-bolt SMG master — class-correct (SMG), caliber differs (7.62x25 Tokarev vs MP5's 9mm), disclosed not exact."
+    },
+    {
+      "path": "gun/fire_rifle_hunting_boom.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "hunting_rifle",
+      "format": "ogg",
+      "durationSec": 1.1,
+      "bytes": 12090,
+      "sha256": "c6c85a26e563e99cff99aa1887a7219ab19b49c3481c635703a60013ec9d503b",
+      "pack": "wn3-aud18-owner-recordings",
+      "sourceUrl": "extracted/Prepared SFX Library/Tikka/W_29P.wav",
+      "license": "owner-owned",
+      "t5Note": "T5 fire-pair split: was fire_rifle_02.wav, identical to fifty_sniper. Real Tikka T3 bolt-action hunting rifle master — exact class match."
+    },
+    {
+      "path": "gun/fire_rifle_fifty_boom.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "fifty_sniper",
+      "format": "ogg",
+      "durationSec": 1.1,
+      "bytes": 11578,
+      "sha256": "0434521bc63a1cbb13d2993b5f0b61e2320cb1192bda881044c1392f0893047d",
+      "pack": "wn3-aud18-owner-recordings",
+      "sourceUrl": "extracted/Prepared SFX Library/Mosin Nagant/M_21P.wav",
+      "license": "owner-owned",
+      "t5Note": "T5 fire-pair split: was fire_rifle_02.wav, identical to hunting_rifle. Real Mosin Nagant large-caliber bolt rifle master — no true .50 BMG recording exists in the owned corpus; this is the loudest/deepest available differentiator, disclosed as NOT a true caliber match."
+    },
+    {
+      "path": "gun/fire_shotgun_pump_mossberg.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "pump_shotgun",
+      "format": "ogg",
+      "durationSec": 0.9,
+      "bytes": 11367,
+      "sha256": "c915bb2eedb299b5128ac329ab29947927865c57f5f9e67b75cbaed32dcad34e",
+      "pack": "wn3-aud18-owner-recordings",
+      "sourceUrl": "extracted/Prepared SFX Library/Mossberg/N_26P.wav",
+      "license": "owner-owned",
+      "t5Note": "T5 fire-pair split: was fire_shotgun_02.wav, identical primary to auto_shotgun. Real Mossberg Model 190 pump-action 12ga master — exact class match."
+    },
+    {
+      "path": "gun/fire_shotgun_auto_nova.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "auto_shotgun",
+      "format": "ogg",
+      "durationSec": 0.9,
+      "bytes": 11207,
+      "sha256": "078eac044a9bf3720127ed3bb14260c48c866eb3df512ae9605876c77d5a1389",
+      "pack": "wn3-aud18-owner-recordings",
+      "sourceUrl": "extracted/Prepared SFX Library/Nova/O_21P.wav",
+      "license": "owner-owned",
+      "t5Note": "T5 fire-pair split: was fire_shotgun_02.wav, identical to pump_shotgun. Real Benelli Nova master — the owned corpus has no true semi-auto shotgun recording (Nova is pump-action too); disclosed as differentiation only, not a true semi-auto match."
+    },
+    {
+      "path": "gun/fire_pistol_01.ogg",
+      "family": "gun",
+      "event": "fire",
+      "format": "ogg",
+      "durationSec": 0.45,
+      "bytes": 8993,
+      "sha256": "72980369811dabbe3790986935d861218a25ae0d86b1e66fdb83976b39aa1a7f",
+      "pack": "free-firearm",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_pistol_02.ogg",
+      "family": "gun",
+      "event": "fire",
+      "format": "ogg",
+      "durationSec": 0.45,
+      "bytes": 7276,
+      "sha256": "de4948bd89c4dba638e0f8998d8d87379349ec354acdcd7a46aeb9c24408f98a",
+      "pack": "free-firearm",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_shotgun_01.ogg",
+      "family": "gun",
+      "event": "fire",
+      "format": "ogg",
+      "durationSec": 0.55,
+      "bytes": 8580,
+      "sha256": "38cf1a04629c1fbee445cc0fa01229a9049fabb5b36f4dd04448e7b563b59c7e",
+      "pack": "free-firearm",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_shotgun_02.ogg",
+      "family": "gun",
+      "event": "fire",
+      "format": "ogg",
+      "durationSec": 0.55,
+      "bytes": 8310,
+      "sha256": "4403513cc99246ded40b1b72e92c779c3f7f910d5dc043f18f7639eb4011daa9",
+      "pack": "free-firearm",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_smg_01.ogg",
+      "family": "gun",
+      "event": "fire",
+      "format": "ogg",
+      "durationSec": 0.28,
+      "bytes": 6691,
+      "sha256": "4593bb257a8a9ba6361ca6b5d193555f647fd864bbee2e5bd5f17df893f5ecf8",
+      "pack": "free-firearm",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_smg_02.ogg",
+      "family": "gun",
+      "event": "fire",
+      "format": "ogg",
+      "durationSec": 0.28,
+      "bytes": 6680,
+      "sha256": "bb96739f0910fafd4e06cbc9e0601ece861914ae1cce1193830d59ab6def4dbc",
+      "pack": "free-firearm",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_rifle_01.ogg",
+      "family": "gun",
+      "event": "fire",
+      "format": "ogg",
+      "durationSec": 0.4,
+      "bytes": 7510,
+      "sha256": "e59a2893cf1d77a756862acd1d67592fd96d53d3e0ef11a831f0d866a6836d19",
+      "pack": "free-firearm",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_rifle_02.ogg",
+      "family": "gun",
+      "event": "fire",
+      "format": "ogg",
+      "durationSec": 0.4,
+      "bytes": 7804,
+      "sha256": "da9477acdadd8ee83779806127521204b9e2959c64adffc66a9f1471761f7268",
+      "pack": "free-firearm",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_rifle_m16_crack.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "m16_rifle",
+      "format": "ogg",
+      "durationSec": 0.39,
+      "bytes": 7497,
+      "sha256": "69563f1d96c8c828e635336bc4585b434b4cf3c13504f5fa140e057ae2e76202",
+      "pack": "derived-ij1-a3rifle",
+      "derivedFrom": "gun/fire_rifle_02.ogg",
+      "transformation": "asetrate=44100*1.08, aresample=44100, highpass=f=280, treble=g=4:f=2500, loudnorm I=-16 TP=-1.5, alimiter; mono 44.1k vorbis q:a=4",
+      "purpose": "IJ1 A3-RIFLE: exclusive M16 primary — brighter/tighter 5.56 service-rifle crack distinct from AK pool",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_rifle_ak_thump.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "ak_rifle",
+      "layer": "dual_body",
+      "format": "ogg",
+      "durationSec": 0.59,
+      "bytes": 7216,
+      "sha256": "8bb0b588b680e36f1c6ee338e5c6e118c30fd36fa3592991b8081ae77bd7c8c2",
+      "pack": "derived-ij1-a3rifle",
+      "derivedFrom": "gun/fire_rifle_01.ogg",
+      "transformation": "asetrate=44100*0.72, aresample=44100, lowpass=f=380, loudnorm I=-16 TP=-1.5, alimiter; mono 44.1k vorbis q:a=4",
+      "purpose": "IJ1 A3-RIFLE: AK dual-layer low body thump (longer/deeper tail) — not used as M16 primary",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/fire_revolver_body.ogg",
+      "family": "gun",
+      "event": "fire",
+      "weapon": "revolver",
+      "layer": "dual_body",
+      "format": "ogg",
+      "durationSec": 0.57,
+      "bytes": 6629,
+      "sha256": "ef836ea35bbecc4b556733b9546d7bca9a9ae0b5a7bee232bbe32f01b68fe860",
+      "pack": "derived-ij1-a3rifle",
+      "derivedFrom": "gun/fire_pistol_02.ogg",
+      "transformation": "asetrate=44100*0.78, aresample=44100, lowpass=f=520, loudnorm I=-16 TP=-1.5, alimiter; mono 44.1k vorbis q:a=4",
+      "purpose": "IJ1 A3-RIFLE: revolver dual-layer big-bore body vs sidearm sharp crack",
+      "sourceUrl": "https://github.com/buddingmonkey/FreeFirearmsSFXLibrary",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/reload_01.ogg",
+      "family": "gun",
+      "event": "reload",
+      "format": "ogg",
+      "durationSec": 0.261,
+      "bytes": 6449,
+      "sha256": "d905bf252f54231c217a49914e729d26ede4a804a83e83e014cc78fd24c158ee",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/reload_02.ogg",
+      "family": "gun",
+      "event": "reload",
+      "format": "ogg",
+      "durationSec": 0.446,
+      "bytes": 8201,
+      "sha256": "bc7db9a95d03cd401d958e622c789dfc3b9efd484f12d47050698122d090f2f5",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/reload_03.ogg",
+      "family": "gun",
+      "event": "reload",
+      "format": "ogg",
+      "durationSec": 1.46,
+      "bytes": 17111,
+      "sha256": "02fa2afff8e78c5ede9c355f8e16367c837fcd1a6fd871fdd66c74003cdfc809",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/empty_01.ogg",
+      "family": "gun",
+      "event": "empty",
+      "format": "ogg",
+      "durationSec": 0.094,
+      "bytes": 4796,
+      "sha256": "f57dd88a6156c00c228f1bfb1486d5182816e00282e816ebafd5a0f5fece8b46",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/empty_02.ogg",
+      "family": "gun",
+      "event": "empty",
+      "format": "ogg",
+      "durationSec": 0.056,
+      "bytes": 4486,
+      "sha256": "73ca2feda477fd7dedca31cefdc4b1784561f215c811d474cc6537a34dbaeb3f",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "melee/swing_01.ogg",
+      "family": "melee",
+      "event": "swing",
+      "format": "ogg",
+      "durationSec": 0.4,
+      "bytes": 7643,
+      "sha256": "a07059cde7e97c29967b519fd67152ad0c5467226a1102d9c9227b1ad31ad690",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "melee/swing_02.ogg",
+      "family": "melee",
+      "event": "swing",
+      "format": "ogg",
+      "durationSec": 0.446,
+      "bytes": 8167,
+      "sha256": "0df4a948762f2d7fc0371dc73f3bef27562c03129174c4d93b63d96e32a44582",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "melee/swing_03.ogg",
+      "family": "melee",
+      "event": "swing",
+      "format": "ogg",
+      "durationSec": 0.477,
+      "bytes": 7958,
+      "sha256": "ecd2ad4de4aca54efc570b409dcc28cec95d456c3959a1634ff45aba446b97cd",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "melee/impact_01.ogg",
+      "family": "melee",
+      "event": "impact",
+      "format": "ogg",
+      "durationSec": 0.24,
+      "bytes": 6046,
+      "sha256": "e18f88711cdd461365f1c22c43916f521f5aab8f1c3e698284de6b0cfb2024db",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "melee/impact_02.ogg",
+      "family": "melee",
+      "event": "impact",
+      "format": "ogg",
+      "durationSec": 0.6,
+      "bytes": 9145,
+      "sha256": "c08d84e5759be98fbc35ea4ee3f4f5f4ba748d2738ef815b907ee6e0b34b547e",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "melee/impact_03.ogg",
+      "family": "melee",
+      "event": "impact",
+      "format": "ogg",
+      "durationSec": 0.569,
+      "bytes": 9081,
+      "sha256": "b78edf1d7459dd2512e8bb13b3a4d759fe245576908a16fd45029541938b41cb",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/metal_01.ogg",
+      "family": "impact",
+      "event": "metal",
+      "format": "ogg",
+      "durationSec": 0.272,
+      "bytes": 5568,
+      "sha256": "b785a1ce5c6e79c0b60d65e5d2d94f338024b52ef999b943e2de6a32fe5047f1",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/metal_02.ogg",
+      "family": "impact",
+      "event": "metal",
+      "format": "ogg",
+      "durationSec": 0.143,
+      "bytes": 4762,
+      "sha256": "514efd0284ff47c436dcf4e8b8ccd1de1d16f80723044c362b3d0a0d01ef8587",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/metal_03.ogg",
+      "family": "impact",
+      "event": "metal",
+      "format": "ogg",
+      "durationSec": 0.168,
+      "bytes": 4674,
+      "sha256": "eef34bc06c07fb2d38dfd67e72f36aab0961d055c8090c1d445a0f121a2a0056",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/wood_01.ogg",
+      "family": "impact",
+      "event": "wood",
+      "format": "ogg",
+      "durationSec": 0.333,
+      "bytes": 5258,
+      "sha256": "fde8332fce3e116607779039162e0e3f8028ae3f05aeb5390a14c631bff298c9",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/wood_02.ogg",
+      "family": "impact",
+      "event": "wood",
+      "format": "ogg",
+      "durationSec": 0.333,
+      "bytes": 5215,
+      "sha256": "83c454f9b22755ef2d7f1c364ef2315db58794d0a112caa1981cfdb7bd04410f",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/wood_03.ogg",
+      "family": "impact",
+      "event": "wood",
+      "format": "ogg",
+      "durationSec": 0.313,
+      "bytes": 4657,
+      "sha256": "165cd0eb8b3e9852ebfe31e852e87933b540b4ebcf6581bd1de5a859d6f0e3fe",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/glass_01.ogg",
+      "family": "impact",
+      "event": "glass",
+      "format": "ogg",
+      "durationSec": 0.543,
+      "bytes": 6253,
+      "sha256": "65d78a10b2dae9fce83b0713799dd9c5ff048b3cb80ed3d8a9e95b178c112551",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/glass_02.ogg",
+      "family": "impact",
+      "event": "glass",
+      "format": "ogg",
+      "durationSec": 0.543,
+      "bytes": 6325,
+      "sha256": "933c1b3cef4fa8b99d5fefb46f1b1bebaff3b6e10298577d2c3dcba505e729e1",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/glass_03.ogg",
+      "family": "impact",
+      "event": "glass",
+      "format": "ogg",
+      "durationSec": 0.241,
+      "bytes": 5718,
+      "sha256": "bc2c1eb8d44195e90ea3cf4f56188568b32407f65690a0d3086c4a37a86ae8db",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/soft_01.ogg",
+      "family": "impact",
+      "event": "soft",
+      "format": "ogg",
+      "durationSec": 0.118,
+      "bytes": 4287,
+      "sha256": "3f158995f1a721687d7e91a31d3876d3ed3cb05358ce1cbc3a9025436622e354",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/soft_02.ogg",
+      "family": "impact",
+      "event": "soft",
+      "format": "ogg",
+      "durationSec": 0.53,
+      "bytes": 4937,
+      "sha256": "06e00ccc9667527e3e46138786fa3d38ae64fecdc2dfbde905b7245e42669a5c",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/generic_01.ogg",
+      "family": "impact",
+      "event": "generic",
+      "format": "ogg",
+      "durationSec": 0.164,
+      "bytes": 4607,
+      "sha256": "865da08898069a38a90afcab7e9a8aab3f3e8b446d51f4fe95bf0e42e3a003a9",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "impact/generic_02.ogg",
+      "family": "impact",
+      "event": "generic",
+      "format": "ogg",
+      "durationSec": 0.118,
+      "bytes": 4466,
+      "sha256": "33a9261824712fd429ef1739a91d329bad71a12360e206ca2223246a4b7ee4e6",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/voice_01.ogg",
+      "family": "zombie",
+      "event": "voice",
+      "format": "ogg",
+      "durationSec": 1.127,
+      "bytes": 11279,
+      "sha256": "7258fe9cbf2067020386e405298d72c5525a95a3961a915b957d4193e9c798eb",
+      "pack": "qubodup-ghost",
+      "sourceUrl": "https://opengameart.org/content/ghost-monster-voice-moaning-growling",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/voice_02.ogg",
+      "family": "zombie",
+      "event": "voice",
+      "format": "ogg",
+      "durationSec": 1.2,
+      "bytes": 13085,
+      "sha256": "da8dc7f16cfd4d771be9d5015951887f95d60f61a3fcc47b1d5cb7bcfcbca302",
+      "pack": "qubodup-ghost",
+      "sourceUrl": "https://opengameart.org/content/ghost-monster-voice-moaning-growling",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/voice_03.ogg",
+      "family": "zombie",
+      "event": "voice",
+      "format": "ogg",
+      "durationSec": 1.2,
+      "bytes": 12716,
+      "sha256": "2a7e40f69f885cdebceea0fba5d1275bbd94a642e1fd9cd4336cd74da1a8510a",
+      "pack": "qubodup-ghost",
+      "sourceUrl": "https://opengameart.org/content/ghost-monster-voice-moaning-growling",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/voice_04.ogg",
+      "family": "zombie",
+      "event": "voice",
+      "format": "ogg",
+      "durationSec": 1,
+      "bytes": 10988,
+      "sha256": "efca125383e901a543b8e351ca32a1f980a1921a3679d3e816a7db5f6af5129b",
+      "pack": "qubodup-ghost",
+      "sourceUrl": "https://opengameart.org/content/ghost-monster-voice-moaning-growling",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/attack_01.ogg",
+      "family": "zombie",
+      "event": "attack",
+      "format": "ogg",
+      "durationSec": 0.431,
+      "bytes": 6881,
+      "sha256": "f4a0483c62f0ca6ed3632ee861fbdf8009619ab0f7908257e6c3b15d2d06a246",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/attack_02.ogg",
+      "family": "zombie",
+      "event": "attack",
+      "format": "ogg",
+      "durationSec": 0.649,
+      "bytes": 8761,
+      "sha256": "dac7dfad1d5228f2538363d31496d39b79a67e0e71b48e83c47e02e58e171f1d",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/hit_01.ogg",
+      "family": "zombie",
+      "event": "hit",
+      "format": "ogg",
+      "durationSec": 0.183,
+      "bytes": 4336,
+      "sha256": "2122f251ed31b6648b661effa840e3d6f0a691cc90d2e97247191b1cb9017e9d",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/hit_02.ogg",
+      "family": "zombie",
+      "event": "hit",
+      "format": "ogg",
+      "durationSec": 0.572,
+      "bytes": 5027,
+      "sha256": "07c539d12fbaa28c4200ffc9d0c0fe271ce6a6e9e3624b5bf0acdcd8cdfae4f3",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/death_01.ogg",
+      "family": "zombie",
+      "event": "death",
+      "format": "ogg",
+      "durationSec": 0.572,
+      "bytes": 5041,
+      "sha256": "df0f5f551343dcbe65379d2a142233a8af4e2b3fe810e278d03c5295308ac88f",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "zombie/death_02.ogg",
+      "family": "zombie",
+      "event": "death",
+      "format": "ogg",
+      "durationSec": 0.9,
+      "bytes": 9919,
+      "sha256": "7442d3262ce3cae58ca57d1304a54303145b90d7658155097e413b89c8268b64",
+      "pack": "qubodup-ghost",
+      "sourceUrl": "https://opengameart.org/content/ghost-monster-voice-moaning-growling",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "door/open_01.ogg",
+      "family": "door",
+      "event": "open",
+      "format": "ogg",
+      "durationSec": 0.919,
+      "bytes": 12683,
+      "sha256": "f567e27eef01992f1c8f79faa720f64c4589717597f40dce20548bf3686ca8d0",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "door/open_02.ogg",
+      "family": "door",
+      "event": "open",
+      "format": "ogg",
+      "durationSec": 1.413,
+      "bytes": 16502,
+      "sha256": "52d7270fb3174142a738e223c2433dbb88c7e70efbb3abece80398b5ea35b49c",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "door/close_01.ogg",
+      "family": "door",
+      "event": "close",
+      "format": "ogg",
+      "durationSec": 0.675,
+      "bytes": 9811,
+      "sha256": "292e6ab95211d91ee32c929936a03db979b5712f74ba8395f0462e31f44405b5",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "door/close_02.ogg",
+      "family": "door",
+      "event": "close",
+      "format": "ogg",
+      "durationSec": 0.612,
+      "bytes": 9935,
+      "sha256": "d3aff285985012a7a06034569c2b32590e08a53b9babfb717886da79fa9fa0dc",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "door/break_01.ogg",
+      "family": "door",
+      "event": "break",
+      "format": "ogg",
+      "durationSec": 0.313,
+      "bytes": 4686,
+      "sha256": "fad500728a98f27a2d6892c15b80049fe4829c6783004607f64a63fddf29ee8a",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "door/break_02.ogg",
+      "family": "door",
+      "event": "break",
+      "format": "ogg",
+      "durationSec": 0.779,
+      "bytes": 9211,
+      "sha256": "b275dc20923c7a8b33dae6981f866e7f26166373c4565f0cde16794fc190ca7b",
+      "pack": "kenney-impact",
+      "sourceUrl": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "door/creak_01.ogg",
+      "family": "door",
+      "event": "creak",
+      "format": "ogg",
+      "durationSec": 0.661,
+      "bytes": 9572,
+      "sha256": "2531065b0708bda48ee0c6a13fcbcb1d6c1de7cb953e7809d36f9d225cd16014",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "inventory/pickup_01.ogg",
+      "family": "inventory",
+      "event": "pickup",
+      "format": "ogg",
+      "durationSec": 0.846,
+      "bytes": 13406,
+      "sha256": "52f94f03112c1bfc4197bcad3fa3b95c2930e35fc1fcc799a65c740123805779",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "inventory/pickup_02.ogg",
+      "family": "inventory",
+      "event": "pickup",
+      "format": "ogg",
+      "durationSec": 0.338,
+      "bytes": 7088,
+      "sha256": "cb080f3d08cf613acfe6a431e5d16b99914fddd0f5f31b655c071645c9a6696a",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "inventory/pickup_03.ogg",
+      "family": "inventory",
+      "event": "pickup",
+      "format": "ogg",
+      "durationSec": 0.661,
+      "bytes": 9686,
+      "sha256": "72a1b1c9adb9f1ca81baf6a7ae8f270e03411184463628d93130890edd8a93ed",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "inventory/store_01.ogg",
+      "family": "inventory",
+      "event": "store",
+      "format": "ogg",
+      "durationSec": 0.277,
+      "bytes": 6544,
+      "sha256": "d8ee51c520fd7df5279838b78c68ac7ce15886baebaa311ef3c1738f794c9883",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "inventory/store_02.ogg",
+      "family": "inventory",
+      "event": "store",
+      "format": "ogg",
+      "durationSec": 0.415,
+      "bytes": 7250,
+      "sha256": "a937a85ee187e5bfaa93c72ad341c4fafd23a075d205fb97025f757010fd2a0b",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "inventory/craft_01.ogg",
+      "family": "inventory",
+      "event": "craft",
+      "format": "ogg",
+      "durationSec": 0.938,
+      "bytes": 12061,
+      "sha256": "0990184cac10385cef53f1ec8fad4bda8b51de39a46ce41370090a63c7815ad3",
+      "pack": "kenney-rpg",
+      "sourceUrl": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "inventory/craft_02.ogg",
+      "family": "inventory",
+      "event": "craft",
+      "format": "ogg",
+      "durationSec": 0.367,
+      "bytes": 6480,
+      "sha256": "dddf158254191f7a4c6014b58389e39788dd8d7970cd57b3ce02fc40960cd801",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "weather/rain_loop.ogg",
+      "family": "weather",
+      "event": "rain",
+      "format": "ogg",
+      "durationSec": 4,
+      "bytes": 44089,
+      "sha256": "aa8cecee48695ef9cd9c504d8356302bab24cbf251a4058aa18834d613c0bf31",
+      "pack": "rubberduck-loops",
+      "sourceUrl": "https://opengameart.org/content/30-cc0-sfx-loops",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/open_01.ogg",
+      "family": "ui",
+      "event": "open",
+      "format": "ogg",
+      "durationSec": 0.315,
+      "bytes": 6150,
+      "sha256": "fba0d410bf4b1ce0fc5644804fc6e2c90e268da09170071050fbe9a8ca18c1d8",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/open_02.ogg",
+      "family": "ui",
+      "event": "open",
+      "format": "ogg",
+      "durationSec": 0.086,
+      "bytes": 4588,
+      "sha256": "3d959c085eb21f9c37a2b0dbf61ed51daf40bf0c5895777b5eff43e45f2c4820",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/close_01.ogg",
+      "family": "ui",
+      "event": "close",
+      "format": "ogg",
+      "durationSec": 0.321,
+      "bytes": 6228,
+      "sha256": "57322ab38f2b2090d094fbdc54f121772fe4ea3cf99f89845530baac24d4a594",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/close_02.ogg",
+      "family": "ui",
+      "event": "close",
+      "format": "ogg",
+      "durationSec": 0.041,
+      "bytes": 4257,
+      "sha256": "633ac1c2ec3389a8467bce6becf56a6b59be01d5546dd0b567829292d449280d",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/click_01.ogg",
+      "family": "ui",
+      "event": "click",
+      "format": "ogg",
+      "durationSec": 0.059,
+      "bytes": 4453,
+      "sha256": "ae3e047919961e6278315e1f75ddf57e23a3feceb6c4ac6ff4b84678399848dc",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/click_02.ogg",
+      "family": "ui",
+      "event": "click",
+      "format": "ogg",
+      "durationSec": 0.038,
+      "bytes": 4207,
+      "sha256": "ee3383808693f170bec15e99a8338e59fc5c964c81ffd3037a855b207099d127",
+      "pack": "kenney-ui",
+      "sourceUrl": "https://kenney.nl/assets/ui-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/levelup_01.ogg",
+      "family": "ui",
+      "event": "levelup",
+      "format": "ogg",
+      "durationSec": 1.202,
+      "bytes": 11654,
+      "sha256": "496c5d7b0bcd2ceeddd17cd82ddc309960b8e433068a2ef571025d0a31a71a35",
+      "pack": "kenney-digital",
+      "sourceUrl": "https://kenney.nl/assets/digital-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/levelup_02.ogg",
+      "family": "ui",
+      "event": "levelup",
+      "format": "ogg",
+      "durationSec": 0.522,
+      "bytes": 7141,
+      "sha256": "7fc905d4414bc5554b3b7deb48cd1f0892f3cd9616b1287f9195f2223eb46096",
+      "pack": "kenney-digital",
+      "sourceUrl": "https://kenney.nl/assets/digital-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "ui/reward_01.ogg",
+      "family": "ui",
+      "event": "reward",
+      "format": "ogg",
+      "durationSec": 0.549,
+      "bytes": 7872,
+      "sha256": "5768cbb1ff2721da930a8871fb408d3ade2c3e745127a11d59944c51232c8d7a",
+      "pack": "kenney-digital",
+      "sourceUrl": "https://kenney.nl/assets/digital-audio",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/reload_shell_insert_01.wav",
+      "family": "gun",
+      "event": "reload",
+      "format": "wav",
+      "durationSec": 0.3,
+      "bytes": 26504,
+      "sha256": "bd9befb365d54ad44c68bdc420a2fa72401a3aaef5c1042b1a15a0ca2afa5e2e",
+      "pack": "zss-procedural",
+      "sourceUrl": "LOCAL — generated offline by assets/sfx/gun/reload_shell_insert.gen.mjs (no network)",
+      "license": "CC0-1.0"
+    },
+    {
+      "path": "gun/reload_shell_insert_02.wav",
+      "family": "gun",
+      "event": "reload",
+      "format": "wav",
+      "durationSec": 0.3,
+      "bytes": 26504,
+      "sha256": "917a531d315a4b9db017e87006f61cf0f6476bea95b855e09023bf5824f6b5fa",
+      "pack": "zss-procedural",
+      "sourceUrl": "LOCAL — generated offline by assets/sfx/gun/reload_shell_insert.gen.mjs (no network)",
+      "license": "CC0-1.0"
+    }
+  ],
+  "eventMap": {
+    "gun.fire": [
+      "gun/fire_pistol_01.ogg",
+      "gun/fire_pistol_02.ogg",
+      "gun/fire_shotgun_01.ogg",
+      "gun/fire_shotgun_02.ogg",
+      "gun/fire_smg_01.ogg",
+      "gun/fire_smg_02.ogg",
+      "gun/fire_rifle_01.ogg",
+      "gun/fire_rifle_02.ogg"
+    ],
+    "gun.reload": [
+      "gun/reload_01.ogg",
+      "gun/reload_02.ogg",
+      "gun/reload_shell_insert_01.wav",
+      "gun/reload_shell_insert_02.wav"
+    ],
+    "gun.reload.shell": [
+      "gun/reload_shell_insert_01.wav",
+      "gun/reload_shell_insert_02.wav"
+    ],
+    "gun.empty": [
+      "gun/empty_01.ogg",
+      "gun/empty_02.ogg"
+    ],
+    "melee.swing": [
+      "melee/swing_01.ogg",
+      "melee/swing_02.ogg",
+      "melee/swing_03.ogg"
+    ],
+    "melee.impact": [
+      "melee/impact_01.ogg",
+      "melee/impact_02.ogg",
+      "melee/impact_03.ogg"
+    ],
+    "impact.metal": [
+      "impact/metal_01.ogg",
+      "impact/metal_02.ogg",
+      "impact/metal_03.ogg"
+    ],
+    "impact.wood": [
+      "impact/wood_01.ogg",
+      "impact/wood_02.ogg",
+      "impact/wood_03.ogg"
+    ],
+    "impact.glass": [
+      "impact/glass_01.ogg",
+      "impact/glass_02.ogg",
+      "impact/glass_03.ogg"
+    ],
+    "impact.soft": [
+      "impact/soft_01.ogg",
+      "impact/soft_02.ogg"
+    ],
+    "impact.generic": [
+      "impact/generic_01.ogg",
+      "impact/generic_02.ogg"
+    ],
+    "zombie.voice": [
+      "zombie/voice_01.ogg",
+      "zombie/voice_02.ogg",
+      "zombie/voice_03.ogg",
+      "zombie/voice_04.ogg"
+    ],
+    "zombie.attack": [
+      "zombie/attack_01.ogg",
+      "zombie/attack_02.ogg"
+    ],
+    "zombie.hit": [
+      "zombie/hit_01.ogg",
+      "zombie/hit_02.ogg"
+    ],
+    "zombie.death": [
+      "zombie/death_01.ogg",
+      "zombie/death_02.ogg"
+    ],
+    "door.open": [
+      "door/open_01.ogg",
+      "door/open_02.ogg"
+    ],
+    "door.close": [
+      "door/close_01.ogg",
+      "door/close_02.ogg"
+    ],
+    "door.break": [
+      "door/break_01.ogg",
+      "door/break_02.ogg"
+    ],
+    "door.creak": [
+      "door/creak_01.ogg"
+    ],
+    "inventory.pickup": [
+      "inventory/pickup_01.ogg",
+      "inventory/pickup_02.ogg",
+      "inventory/pickup_03.ogg"
+    ],
+    "inventory.store": [
+      "inventory/store_01.ogg",
+      "inventory/store_02.ogg"
+    ],
+    "inventory.craft": [
+      "inventory/craft_01.ogg",
+      "inventory/craft_02.ogg"
+    ],
+    "weather.rain": [
+      "weather/rain_loop.ogg"
+    ],
+    "ui.open": [
+      "ui/open_01.ogg",
+      "ui/open_02.ogg"
+    ],
+    "ui.close": [
+      "ui/close_01.ogg",
+      "ui/close_02.ogg"
+    ],
+    "ui.click": [
+      "ui/click_01.ogg",
+      "ui/click_02.ogg"
+    ],
+    "ui.levelup": [
+      "ui/levelup_01.ogg",
+      "ui/levelup_02.ogg"
+    ],
+    "ui.reward": [
+      "ui/reward_01.ogg"
+    ]
+  },
+  "weaponFireMap": {
+    "boomstick": [
+      "gun/fire_shotgun_01.ogg",
+      "gun/fire_shotgun_02.ogg"
+    ],
+    "sidearm": [
+      "gun/fire_pistol_01.ogg",
+      "gun/fire_pistol_02.ogg"
+    ],
+    "nailgun": [
+      "gun/fire_smg_01.ogg",
+      "gun/fire_smg_02.ogg"
+    ],
+    "mac_smg": [
+      "gun/fire_smg_01.ogg",
+      "gun/fire_smg_02.ogg"
+    ],
+    "pistol": [
+      "gun/fire_pistol_01.ogg",
+      "gun/fire_pistol_02.ogg"
+    ],
+    "shotgun": [
+      "gun/fire_shotgun_01.ogg",
+      "gun/fire_shotgun_02.ogg"
+    ],
+    "rifle": [
+      "gun/fire_rifle_01.ogg",
+      "gun/fire_rifle_02.ogg"
+    ],
+    "smg": [
+      "gun/fire_smg_01.ogg",
+      "gun/fire_smg_02.ogg"
+    ],
+    "auto": [
+      "gun/fire_smg_01.ogg",
+      "gun/fire_smg_02.ogg"
+    ]
+  }
+}

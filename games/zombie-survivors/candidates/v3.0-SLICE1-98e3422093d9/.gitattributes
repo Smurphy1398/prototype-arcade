@@ -2,3 +2,12 @@
 # Without this, core.autocrlf normalisation changes the published bytes and public
 # SHA verification fails. Do not remove.
 index.html -text
+# 2026-09-02 incident follow-up: index.html references three.min.js via a relative
+# <script src> and assets/sfx/** via relative audio-sample fetches. The original publish
+# copied only index.html, so three.min.js 404'd, throwing "ReferenceError: THREE is not
+# defined" and halting all script execution -- this is why New Game never worked on the
+# public deployment. three.min.js is JS text and would otherwise be subject to the same
+# CRLF-corruption risk; audio files are binary and git auto-detects them, but marked
+# explicitly here for certainty.
+three.min.js -text
+assets/** -text
