@@ -8,20 +8,20 @@
     :root { color-scheme: dark; }
     body {
       margin: 0; padding: 2rem 1.25rem; font-family: Arial, Helvetica, sans-serif;
-      background: radial-gradient(circle at top, rgba(180,60,60,.18), transparent 40%), #0b0d11;
+      background: radial-gradient(circle at top, rgba(120,200,100,.16), transparent 40%), #0b0d11;
       color: #e6e9ef; line-height: 1.55;
     }
     .wrap { max-width: 760px; margin: 0 auto; }
     h1 { margin: 0 0 .25rem; font-size: 1.6rem; letter-spacing: .01em; }
     .sub { color: #9aa4b2; margin: 0 0 1.5rem; font-size: .95rem; }
     .banner {
-      border: 2px solid #b23b3b; background: rgba(150,30,30,.18); border-radius: 10px;
+      border: 2px solid #b2823b; background: rgba(150,110,30,.18); border-radius: 10px;
       padding: 1rem 1.1rem; margin: 0 0 1.5rem;
     }
-    .banner strong { color: #ff9d9d; letter-spacing: .06em; display: block; font-size: 1.05rem; margin-bottom: .4rem; }
+    .banner strong { color: #ffd39d; letter-spacing: .06em; display: block; font-size: 1.05rem; margin-bottom: .4rem; }
     .play {
       display: inline-block; padding: .85rem 1.6rem; border-radius: 10px; font-weight: 700;
-      background: linear-gradient(165deg,#e8a15a,#c9762e); color: #1a1206; text-decoration: none;
+      background: linear-gradient(165deg,#7ac97a,#3e8a3e); color: #0c1a0c; text-decoration: none;
       font-size: 1.05rem;
     }
     .meta { margin-top: 1.75rem; border-top: 1px solid #262c36; padding-top: 1.1rem; font-size: .9rem; color: #9aa4b2; }
@@ -35,37 +35,41 @@
 <body>
   <div class="wrap">
     <h1>Zombie Survivors — Latest Owner Preview</h1>
-    <p class="sub">Wall N5 · “Pose, Room, and Readout”</p>
+    <p class="sub">Ten Honest Minutes &mdash; Runtime Recovery</p>
 
     <div class="banner">
       <strong>CANDIDATE / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED</strong>
-      This build has had <b>no meaningful product bot smoke</b>. There is <b>no gameplay verification of any
-      kind</b> — no camera turn, aim, combat, traversal or audio was ever tested by automation.
-      Deployment here does <b>not</b> mean the build works or was accepted.
+      This build has real CDP-driven automated verification behind it (damage/death chain, real
+      AI-driven movement, several UI/interaction/audio fixes, an independent Codex regression
+      pass) &mdash; but it has <b>not</b> had a real human playthrough. Deployment here does
+      <b>not</b> mean the owner has accepted this build.
     </div>
 
-    <p><a class="play" href="./zombie-survivors/candidates/v2.8-WN5-4bd6b94dfe72/index.html">Play the candidate</a></p>
+    <p><a class="play" href="./zombie-survivors/candidates/v3.0-SLICE1-98e3422093d9/index.html">Play the candidate</a></p>
 
     <div class="meta">
-      <p><b>Version:</b> <code>v2.8-WN5</code><br />
-         <b>Candidate SHA-256:</b> <code>4bd6b94dfe72d0a41e8abc9949fe3a7a03632c5e46cdc8355413ef48c610bae5</code></p>
+      <p><b>Version:</b> <code>v3.0-SLICE1</code><br />
+         <b>Candidate SHA-256:</b> <code>98e3422093d9cbf5cace834c370b6dd940b38c0dfca832ce0a19f9285b1c86f2</code><br />
+         <b>ZSS source commit:</b> <code>62835a37</code></p>
 
-      <p><b>What automation actually proved — the whole list:</b></p>
+      <p><b>What automation actually proved — the short version (full list in this candidate's
+      <a href="./zombie-survivors/candidates/v3.0-SLICE1-98e3422093d9/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a>):</b></p>
       <ul>
-        <li>The build self-identifies as <code>v2.8-WN5</code> (static/serve proof)</li>
-        <li>HUD layout geometry at six viewport widths — <b>partial</b>, DOM only</li>
-        <li>Dev Lab tabs / green active state / one-shot flash — <b>partial</b>, DOM only</li>
+        <li>Damage/HP/state/death chain integrity across real combat frames &mdash; Codex-certified</li>
+        <li>Real AI-driven movement across the full live 100-zombie population, no clean-frame teleport found</li>
+        <li>Several real UI/interaction bugs fixed and live-verified: noclip-cheat gate closed, debug-overlay gate closed, single-target interaction highlight, a working Hands-off toggle, a no-Tab grenade/molotov quick-throw</li>
+        <li>Spatial-audio fixes: frontal-source HRTF collapse, a stereo-pan sign bug, per-frame listener sync</li>
+        <li>An independent Codex regression/control-flow pass caught and this pass fixed 2 more real bugs</li>
       </ul>
 
-      <p class="warn"><b>Zero automated gameplay proof:</b> crawler hit registration, stair geometry,
-      bar ladder placement, stair-top collision, dry-fire audio, care-package freeze behaviour,
-      combat pressure, and all nine SHOULD rows.</p>
+      <p class="warn"><b>Still open, not claimed as fixed:</b> the render-cost "freeze" cause is
+      bounded but not fully profiled; a window-impact (breaking glass) performance stall is
+      unexplained; the grenade-equip stall is very likely a test-harness artifact but not
+      fully decisively proven; audio listening quality (how it actually sounds) is entirely the
+      owner's own judgment, not tested by automation.</p>
 
-      <p><b>Two things worth watching in the smoke:</b> the bar ladder placement (a previous code claim
-      about it already failed the owner's eye), and crawler hit-feel (limb hit radii were widened
-      ~1.45–2.35×, which nobody requested).</p>
-
-      <p>Candidate snapshots are immutable and content-addressed; older previews are never deleted.</p>
+      <p>Candidate snapshots are immutable and content-addressed; older previews (including the
+      prior <code>v2.8-WN5</code> candidate) are never deleted.</p>
       <p><a class="back" href="../index.html">← Back to Prototype Arcade</a></p>
     </div>
   </div>

@@ -1,0 +1,58 @@
+{
+  "schema": "arcade.candidate_snapshot.v1",
+  "game": "Zombie Survivors",
+  "candidate_version": "v3.0-SLICE1",
+  "wall": "Ten Honest Minutes — Runtime Recovery",
+  "candidate_sha256": "98e3422093d9cbf5cace834c370b6dd940b38c0dfca832ce0a19f9285b1c86f2",
+  "artifact": "index.html",
+  "byte_identical_to_source": true,
+  "published_at": "2026-09-02",
+
+  "status": "CANDIDATE / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED",
+  "owner_accepted": false,
+
+  "immutability": "This directory is content-addressed by the candidate SHA-256 and is IMMUTABLE. It must never be overwritten. Future candidates get their own directory; this one is preserved for audit and rollback.",
+
+  "verification_status_at_publish": {
+    "honest_summary": "Extensive CDP-driven automated verification was performed this pass against the real running code (not reimplementations) — damage/HP/state/death chain, locomotion integration, a full live 100-zombie population's real AI-driven movement, several UI/interaction fixes, and a Codex regression/control-flow certification. This is NOT a real-hardware, real-human playthrough — the owner's own ten continuous minutes of real play remains the only acceptance test that matters, and several items are explicitly left open below.",
+    "what_was_proven": [
+      "damage/HP/timeScale/freezeAI/pointer-lock/animation-state integrity across 90 real combat frames and 7 real hits (godmode confirmed off) — Codex-certified",
+      "full death -> results panel -> pointer-lock-release -> Again-restart flow, via real entry points and a real DOM click",
+      "raw locomotion integrator (update(dt)) is linear/stable across a 60x dt range",
+      "real AI-driven movement across the full live 100-zombie population over 40 frames produced no clean-frame teleport (one anomaly found, fully explained by that frame's own render lag)",
+      "KeyN noclip-cheat gate is fully closed to dev/cheat mode only (two separate bypasses found and fixed this pass, including one caught by an independent Codex regression review)",
+      "F3 collision-debug overlay is fully closed to dev/cheat mode only",
+      "single-target interaction halo (was: every nearby container highlighted)",
+      "Hands-off settings toggle actually controls the viewmodel (was: a completely dead stub)",
+      "grenade/molotov quick-throw (G with no prior Tab-equip) works end-to-end, including 4 session-flag cleanup gaps a Codex regression review found and this pass fixed",
+      "spatial audio: HRTF frontal-source collapse fixed (equalpower-primary), a stereo-pan sign bug fixed, per-frame listener sync added",
+      "firearm ATTACK-layer 8-bit-adjacent oscillator removed"
+    ],
+    "zero_or_partial_automated_proof": [
+      "the render-cost stall behind the owner's original 'freeze' report is real and reproducible, and a decisive test found it plateaus under sustained combat rather than growing unbounded (supports ordinary lazy-GPU-registration warm-up cost, not a leak) — but the stall's exact internal mechanism was not profiled further",
+      "the window-impact (breaking glass) stall (~1.26s measured once) remains completely uninvestigated beyond that one measurement",
+      "the grenade/molotov equip stall is very likely a test-harness artifact (this CDP harness's requestAnimationFrame never fires, so the game's own idle-frame warm-up system never runs) — strong converging evidence, not a fully decisive before/after comparison",
+      "audio listening quality (spatial correctness by ear, firearm punch/feel, zombie-voice variety in a real firefight) is explicitly NOT claimed — that is the owner's own judgment to make",
+      "inventory-full and wall-clipping owner reports were investigated and not reproduced on this build, but cannot be ruled out as build-age or true-ceiling/different-code-path cases"
+    ],
+    "explicitly_not_proof": "This is CDP-harness automation against a headless, software-rendered (SwiftShader) Chrome instance with an already-documented broken requestAnimationFrame limitation. Absolute timing numbers are not representative of real hardware. Real controller/mouse feel, real audio through real speakers/headphones, and sustained real play are not simulated by any of this."
+  },
+
+  "source": {
+    "repo": "Zombie Survivors (source of truth) — the separate, canonical ZOMBIE SURVIVORS EXPERIMENT repository",
+    "branch": "zss/slice-1-ten-minutes",
+    "commit": "62835a37",
+    "run_docs": "docs/TEN_HONEST_MINUTES_RUNTIME_RECOVERY.md and docs/agent-runs/2026-08-31-ten-honest-minutes/ in the ZSS repository",
+    "base_of_record": "first-ever Zombie Survivors candidate imported to THIS worktree-clean-main lineage since the prior v2.8-WN5 candidate (that one was smoked and is recorded separately in games/zombie-survivors/candidates/v2.8-WN5-4bd6b94dfe72/CANDIDATE.json) — this candidate supersedes it as the latest preview but does not delete or alter it"
+  },
+
+  "publishing_rules_honoured": [
+    "copied from a clean Prototype Arcade worktree based on origin/main (git worktree add), NOT published from the dirty work/nebula-v6.5-restoration feature branch",
+    "the pre-existing, unrelated, currently-staged Rubik's Cube changes on work/nebula-v6.5-restoration were inspected and left completely untouched — not staged, overwritten, reverted, or modified by this publish",
+    "candidate bytes are byte-identical to the verified ZSS source build artifact — nothing injected, so the public SHA-256 can be verified against this value",
+    "no accepted/live path was modified; only new paths were added (this candidate directory, and the zombie-survivors-latest.html pointer update)",
+    "no local paths, private evidence, secrets, transcripts, worktrees, or internal ZSS run artifacts published — only the single built HTML artifact plus this metadata"
+  ],
+
+  "deployment_semantics": "Deployment success does NOT equal product acceptance. This artifact being publicly reachable means only that it was copied and served. owner_accepted remains false until Simon's smoke says otherwise."
+}
