@@ -1,0 +1,108 @@
+{
+  "pack_id": "weapon-kit-cc0",
+  "version": "1.0.0",
+  "license": "CC0-1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "source_url": "v2.0-ec/assets/packs/weapon-kit-cc0/",
+  "acquired": "2026-07-26",
+  "purpose": "Curated FPS viewmodel geometry kit bound to existing WEP/registry rows (P25)",
+  "boomstick_excluded": true,
+  "files": [
+    {
+      "path": "weapon-kit-cc0/CONTACT_SHEET.svg",
+      "format": "svg",
+      "bytes": 3206,
+      "sha256": "c1dab8c1ce4a35d888b7b908589431aaf67beeee4e28668dfce487b4462eae76",
+      "purpose": "contact-sheet",
+      "dims": null
+    },
+    {
+      "path": "weapon-kit-cc0/LICENSE",
+      "format": "bin",
+      "bytes": 928,
+      "sha256": "63a77964b32fae3690f03bedaddbdfc29cf3866596e0d70ac40c4fe3ea9a0621",
+      "purpose": "license",
+      "dims": null
+    },
+    {
+      "path": "weapon-kit-cc0/models/crowbar.json",
+      "format": "json",
+      "bytes": 2525,
+      "sha256": "e8394b1844a010a2c8d59cf3bc57322ea8f5b19276e711ab8958fa145d3d77cb",
+      "purpose": "viewmodel-recipe",
+      "dims": {
+        "parts": 17,
+        "leaf": "crowbar",
+        "format": "mesh-recipe-json"
+      }
+    },
+    {
+      "path": "weapon-kit-cc0/models/m16_rifle.json",
+      "format": "json",
+      "bytes": 2020,
+      "sha256": "0925cfb1385f0a3cd100ecb9594dcbd1aed45096e8680f1029a5139ad7b4e73b",
+      "purpose": "viewmodel-recipe",
+      "dims": {
+        "parts": 14,
+        "leaf": "m16_rifle",
+        "format": "mesh-recipe-json"
+      }
+    },
+    {
+      "path": "weapon-kit-cc0/models/mac_smg.json",
+      "format": "json",
+      "bytes": 840,
+      "sha256": "ae47cadbd94777b9009bf0cfe89d00abbf2fbce142195ab9781ab8c9d8cb0b33",
+      "purpose": "viewmodel-recipe",
+      "dims": {
+        "parts": 5,
+        "leaf": "mac_smg",
+        "format": "mesh-recipe-json"
+      }
+    },
+    {
+      "path": "weapon-kit-cc0/models/nailgun.json",
+      "format": "json",
+      "bytes": 814,
+      "sha256": "ab0154d064305d2461c86ed7466b14fec67e286aad57e519d89ee7dfbf32bc84",
+      "purpose": "viewmodel-recipe",
+      "dims": {
+        "parts": 5,
+        "leaf": "nailgun",
+        "format": "mesh-recipe-json"
+      }
+    },
+    {
+      "path": "weapon-kit-cc0/models/pump_shotgun.json",
+      "format": "json",
+      "bytes": 1059,
+      "sha256": "fcca225634cbda987950aad442a2a6a8560f2fddf10636923ff5c854e3d4b805",
+      "purpose": "viewmodel-recipe",
+      "dims": {
+        "parts": 6,
+        "leaf": "pump_shotgun",
+        "format": "mesh-recipe-json"
+      }
+    },
+    {
+      "path": "weapon-kit-cc0/models/sidearm.json",
+      "format": "json",
+      "bytes": 959,
+      "sha256": "19e871fd4d3370f53216dcb0546fd197b4cecf8c7dfaa215ef187385e174efe9",
+      "purpose": "viewmodel-recipe",
+      "dims": {
+        "parts": 6,
+        "leaf": "sidearm",
+        "format": "mesh-recipe-json"
+      }
+    },
+    {
+      "path": "weapon-kit-cc0/PROVENANCE.md",
+      "format": "md",
+      "bytes": 1686,
+      "sha256": "33e87f1b0f21b1141f8056aa3960c20f4f157096a9f929604a6b01efc35e6a21",
+      "purpose": "provenance",
+      "dims": null
+    }
+  ]
+}

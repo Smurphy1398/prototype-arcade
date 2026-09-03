@@ -1,0 +1,394 @@
+{
+  "pack_id": "zss.zombie.skins.p21",
+  "purpose": "P21 custom zombie skin pack \u2014 10 genuinely distinct civilian-heavy variants",
+  "license": "project-owned original procedural generation (Zombie Survivors / NF3 lane3b-skins)",
+  "source": "original work \u2014 v2.0-ec/tools/gen-zombie-skins.py",
+  "source_url": null,
+  "commercial_use": "allowed",
+  "format": "PNG RGBA",
+  "dimensions": {
+    "cloth": "64x64",
+    "pants": "64x64",
+    "skin": "64x64",
+    "contact_sheet": "varies"
+  },
+  "composition_rule": "Most commons are ordinary clothing families; worker/nurse are occasional uniforms only",
+  "variants": [
+    {
+      "id": "hoodie_jeans",
+      "label": "Hoodie + jeans",
+      "axes": "clothing=hoodie+jeans; frame=stocky; hair=short-cap; skin=mid; wounds=forearm blood; decay=early; IJ1-Z2 silhouette split from tee_jeans",
+      "common": true,
+      "weight": 16,
+      "frame": "stocky",
+      "hair": "cap",
+      "colors": {
+        "cloth": "#3a4a5a",
+        "pants": "#2a3a58",
+        "skin": "#9a7860",
+        "dark": "#1a1e24"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/hoodie_jeans_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "e8854a46cfbd1f14ae9ec6127f85b0f5173998bd09ca1526349539c0ef3aa3ab"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/hoodie_jeans_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "9a50f7fc535a507bb9d45dc4a508d03cd707e7deb7e1a00bf59c2915e83cad17"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/hoodie_jeans_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "57f66fb689464fd93659f8bb7cdc86467dad5e61f53064a03f599bf8bad8eca2"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "tee_jeans",
+      "label": "T-shirt + jeans",
+      "axes": "clothing=plain T-shirt+jeans; frame=average; hair=messy tuft; skin=light; wounds=chest spray; decay=early",
+      "common": true,
+      "weight": 18,
+      "frame": "average",
+      "hair": "messy",
+      "colors": {
+        "cloth": "#b0aaa0",
+        "pants": "#2a3a58",
+        "skin": "#be9678",
+        "dark": "#2a2420"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/tee_jeans_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "19c0f2e56f4a9a04f19651ed1a5070dfa059dc166d057970d70a52a29e7fdae3"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/tee_jeans_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "9a50f7fc535a507bb9d45dc4a508d03cd707e7deb7e1a00bf59c2915e83cad17"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/tee_jeans_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "9ee86b59f35e82c1a3f7fca72967be6c4285156badc91b4f4920b395863377ba"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "button_office",
+      "label": "Button-down shirt",
+      "axes": "clothing=striped button-down; frame=slim-tall; hair=side-part; skin=mid; wounds=torn cuff/missing cloth; decay=mid",
+      "common": true,
+      "weight": 14,
+      "frame": "slim_tall",
+      "hair": "sidepart",
+      "colors": {
+        "cloth": "#4868a0",
+        "pants": "#222428",
+        "skin": "#a08064",
+        "dark": "#14161a"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/button_office_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "3d56463884c29657871c7566116c8ba028be6fae6d79daa6633dc4e5e2d60ee6"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/button_office_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "ca939e1515850c6df086ef9c4cb0860163aef1bbd1aec6dfa30b2b64ba593d98"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/button_office_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "8a15da5f89775a661fc8f64428ae55e80948b2dc492589f8f1a6851c03574ccc"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "pyjama_home",
+      "label": "Pyjamas",
+      "axes": "clothing=plaid pyjamas; frame=soft-heavy; hair=sleep-mess; skin=pale; wounds=face streak; decay=early",
+      "common": true,
+      "weight": 12,
+      "frame": "soft_heavy",
+      "hair": "messy",
+      "colors": {
+        "cloth": "#5a3848",
+        "pants": "#5a3848",
+        "skin": "#c8aa96",
+        "dark": "#201818"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/pyjama_home_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "1aff622fdbcff970405acc289cc8eeb0e05fb9b041730099e4eab8473a707f6c"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/pyjama_home_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "7ba8df69de341b770ef22ba5df5f9b364e3598ff846c6bf8c53ec4756d2eda9f"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/pyjama_home_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "a88d0c8c3677beb81661125712fde8efd4fc2c5d15a8bef9e83d2e1456848bd3"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "tank_shorts",
+      "label": "Tank + shorts",
+      "axes": "clothing=tank top+shorts; frame=athletic; hair=buzz(none); skin=tan; wounds=knee scrape; decay=early",
+      "common": true,
+      "weight": 12,
+      "frame": "athletic",
+      "hair": "none",
+      "colors": {
+        "cloth": "#1e5a37",
+        "pants": "#2c3038",
+        "skin": "#af7d55",
+        "dark": "#1a1814"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/tank_shorts_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "a5d195cf9499f56b2fcc21023df14ba5c2f34bbee3b3aa6707b685511f8bdef5"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/tank_shorts_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "ac49917842a375c2e65d4e76fc5e9ce4adb876372a58909bf8d2243a6a3b1585"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/tank_shorts_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "37a027c1e8b5f26b966abae4f849ed50b9d7cec85ad72802344ee755621c1409"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "denim_jacket",
+      "label": "Denim jacket",
+      "axes": "clothing=denim jacket+twill; frame=stocky; hair=beanie; skin=olive-mid; wounds=sleeve smear; decay=mid",
+      "common": true,
+      "weight": 10,
+      "frame": "stocky",
+      "hair": "beanie",
+      "colors": {
+        "cloth": "#2a3a6a",
+        "pants": "#2a3a58",
+        "skin": "#917355",
+        "dark": "#12141c"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/denim_jacket_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "cef873a5c46149185c734ac8543988e14005a992f987749e94aa92f2f189fcf7"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/denim_jacket_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "9a50f7fc535a507bb9d45dc4a508d03cd707e7deb7e1a00bf59c2915e83cad17"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/denim_jacket_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "66cf1a1163a8bcee97a7faf8801591106da9d00c9a085ba64122e6d9c5541d33"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "summer_dress",
+      "label": "Torn dress",
+      "axes": "clothing=floral dress; frame=slim; hair=long; skin=mid-dark; wounds=hem blood; decay=mid",
+      "common": true,
+      "weight": 8,
+      "frame": "slim",
+      "hair": "long",
+      "colors": {
+        "cloth": "#8c6478",
+        "pants": "#8c6478",
+        "skin": "#825f46",
+        "dark": "#1c1410"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/summer_dress_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "e524daa2ac47aa38e285ecbfe86e293dff6c020fd5fc3f870d4a39da49a3227e"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/summer_dress_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "1a36c5f7a6c8120973931dcff145a67737290c77f0ff3af27c757da6f0345f0f"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/summer_dress_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "8cac9c37632d6be2a1b37e3687d600fff9595dd801cdcc9f9c320717dcb1c15c"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "elder_cardigan",
+      "label": "Elder cardigan",
+      "axes": "clothing=cable-knit cardigan; frame=hunched-short; hair=thin; skin=pale mottled; wounds=decay patches; decay=late",
+      "common": true,
+      "weight": 6,
+      "frame": "hunched",
+      "hair": "thin",
+      "colors": {
+        "cloth": "#6a5a48",
+        "pants": "#3a3428",
+        "skin": "#a09078",
+        "dark": "#181410"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/elder_cardigan_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "4ac45111aea5adfe8b9c18cd8e854cf6434c43e70a1c6fe9a8a34fcfad1504f5"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/elder_cardigan_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "ca939e1515850c6df086ef9c4cb0860163aef1bbd1aec6dfa30b2b64ba593d98"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/elder_cardigan_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "9d000dcbe86e7d1c9cae31543ef5da8ff0219dd8e7fdda5fb61cc4d29de2f945"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "worker_hivis",
+      "label": "Worker hi-vis",
+      "axes": "clothing=charcoal coverall+hi-vis bands; frame=stocky; hair=hardhat; skin=tan; wounds=grease; decay=mid; OCCASIONAL uniform",
+      "common": false,
+      "weight": 1,
+      "frame": "stocky",
+      "hair": "hardhat",
+      "colors": {
+        "cloth": "#c8a020",
+        "pants": "#3a3a40",
+        "skin": "#c2a070",
+        "dark": "#1c1c14"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/worker_hivis_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "2d25081538aefc24628a5a571c5823c4ee54be8d4f95f1d0782ffd5d706761fb"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/worker_hivis_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "f327a1ed3142445d751cfd1b9c921e153c675db46ae9c94855a45db550a84bf6"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/worker_hivis_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "14aa129d364486f0bd5575d85e3f44496ac419b7de5be01ea6cf05fb52d79150"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    },
+    {
+      "id": "nurse_scrubs",
+      "label": "Nurse scrubs",
+      "axes": "clothing=pale teal scrubs; frame=tall-lean; hair=cap; skin=light; wounds=blood spatter; decay=mid; OCCASIONAL uniform",
+      "common": false,
+      "weight": 1,
+      "frame": "tall_lean",
+      "hair": "cap",
+      "colors": {
+        "cloth": "#d8dce0",
+        "pants": "#2a3848",
+        "skin": "#c8a888",
+        "dark": "#1a2028"
+      },
+      "files": {
+        "cloth": {
+          "path": "assets/skins/zombies/nurse_scrubs_cloth.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "4f9b6e11ce9b2cbbc771c557af35d6b917ad211d544517957b6170356ba345ca"
+        },
+        "pants": {
+          "path": "assets/skins/zombies/nurse_scrubs_pants.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "734aac5aab95b08219a3a6933d79c4ad2c4831cc8b4378610395c8980be8207d"
+        },
+        "skin": {
+          "path": "assets/skins/zombies/nurse_scrubs_skin.png",
+          "format": "PNG RGBA",
+          "dimensions": "64x64",
+          "sha256": "317c7b278456b61d9e91ef790d3d1d2a3456106210d54204ebc2cf4adfc1cc1f"
+        }
+      },
+      "license": "project-owned original",
+      "source": "original procedural \u2014 gen-zombie-skins.py"
+    }
+  ],
+  "contact_sheet": {
+    "path": "assets/skins/zombies/CONTACT_SHEET.png",
+    "format": "PNG RGBA",
+    "sha256": "038e4f45aa0a75d8cdcd73d5acd172f4302aa14fcc9833b054a4eb99d8e0c3e9",
+    "note": "All 10 variants side-by-side (cloth|pants|skin strips per cell)"
+  }
+}

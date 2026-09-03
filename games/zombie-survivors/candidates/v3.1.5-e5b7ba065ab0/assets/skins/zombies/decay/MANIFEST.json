@@ -1,0 +1,71 @@
+{
+  "pack_id": "zss.zombie.decay.z9",
+  "purpose": "NF4 L4 Z9 \u2014 four play-distance-readable zombie decay/damage classes",
+  "license": "project-owned original procedural generation (Zombie Survivors / NF4 L4)",
+  "source": "original work \u2014 v2.0-ec/tools/gen-zombie-decay-classes.py",
+  "source_url": null,
+  "commercial_use": "allowed",
+  "format": "PNG RGBA",
+  "note": "Runtime applies classes via shared materials + posture/gait in entities.js; swatches document class colour axes. Contact sheet shows silhouette marks (blood/rot/bandage/limp).",
+  "classes": [
+    {
+      "id": "fresh",
+      "label": "fresh",
+      "axes": "tone=fresh; mark=none; hunch=0; limp=False",
+      "runtime": "applyZombieDecayClass(z, id) in entities.js on normal spawn path",
+      "file": {
+        "path": "assets/skins/zombies/decay/fresh_swatch.png",
+        "format": "PNG RGBA",
+        "dimensions": "32x32",
+        "sha256": "811fccb58ca9729fb9c2283b36622c08ae0d4c8eb8b36fc72a6f92d18a30cd48",
+        "purpose": "Z9 class colour anchor for fresh (procedural; not a third-party texture)"
+      }
+    },
+    {
+      "id": "bloody",
+      "label": "bloody",
+      "axes": "tone=bloody; mark=blood; hunch=1; limp=False",
+      "runtime": "applyZombieDecayClass(z, id) in entities.js on normal spawn path",
+      "file": {
+        "path": "assets/skins/zombies/decay/bloody_swatch.png",
+        "format": "PNG RGBA",
+        "dimensions": "32x32",
+        "sha256": "fc8f9558b1906e8e3721fcad336108d4fe9be16c209f952e22b23e86d7866e85",
+        "purpose": "Z9 class colour anchor for bloody (procedural; not a third-party texture)"
+      }
+    },
+    {
+      "id": "decomposed",
+      "label": "decomposed",
+      "axes": "tone=decomposed; mark=rot; hunch=3; limp=False",
+      "runtime": "applyZombieDecayClass(z, id) in entities.js on normal spawn path",
+      "file": {
+        "path": "assets/skins/zombies/decay/decomposed_swatch.png",
+        "format": "PNG RGBA",
+        "dimensions": "32x32",
+        "sha256": "41ac801773d686491ebfd8e60ce721c20b7a41c830d32d58c6c3867ee8409e6a",
+        "purpose": "Z9 class colour anchor for decomposed (procedural; not a third-party texture)"
+      }
+    },
+    {
+      "id": "injured",
+      "label": "injured",
+      "axes": "tone=injured; mark=bandage; hunch=2; limp=True",
+      "runtime": "applyZombieDecayClass(z, id) in entities.js on normal spawn path",
+      "file": {
+        "path": "assets/skins/zombies/decay/injured_swatch.png",
+        "format": "PNG RGBA",
+        "dimensions": "32x32",
+        "sha256": "376c1bee039801d0cc68e7cc479e52aba0a14fa55bb5ae9775e53a2928c4ba82",
+        "purpose": "Z9 class colour anchor for injured (procedural; not a third-party texture)"
+      }
+    }
+  ],
+  "contact_sheet": {
+    "path": "assets/skins/zombies/decay/CONTACT_SHEET.png",
+    "format": "PNG RGBA",
+    "dimensions": "424x130",
+    "sha256": "d1d46bf12f16b5d7fb0f5bfb727804618a698a72076663812a7a63e4cb346503",
+    "note": "fresh | bloody | decomposed | injured left-to-right"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "generated": "2026-07-31T09:34:11.795Z",
+  "SR": 44100,
+  "DUR": 0.3,
+  "results": [
+    {
+      "path": "gun/reload_shell_insert_01.wav",
+      "bytes": 26504,
+      "sha256": "bd9befb365d54ad44c68bdc420a2fa72401a3aaef5c1042b1a15a0ca2afa5e2e",
+      "bandRatio": 0.0001991418180814006,
+      "tailDb200ms": -58.449422634136866
+    },
+    {
+      "path": "gun/reload_shell_insert_02.wav",
+      "bytes": 26504,
+      "sha256": "917a531d315a4b9db017e87006f61cf0f6476bea95b855e09023bf5824f6b5fa",
+      "bandRatio": 0.00022460676873981483,
+      "tailDb200ms": -57.16882233020194
+    }
+  ]
+}

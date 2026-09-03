@@ -1,0 +1,41 @@
+{
+  "schema": "arcade.candidate_snapshot.v1",
+  "game": "Zombie Survivors",
+  "candidate_version": "v3.1.5",
+  "channel": "Candidate",
+  "identity_line": "v3.1.5 \u00b7 source 394da716 \u00b7 Owner review pending",
+  "wall": "2026-09-03-zss-v3-1x (ZSS 6H OVERNIGHT -> PLAYABLE v3.1.x)",
+  "candidate_sha256": "e5b7ba065ab05aa4278d56fb10c3a743e6870af9bbfe5b1324dac8cf484e087e",
+  "candidate_bytes": 6086222,
+  "artifact": "index.html",
+  "runtime_dependencies_copied": [
+    "three.min.js",
+    "assets/"
+  ],
+  "byte_identical_to_source": true,
+  "published_at": "2026-09-03",
+  "status": "CANDIDATE / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED",
+  "owner_accepted": false,
+  "stable_channel": "none (no owner-accepted build exists)",
+  "immutability": "This directory is content-addressed by the candidate SHA-256 and is IMMUTABLE. Never overwrite; future candidates get their own directory.",
+  "what_changed_since_v3.0-SLICE1": [
+    "v3.1.0: collision grid restored (12 FPS linear collider scan fixed); synchronous death-frame render removed; camera roll/gun offsets reset on Again",
+    "v3.1.1: permanent dynamic light pools + shader warm-up loading stage (constant light count; no runtime light add/remove)",
+    "v3.1.2: root cause of the multi-minute attack/death freeze fixed (endRun/startRun wrapper re-installation every frame); death->Again restart verified 15 times across 52 minutes of real-input play",
+    "v3.1.3: same wrapper defect fixed on hurt() (stack overflows / suppressed damage)"
+  ],
+  "known_residuals_disclosed": [
+    "FPS is not 60: typically 20-34 across street/town-center/interior/residential; ~19 at the gas station",
+    "first-use combat hitches 0.8-2.6 s (shader programs still link lazily for gore/decal/corpse/muzzle/tracer families; warm-up covers zombie/throw/fire only)",
+    "static light pool and draw-call merge deferred (measured: draw calls dominate)",
+    "remaining RAW-039 items not addressed tonight: inverted recoil, rooftop projectile origin, spatial audio direction, gun mix, glass break, interiors/ladders, menu/settings",
+    "Tier-3 review family coverage 2 of 3 (Grok, Codex; AGY seat unavailable - tooling) plus an independent Anthropic non-author reader"
+  ],
+  "source": {
+    "repo": "ZOMBIE SURVIVORS EXPERIMENT (canonical ZSS)",
+    "branch": "zss/slice-1-ten-minutes",
+    "commit": "394da716",
+    "run_docs": "ZSS-worktrees/workflow-repair-2026-08-10/docs/agent-runs/2026-09-03-zss-v3-1x/ (evidence.log, receipts/, DESIGN_ENDRUN_WRAP_PINGPONG.md, LOADING_STAGES.md) and slice worktree docs/agent-runs/2026-09-02-p0-perf-freeze-rootcause/"
+  },
+  "deployment_semantics": "Deployment success does NOT equal product acceptance. Publicly reachable means copied and served; owner smoke decides."
+}
