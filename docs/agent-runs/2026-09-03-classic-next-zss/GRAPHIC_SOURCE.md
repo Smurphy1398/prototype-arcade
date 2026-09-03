@@ -17,9 +17,11 @@ R2.2 already reserved an empty **District Zero** cabinet (“empty until it has 
 
 # ZSS cover
 
-- Original: `docs/agent-runs/2026-09-03-classic-next-zss/assets/zss-cover-original.jpg` (354600 bytes)
+- Original (wrong title BOOMSTICK '88, kept as provenance): `docs/agent-runs/2026-09-03-classic-next-zss/assets/zss-cover-original.jpg`
+- Titled web still: `docs/agent-runs/2026-09-03-classic-next-zss/assets/zss-cover-titled-zombie-survivors.jpg`
 - Web: `assets/covers/zombie-survivors.jpg` and `next/assets/covers/zombie-survivors.jpg`
-- SHA-256: `96B0A0E0847DD5D813FB9AD856053BD2BE8844172C8451BBD33A0C930A5B860D`
+- SHA-256 (titled): `08B8A19453C0B9DE3EC3E7E7F42ADB0713010440D93EA9391F4664B4A140BB0B`
+- Title lettering verified: **ZOMBIE SURVIVORS**. Boomstick remains the unlabeled shotgun in-hands.
 - Generator: xAI Imagine `image_gen`, 2026-09-03, 3:4
 - Prompt (verbatim): cinematic first-person survival-shooter arcade cabinet poster, original design, no logos, no franchise marks, no celebrity likeness. Foggy American small-town street at night after a disaster: wet asphalt, a boarded diner window, sodium-orange street lamps drowning in thick ground fog, distant silhouettes of slow walking figures barely readable through the haze. First-person view of weathered gloved hands holding a distinct short double-barrel shotgun (boomstick), not a generic assault rifle. Muted olive, rust, bone, and wet concrete palette. Theatrical fog, low visibility, grounded and grim rather than neon or comic-book. Photoreal cinematic poster quality, slightly grainy film still, not pixel art, not cartoon, not over-saturated zombie-horde cliché.
 
