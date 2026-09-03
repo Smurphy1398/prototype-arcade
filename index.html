@@ -58,6 +58,27 @@
       display: flex;
       gap: 20px;
       font-size: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .style-switch {
+      display: inline-flex;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .style-switch a {
+      padding: 4px 10px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .style-switch a.is-on {
+      background: var(--surface-2);
+      color: var(--text);
     }
 
     .nav-links a {
@@ -298,6 +319,16 @@
         linear-gradient(135deg, #0c201d, #0a1917);
       --game-accent: #4fd6c4;
     }
+    .cover[data-game="zombie-survivors"] {
+      background:
+        url("assets/covers/zombie-survivors.jpg") center/cover no-repeat,
+        linear-gradient(180deg, #1c1a12, #0b0c08);
+      --game-accent: #c4b48a;
+    }
+    .chip.warn-chip {
+      color: #ffd39d;
+      border-color: #b2823b;
+    }
 
     /* ---- Featured cabinet ---- */
     .featured {
@@ -382,6 +413,10 @@
       <a href="#floor">Floor</a>
       <a href="#about">About</a>
       <a href="#lab">Lab</a>
+      <span class="style-switch" aria-label="Arcade style">
+        <a class="is-on" href="index.html">Classic</a>
+        <a href="next/index.html">Next</a>
+      </span>
     </div>
   </div>
 
@@ -426,6 +461,25 @@
       </p>
 
       <div class="grid">
+        <a class="cabinet" href="games/zombie-survivors-latest.html">
+          <div class="cover" data-game="zombie-survivors" aria-hidden="true">
+            <span class="cover-title">Zombie Survivors</span>
+          </div>
+          <div class="cabinet-body">
+            <div class="chip-row">
+              <span class="chip genre">Survival FPS</span>
+              <span class="chip warn-chip">Candidate</span>
+              <span class="chip warn-chip">Owner-smoke required</span>
+            </div>
+            <h3>Zombie Survivors</h3>
+            <p class="pitch">Foggy district survival shooter. Latest published artifact is v3.0-SLICE1 (SHA 98e34220…). Not owner-accepted. v3.1.x is the active marathon and is not an Arcade artifact yet.</p>
+            <div class="status-row">
+              <span class="status">CANDIDATE · NOT OWNER-ACCEPTED</span>
+              <span class="play">Play →</span>
+            </div>
+          </div>
+        </a>
+
         <a class="cabinet" href="games/tower-defense.html">
           <div class="cover" data-game="tower-defense" data-media="placeholder" aria-hidden="true">
             <span class="cover-title">Tower Defense</span>

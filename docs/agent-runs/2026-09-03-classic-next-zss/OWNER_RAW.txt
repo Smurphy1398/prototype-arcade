@@ -1,0 +1,5 @@
+OWNER RAW WORDS — preserved verbatim 2026-09-03
+Source: owner message in Grok session (Watchdog TUI truth + Prototype Arcade Classic/Next + ZSS entry).
+Do not paraphrase-replace. This file is authoritative.
+
+is this looking right? also what can i say to grok to make sure i can navigate to zss on the arcade? and how do we implement the graphics we came up with? we can preserve this version of the arcade as the 'Classic' style. but id like to implement these new graphics, if not too tacky. thats why we can roll back if needed, but using the most recent and making a new graphic for ZSS. what can i tell grok? also preserving my raw words.

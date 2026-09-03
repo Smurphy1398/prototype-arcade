@@ -1,0 +1,14 @@
+Pasteable prompt for Grok (owner asked: “what can i say to grok”):
+
+---
+
+Read my raw words first and do not paraphrase-replace them:
+
+is this looking right? also what can i say to grok to make sure i can navigate to zss on the arcade? and how do we implement the graphics we came up with? we can preserve this version of the arcade as the 'Classic' style. but id like to implement these new graphics, if not too tacky. thats why we can roll back if needed, but using the most recent and making a new graphic for ZSS. what can i tell grok? also preserving my raw words.
+
+Worktree (do not touch the dirty nebula branch or the live ZSS goal):
+C:\Users\smurp\Documents\Projects\AI Projects 26\arcade-classic-next-2026-09-03
+
+Classic = origin/main c9d865c gold cabinet row (index.html). Next = isolated next/ from PA-GEN2.1-20260819-R2.2. Zombie Survivors must be a Floor card with working Play → games/zombie-survivors-latest.html. Candidate v3.0-SLICE1 is NOT owner-accepted. Do not invent a v3.1.x Arcade artifact. Do not push. Critique whether Next is tacky. If you change visuals, keep Classic one click away.
+
+---
