@@ -5,14 +5,15 @@
   "channel": "Candidate",
   "identity_line": "v3.1.14 · source 8d152191 · UNVERIFIED · owner smoke required",
   "wall": "2026-09-04-zss-post-marathon-candidate-hardening",
-  "candidate_sha256": "436fee76a7a6598259b6288429c4187f381b887fc47582e6e5dcb1b9c63f493d",
-  "candidate_bytes": 6162446,
+  "candidate_sha256": "204abc6800832e6a454a89d95731cfd1cb864cc7d87d25409bdb863d03d0b27c",
+  "candidate_bytes": 6111958,
   "artifact": "index.html",
   "runtime_dependencies_copied": [
     "three.min.js",
     "assets/"
   ],
-  "byte_identical_to_source": true,
+  "byte_identical_to_source": false,
+  "line_ending_note": "The ZSS source build.cjs computed sha256 436fee76a7a6598259b6288429c4187f381b887fc47582e6e5dcb1b9c63f493d (6162446 bytes, CRLF line endings on the Windows working tree that was actually build.cjs-verified/tested). This git repository's own commit/push pipeline normalizes text-file line endings to LF, so the artifact actually served here has a DIFFERENT hash: 204abc6800832e6a454a89d95731cfd1cb864cc7d87d25409bdb863d03d0b27c (6111958 bytes). This was caught and corrected live against the published URL before finalizing this manifest. The content is otherwise byte-for-byte identical (JS/HTML semantics are line-ending-insensitive) -- this is a recorded-hash correction, not a content difference. git show <ZSS source commit>:v2.0-ec/zombie-survivors.html reproduces this exact served hash.",
   "published_at": "2026-09-04",
   "status": "CANDIDATE / UNVERIFIED / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED",
   "owner_accepted": false,
