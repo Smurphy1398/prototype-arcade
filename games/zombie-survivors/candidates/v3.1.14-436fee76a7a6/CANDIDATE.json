@@ -1,0 +1,40 @@
+{
+  "schema": "arcade.candidate_snapshot.v1",
+  "game": "Zombie Survivors",
+  "candidate_version": "v3.1.14",
+  "channel": "Candidate",
+  "identity_line": "v3.1.14 · source 8d152191 · UNVERIFIED · owner smoke required",
+  "wall": "2026-09-04-zss-post-marathon-candidate-hardening",
+  "candidate_sha256": "436fee76a7a6598259b6288429c4187f381b887fc47582e6e5dcb1b9c63f493d",
+  "candidate_bytes": 6162446,
+  "artifact": "index.html",
+  "runtime_dependencies_copied": [
+    "three.min.js",
+    "assets/"
+  ],
+  "byte_identical_to_source": true,
+  "published_at": "2026-09-04",
+  "status": "CANDIDATE / UNVERIFIED / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED",
+  "owner_accepted": false,
+  "stable_channel": "unchanged — the public v3.0-SLICE1 candidate remains the last state; it was OWNER-REJECTED and is NOT superseded or replaced by this entry",
+  "immutability": "This directory is content-addressed by the candidate SHA-256 and is IMMUTABLE. Never overwrite; future candidates get their own directory.",
+  "what_changed_since_v3.1.5_public_candidate": [
+    "Extensive marathon stabilization work not previously published here: zombie wound-decal geometry leak fix, apartment wall/ceiling gaps, roof-access ladder gameplay verification, cross-building jump-clip exploit seal, throwable warmup fix, rotated-car standing fix, barricade pry-collision desync fix, glass crack visual-reset fix, multiple audio verification passes, corpse-geometry investigation, idle render-stall investigation.",
+    "This hardening pass: corrected a wrong 'SE corner' label on the bar roof ladder to the verified 'SW corner' (geometry itself was already correct — label-only fix); confirmed the old exterior fire-escape/catwalk route is fully removed; fixed a real bug where weather (rain/lightning-fog-intensify at wave 7+) defaulted OFF in every single run due to a stale owner-control default, silently overriding the game's own intended on-by-default weather."
+  ],
+  "known_residuals_disclosed": [
+    "BAR ROOF LADDER: climbing UP from the second-floor loft to the roof is real-input-proven and works. Climbing DOWN is BROKEN — the player gets stuck near the top rung or falls off the roof edge instead of descending. This is a confirmed, math-backed collision defect (all rungs share one collision footprint, so the physics always resolves to the highest one), not fixed this pass.",
+    "WAVE 7 ENCOUNTER: a real boss-tier 'brute' zombie type and a real wave-7+ lightning-flash/fog-intensify storm system both exist in source code, with real combat stats and real charge AI. However, five separate live-runtime attempts this pass did NOT observe a brute actually spawning at wave 7, and did NOT observe the lightning flash actually firing — looked for both, found neither. Not claimed as working.",
+    "CANDIDATE BOOT STATUS: this exact build (sha256 above) was never successfully booted to a playing state by any automated agent this session (2 attempts, both inconclusive due to local browser-automation resource contention, not attributed to a game defect). This owner launch is the first real boot check this exact candidate has had.",
+    "WEATHER DEFAULT CHANGED: New Game now starts with rain/weather ON by default (previously silently forced off every run). The existing Settings > Weather toggle still lets a player turn it off.",
+    "The public v3.0-SLICE1 Arcade entry remains OWNER-REJECTED (~12 FPS, long freeze, ladder/interior issues, weak fog, audio, rooftop, wall complaints from that smoke). This candidate is a newer snapshot, not a fix-confirmed successor to that rejection — most of those original complaint categories were not specifically re-tested this pass."
+  ],
+  "source": {
+    "repo": "ZOMBIE SURVIVORS EXPERIMENT (canonical ZSS)",
+    "branch": "zss/slice-1-ten-minutes",
+    "commit": "8d152191",
+    "packaging_commit": "bdfe44e8 (rebuild-only, one commit ahead of the source commit stamped in the banner — established PROC-22 build-then-commit convention)",
+    "run_docs": "ZSS-worktrees/slice-1-ten-minutes/docs/agent-runs/2026-09-04-zss-marathon-resume/HARDENING_RUN_REPORT.md (full closing disposition, Grok + Codex independent reviews, all evidence)"
+  },
+  "deployment_semantics": "Deployment success does NOT equal product acceptance. Publicly reachable means copied and served; owner smoke decides. This entry does not replace, relabel, or promote Stable, and is not marked owner-accepted."
+}

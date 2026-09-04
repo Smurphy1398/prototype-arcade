@@ -38,41 +38,43 @@
     <p class="sub">Ten Honest Minutes &mdash; Runtime Recovery</p>
 
     <div class="banner">
-      <strong>CANDIDATE / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED</strong>
-      This build has real CDP-driven automated verification behind it (damage/death chain, real
-      AI-driven movement, several UI/interaction/audio fixes, an independent Codex regression
-      pass) &mdash; but it has <b>not</b> had a real human playthrough. Deployment here does
-      <b>not</b> mean the owner has accepted this build.
+      <strong>CANDIDATE / UNVERIFIED / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED</strong>
+      This is explicitly an <b>unverified</b> candidate, not a passed or hardened build. It has
+      known, disclosed defects below (not buried in a log) and was <b>not</b> agent-booted to a
+      playing state before publishing. Deployment here does <b>not</b> mean the owner has accepted
+      this build, and it does <b>not</b> replace or supersede the existing rejected candidate.
     </div>
 
-    <p><a class="play" href="./zombie-survivors/candidates/v3.1.5-e5b7ba065ab0/index.html">Play the candidate</a></p>
+    <p><a class="play" href="./zombie-survivors/candidates/v3.1.14-436fee76a7a6/index.html">Play the candidate</a></p>
 
     <div class="meta">
-      <p><b>Version:</b> <code>v3.1.4</code><br />
-         <b>Candidate SHA-256:</b> <code>a130724518c0cbf5cace834c370b6dd940b38c0dfca832ce0a19f9285b1c86f2</code><br />
-         <b>ZSS source commit:</b> <code>62835a37</code></p>
+      <p><b>Version:</b> <code>v3.1.14</code><br />
+         <b>Candidate SHA-256:</b> <code>436fee76a7a6598259b6288429c4187f381b887fc47582e6e5dcb1b9c63f493d</code><br />
+         <b>ZSS source commit:</b> <code>8d152191</code></p>
 
-      <p><b>What automation actually proved — the short version (full list in this candidate's
-      <a href="./zombie-survivors/candidates/v3.1.5-e5b7ba065ab0/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a>):</b></p>
+      <p class="warn"><b>Known defects — disclosed on this card, not just in a worker log (full
+      detail in this candidate's
+      <a href="./zombie-survivors/candidates/v3.1.14-436fee76a7a6/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a>):</b></p>
       <ul>
-        <li>Damage/HP/state/death chain integrity across real combat frames &mdash; Codex-certified</li>
-        <li>Real AI-driven movement across the full live 100-zombie population, no clean-frame teleport found</li>
-        <li>Several real UI/interaction bugs fixed and live-verified: noclip-cheat gate closed, debug-overlay gate closed, single-target interaction highlight, a working Hands-off toggle, a no-Tab grenade/molotov quick-throw</li>
-        <li>Spatial-audio fixes: frontal-source HRTF collapse, a stereo-pan sign bug, per-frame listener sync</li>
-        <li>An independent Codex regression/control-flow pass caught and this pass fixed 2 more real bugs</li>
+        <li><b>Bar roof ladder:</b> climbing UP from the second-floor loft to the roof works and is real-input-proven. Climbing <b>DOWN is broken</b> &mdash; you will get stuck near the top rung or fall off the roof edge instead of descending.</li>
+        <li><b>Wave 7 encounter:</b> a real boss-tier "brute" zombie and a real storm/lightning-intensify system both exist in the game's code, but five separate automated attempts did <b>not</b> observe either one actually firing during play. Not claimed as working.</li>
+        <li><b>This exact build was never agent-booted to a playing state</b> this session (browser-automation environment issue, not attributed to the game itself) &mdash; your launch is the first real boot check this specific candidate has had.</li>
+        <li><b>Weather now defaults ON</b> (a real bug fix &mdash; it used to silently force off every run). Settings can still turn it off.</li>
       </ul>
 
-      <p class="warn"><b>Still open, not claimed as fixed:</b> the render-cost "freeze" cause is
-      bounded but not fully profiled; a window-impact (breaking glass) performance stall is
-      unexplained; the grenade-equip stall is very likely a test-harness artifact but not
-      fully decisively proven; audio listening quality (how it actually sounds) is entirely the
-      owner's own judgment, not tested by automation.</p>
+      <p>What changed since the last published candidate: extensive stabilization work (geometry
+      leaks, apartment/traversal/collision fixes, throwables, barricades, car standing, glass
+      reset, audio verification) plus this pass's ladder-label correction and the weather-default
+      fix above. None of the original <code>v3.0-SLICE1</code> owner-smoke rejection reasons
+      (FPS, freezes, ladder/interiors, fog, audio, rooftop, walls) were specifically re-tested
+      this pass.</p>
 
-      <p>Candidate snapshots are immutable and content-addressed; older previews (including the
-      prior <code>v2.8-WN5</code> candidate) are never deleted.</p>
-      <p class="warn"><b>v3.1.x:</b> an overnight marathon is active in the ZSS repo
-      (<code>docs/agent-runs/2026-09-03-zss-v3-1x</code>). It is <b>not</b> published here yet.
-      This page still points at the last immutable Arcade candidate only.</p>
+      <p class="warn"><b>The public <code>v3.0-SLICE1</code> candidate remains the owner-rejected
+      state.</b> This entry is a newer snapshot for smoke-testing, not a confirmed fix of that
+      rejection, and does not replace or relabel it as Stable.</p>
+
+      <p>Candidate snapshots are immutable and content-addressed; older previews (including
+      <code>v2.8-WN5</code>, <code>v3.0-SLICE1</code>, and <code>v3.1.5</code>) are never deleted.</p>
       <p><a class="back" href="../index.html">← Back to Floor</a>
          · <a class="back" href="../classic/index.html">Classic</a></p>
     </div>
