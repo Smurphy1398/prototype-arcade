@@ -35,46 +35,46 @@
 <body>
   <div class="wrap">
     <h1>Zombie Survivors — Latest Owner Preview</h1>
-    <p class="sub">Ten Honest Minutes &mdash; Runtime Recovery</p>
+    <p class="sub">GG_WN2 — Loot, Reserve Fixes &amp; Test-Suite Repair</p>
 
     <div class="banner">
-      <strong>CANDIDATE / UNVERIFIED / OWNER SMOKE REQUIRED / NOT OWNER ACCEPTED</strong>
-      This is explicitly an <b>unverified</b> candidate, not a passed or hardened build. It has
-      known, disclosed defects below (not buried in a log) and was <b>not</b> agent-booted to a
-      playing state before publishing. Deployment here does <b>not</b> mean the owner has accepted
-      this build, and it does <b>not</b> replace or supersede the existing rejected candidate.
+      <strong>CANDIDATE / AGENT-VERIFIED BOOT / NOT OWNER ACCEPTED</strong>
+      This build boots cleanly and reaches a playing state (agent-verified, evidence below), and
+      reuses an already-PASSED natural-play smoke from the same product content two days earlier.
+      It has known, disclosed defects below (not buried in a log). Deployment here does
+      <b>not</b> mean the owner has accepted this build, and it does <b>not</b> replace or
+      supersede the existing candidate lineage.
     </div>
 
-    <p><a class="play" href="./zombie-survivors/candidates/v3.1.14-436fee76a7a6/index.html">Play the candidate</a></p>
+    <p><a class="play" href="./zombie-survivors/candidates/v3.1.17-b7fe6d3a262b/index.html">Play the candidate</a></p>
 
     <div class="meta">
-      <p><b>Version:</b> <code>v3.1.14</code><br />
-         <b>Candidate SHA-256 (as served here):</b> <code>204abc6800832e6a454a89d95731cfd1cb864cc7d87d25409bdb863d03d0b27c</code><br />
-         <b>ZSS source commit:</b> <code>8d152191</code></p>
+      <p><b>Version:</b> <code>v3.1.17</code> &middot; GG_WN2 Loot, Reserve Fixes &amp; Test-Suite Repair<br />
+         <b>ZSS source commit:</b> <code>4b06c503</code> (docs-only preservation commit; product content identical to GG_WN2's closeout build <code>a73e23d0</code>)<br />
+         <b>Full detail:</b> <a href="./zombie-survivors/candidates/v3.1.17-b7fe6d3a262b/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a></p>
 
-      <p class="warn"><b>Known defects — disclosed on this card, not just in a worker log (full
-      detail in this candidate's
-      <a href="./zombie-survivors/candidates/v3.1.14-436fee76a7a6/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a>):</b></p>
+      <p class="warn"><b>Known, disclosed defects (unchanged from prior candidates unless noted):</b></p>
       <ul>
-        <li><b>Bar roof ladder:</b> climbing UP from the second-floor loft to the roof works and is real-input-proven. Climbing <b>DOWN is broken</b> &mdash; you will get stuck near the top rung or fall off the roof edge instead of descending.</li>
-        <li><b>Wave 7 encounter:</b> a real boss-tier "brute" zombie and a real storm/lightning-intensify system both exist in the game's code, but five separate automated attempts did <b>not</b> observe either one actually firing during play. Not claimed as working.</li>
-        <li><b>This exact build was never agent-booted to a playing state</b> this session (browser-automation environment issue, not attributed to the game itself) &mdash; your launch is the first real boot check this specific candidate has had.</li>
-        <li><b>Weather now defaults ON</b> (a real bug fix &mdash; it used to silently force off every run). Settings can still turn it off.</li>
+        <li><b>Bar roof ladder:</b> now a real dedicated ladder-state movement override, verified round-trip in BOTH directions (fixed in v3.1.15 — supersedes the earlier "climbing down is broken" disclosure).</li>
+        <li><b>Wave 7+ encounter:</b> a real boss-tier "brute" zombie and a real storm/lightning-intensify system both exist in code, but the last session that specifically looked (five attempts) did not observe either firing live. Not re-tested this pass — still not claimed as working.</li>
+        <li><b>Corpse-loot round trip</b> (throwables/ammo/meds): two bounded attempts this pass were inconclusive, not claimed pass or fail.</li>
+        <li><b>Compass/HUD cardinal alignment:</b> still uncertified despite this pass's HUD/minimap readability fix.</li>
       </ul>
 
-      <p>What changed since the last published candidate: extensive stabilization work (geometry
-      leaks, apartment/traversal/collision fixes, throwables, barricades, car standing, glass
-      reset, audio verification) plus this pass's ladder-label correction and the weather-default
-      fix above. None of the original <code>v3.0-SLICE1</code> owner-smoke rejection reasons
-      (FPS, freezes, ladder/interiors, fog, audio, rooftop, walls) were specifically re-tested
-      this pass.</p>
+      <p><b>What changed since the last published candidate (v3.1.14):</b> bar-roof ladder fully fixed,
+      two apartment fall-through bugs fixed and round-trip verified, roof-edge shot connect validated,
+      loot/inventory payoff work, New Game config panel (map/mode/difficulty/wave-length), HUD/minimap
+      readability pass, a full test-suite sweep (4 real stale-test defects found and fixed — none were
+      product regressions). Full list in CANDIDATE.json.</p>
 
-      <p class="warn"><b>The public <code>v3.0-SLICE1</code> candidate remains the owner-rejected
-      state.</b> This entry is a newer snapshot for smoke-testing, not a confirmed fix of that
-      rejection, and does not replace or relabel it as Stable.</p>
+      <p class="warn"><b>Not included:</b> the Astra reserve-zombie-behavior experiments (a "Sawer"
+      chainsaw mini-boss and a "twitch" zombie variant) were built and evaluated in isolated
+      worktrees this same marathon but never integrated into the branch this candidate ships from —
+      they are explicitly excluded, not merely untested.</p>
 
       <p>Candidate snapshots are immutable and content-addressed; older previews (including
-      <code>v2.8-WN5</code>, <code>v3.0-SLICE1</code>, and <code>v3.1.5</code>) are never deleted.</p>
+      <code>v2.8-WN5</code>, <code>v3.0-SLICE1</code>, <code>v3.1.5</code>, and <code>v3.1.14</code>)
+      are never deleted. Prior candidate: <a href="./zombie-survivors/candidates/v3.1.14-436fee76a7a6/index.html" style="color:#8fb7ff">v3.1.14</a>.</p>
       <p><a class="back" href="../index.html">← Back to Floor</a>
          · <a class="back" href="../classic/index.html">Classic</a></p>
     </div>

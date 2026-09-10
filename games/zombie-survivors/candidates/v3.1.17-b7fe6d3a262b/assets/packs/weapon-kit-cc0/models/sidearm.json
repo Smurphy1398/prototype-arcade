@@ -1,0 +1,17 @@
+{
+  "leaf": "sidearm",
+  "id": "weapon.held.sidearm",
+  "wepName": "Sidearm",
+  "kind": "pistol",
+  "place": "hip",
+  "muzzle": [0, 0.02, -0.62],
+  "mag": { "type": "box", "sx": 0.038, "sy": 0.10, "sz": 0.050, "mat": "body", "x": 0, "y": -0.10, "z": -0.32 },
+  "parts": [
+    { "type": "box", "sx": 0.052, "sy": 0.068, "sz": 0.175, "mat": "body", "x": 0, "y": 0, "z": -0.40 },
+    { "type": "box", "sx": 0.048, "sy": 0.036, "sz": 0.155, "mat": "blued", "x": 0, "y": 0.038, "z": -0.42 },
+    { "type": "box", "sx": 0.026, "sy": 0.026, "sz": 0.10, "mat": "metal", "x": 0, "y": 0.02, "z": -0.55 },
+    { "type": "box", "sx": 0.012, "sy": 0.020, "sz": 0.012, "mat": "sight", "x": 0, "y": 0.062, "z": -0.52 },
+    { "type": "box", "sx": 0.010, "sy": 0.016, "sz": 0.010, "mat": "sight", "x": 0, "y": 0.058, "z": -0.34 },
+    { "type": "box", "sx": 0.048, "sy": 0.115, "sz": 0.065, "mat": "dark", "x": 0, "y": -0.088, "z": -0.32, "rx": 0.18 }
+  ]
+}

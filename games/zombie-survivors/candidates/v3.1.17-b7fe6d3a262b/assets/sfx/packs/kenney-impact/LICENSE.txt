@@ -1,0 +1,12 @@
+Impact / RPG / UI / Digital Audio packs by Kenney Vleugels (www.kenney.nl)
+License: Creative Commons Zero (CC0 1.0)
+https://creativecommons.org/publicdomain/zero/1.0/
+
+You may use these assets in personal and commercial projects.
+Credit (Kenney or www.kenney.nl) is appreciated but not required.
+
+Source packs:
+- https://kenney.nl/assets/impact-sounds
+- https://kenney.nl/assets/rpg-audio
+- https://kenney.nl/assets/ui-audio
+- https://kenney.nl/assets/digital-audio

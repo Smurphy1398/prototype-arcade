@@ -1,0 +1,48 @@
+{
+  "schema": "arcade.candidate_snapshot.v1",
+  "game": "Zombie Survivors",
+  "candidate_version": "v3.1.17",
+  "channel": "Candidate",
+  "identity_line": "v3.1.17 · GG_WN2 Loot, Reserve Fixes & Test-Suite Repair · source 4b06c503 · AGENT-VERIFIED BOOT · OWNER SMOKE STILL REQUIRED",
+  "candidate_sha256_source_build": "b7fe6d3a262b0eaf08bd0e27c4ee083faaacc68cf5134511d6f19e45f5d3643e",
+  "candidate_bytes_source_build": 6318488,
+  "candidate_sha256_note": "This is the sha256 build.cjs computed on the Windows working tree (CRLF line endings) at build time. This git repository normalizes text files to LF on commit (root .gitattributes: `* text=auto`), so the hash of the file actually served from this directory differs -- corrected below, per the same disclosed correction this repo made for the v3.1.14 candidate.",
+  "candidate_sha256_as_served": "b2d69c6df0f177dcf1f06438a30a8776d9a9dc91924d5057d9dd4a15a64c1ec4",
+  "candidate_sha256_as_served_note": "Computed from the git index blob (post text=auto LF normalization) before commit -- this is the hash of the exact bytes this repository will serve. Content is byte-for-byte identical to the source build modulo line endings (JS/HTML semantics are line-ending-insensitive).",
+  "artifact": "index.html",
+  "runtime_dependencies_copied": ["three.min.js", "assets/"],
+  "published_at": "2026-09-10",
+  "status": "CANDIDATE / AGENT-VERIFIED BOOT + REUSED GG_WN2 CLOSEOUT SMOKE / NOT OWNER ACCEPTED",
+  "owner_accepted": false,
+  "stable_channel": "unchanged -- this publish does not replace, relabel, or promote any existing Stable/public entry. The prior v3.1.14 candidate (owner-rejected lineage predecessor, itself never owner-accepted) remains in place at its own immutable path and is not deleted.",
+  "immutability": "This directory is content-addressed by the source build's SHA-256 prefix and is IMMUTABLE. Never overwrite; future candidates get their own directory.",
+  "excluded_experiments": [
+    "Astra reserve-zombie-behavior experiments (a 'Sawer' chainsaw mini-boss and a 'twitch' zombie variant) were built and evaluated in isolated worktrees (gg-wn2-astra-chainsaw-boss, gg-wn2-astra1b-twitch) during GG_WN2. Per build-identity.json's own recorded disposition, both 'remain isolated/PARTIAL, never integrated into canonical.' They are NOT present in this candidate's source (branch zss/v3.1.16-core-world-zombie-integrity, HEAD 4b06c503) and were explicitly excluded from this publish, not merely unverified."
+  ],
+  "what_changed_since_v3.1.14_public_candidate": [
+    "v3.1.15 'Owner Smoke Recovery': fixed audio sample loading + one-click launcher; the bar-roof ladder became a real dedicated ladder-state movement override with a verified ground-roof-ground round trip in BOTH directions (this supersedes the v3.1.14 card's disclosed 'climbing DOWN is broken' -- that specific defect is fixed); stair landing depth fix; per-weapon glass crack/shatter + zombie glass breach + board-protects-glass; bar counter/cabinet clearance fix.",
+    "v3.1.16 'Core World & Zombie Integrity': fixed Eastview + Commerce Flats apartment shaft hallway fall-through (ZSS-BUG-028), gameplay-round-trip verified both directions; validated roof-edge shot connect/no-connect at the fire-pipeline level (ZSS-BUG-027); confirmed corpse-limb clipping is not a defect via source read.",
+    "v3.1.17 (GG_WN2 marathon): loot/inventory payoff work (corpse-search timing, curated lucky-weapon roll table, duplicate-gun-grant fix), hands/viewmodel finger-curl polish on grip transitions, a real New Game config panel (map/mode/difficulty/wave-length) with a persistence-bug fix, HUD/minimap readability pass (bigger player arrow, unified N marker, nearby-only zombie contacts), a documentation-staleness correction (car doors/headlights/trunk-search were already implemented), a full test-suite sweep that found and fixed 4 real stale-test defects (none were product regressions -- each a source-extraction unit test that had fallen behind a deliberate refactor)."
+  ],
+  "known_residuals_disclosed": [
+    "WAVE 7+ ENCOUNTER: a real boss-tier 'brute' zombie and a real storm/lightning-intensify system both exist in source code with real stats/AI, but as of the last session that specifically looked (v3.1.14 pass), five separate live-runtime attempts did not observe either firing. Not re-tested this pass -- carried forward as an open, disclosed item, not claimed fixed.",
+    "ZSS-BUG-020 (throwable/ammo/med corpse-loot replenishment): two bounded real find-loot-use-it attempts this GG_WN2 session were inconclusive (interrupted by out-of-range spawn, then by a live combat encounter). Not claimed as either pass or fail.",
+    "ZSS-BUG-007 (compass/HUD cardinal alignment): still uncertified by either the prior pass or GG_WN2's HUD/minimap fix. Needs a dedicated verification pass with a known-heading reference point.",
+    "~20 test files outside GG_WN2's L01-L05 scope were not investigated this pass; a real, disclosed baseline, not hidden technical debt.",
+    "dev.lab.reach.js has one honestly-failing assertion (a documented design ambiguity around devGrantAllWeapons() interaction, not a regression)."
+  ],
+  "source": {
+    "repo": "ZOMBIE SURVIVORS EXPERIMENT (canonical ZSS)",
+    "worktree": "v3.1.16-core-world-zombie-integrity",
+    "branch": "zss/v3.1.16-core-world-zombie-integrity",
+    "commit": "4b06c503d160ec30c172670a69e857006f992f2a",
+    "commit_note": "Docs-only preservation commit (GG_WN2 workflow-benchmark freeze); no product source changed since the GG_WN2 final closeout commit 3378c159. Rebuilding at this HEAD reproduces byte-identical product content to the GG_WN2 closeout build (a73e23d0) -- only the build-stamp short SHA differs.",
+    "run_docs": "docs/agent-runs/GG_WN2/GG_WN2-FINAL-REPORT.md, GG_WN2-NEXT-RUN-PACKET.md, GG_WN2-TASK-CLOSURE.md; docs/workflows/GG_WN2-WORKFLOW-BENCHMARK/"
+  },
+  "smoke_evidence": {
+    "reused_evidence": "GG_WN2 closeout final natural-play smoke, run 2026-09-08T21:31:31Z against build a73e23d0 (byte-identical product content to this candidate): boot->playing PASS, movement PASS, fire/reload/weapon-swap PASS, duplicate-gun-grant PASS, player+zombie vault bridges present, avg frame 49.46ms (headless CDP + screenshot overhead), zero console errors, 2 uncaught exceptions both the known headless-CDP pointer-lock artifact (not a real defect). Record: docs/agent-runs/GG_WN2/receipts/closeout-final-smoke/FINAL-SMOKE-RECORD.md.",
+    "fresh_evidence_this_publish": "2026-09-10 boot-confirmation run against this exact served candidate file (headed Chrome, occlusion-disable flags, real CDP Input key/mouse events, no god-mode/no ?cap): title bar correctly reads 'Zombie Survivors -- ver. v3.1.17', New Game -> Start reached 'playing' state, HP 100, Glock 17 equipped with ammo, remained 'playing' after real WASD movement + a real mouse-click fire input, avg frame 26ms (~38.5 fps) in headed Chrome, visibilityState 'visible', zero console errors, same single known pointer-lock DOMException artifact (not new, not a defect). Screenshots: bootconfirm_01_title.png, bootconfirm_02_playing.png, bootconfirm_03_after_input.png.",
+    "not_claimed": "This publish does NOT claim a fresh sustained multi-minute natural-play session was completed at publish time. An earlier attempt at a scripted 5-minute continuous-play run was aborted mid-run after the owner observed (live, watching the same window) that the bot's fixed movement pattern had gotten stuck repeatedly walking into a wall for an extended stretch -- a real limitation of driving this FPS's camera turn via CDP synthetic input, not a game defect. Per explicit owner instruction, this publish instead relies on GG_WN2's own already-PASSED closeout smoke (byte-identical product content) plus the fresh boot-confirmation above, rather than re-attempting or padding out that flawed run."
+  },
+  "deployment_semantics": "Deployment success does NOT equal product acceptance. Publicly reachable means copied and served; owner smoke decides. This entry does not replace, relabel, or promote Stable, and is not marked owner-accepted."
+}

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420">
+  <rect width="960" height="420" fill="#1a1c20"/>
+  <text x="24" y="36" fill="#c8cdd4" font-family="Segoe UI,Arial,sans-serif" font-size="18">weapon-kit-cc0 contact sheet — pack leaves (Boomstick excluded)</text>
+  <!-- crowbar -->
+  <g transform="translate(40,80)">
+    <rect width="140" height="120" fill="#252830" stroke="#4a5058"/>
+    <line x1="70" y1="20" x2="70" y2="95" stroke="#8a9098" stroke-width="6"/>
+    <path d="M55 25 L70 10 L85 25" fill="none" stroke="#b8c0c8" stroke-width="4"/>
+    <text x="70" y="112" text-anchor="middle" fill="#9aa0a8" font-size="12" font-family="Segoe UI,Arial,sans-serif">crowbar</text>
+  </g>
+  <!-- sidearm -->
+  <g transform="translate(200,80)">
+    <rect width="140" height="120" fill="#252830" stroke="#4a5058"/>
+    <rect x="40" y="40" width="70" height="22" fill="#2a3038"/>
+    <rect x="55" y="62" width="18" height="35" fill="#16181c"/>
+    <text x="70" y="112" text-anchor="middle" fill="#9aa0a8" font-size="12" font-family="Segoe UI,Arial,sans-serif">sidearm</text>
+  </g>
+  <!-- nailgun -->
+  <g transform="translate(360,80)">
+    <rect width="140" height="120" fill="#252830" stroke="#4a5058"/>
+    <rect x="30" y="38" width="80" height="36" fill="#3a4035"/>
+    <rect x="95" y="48" width="22" height="16" fill="#5a6068"/>
+    <text x="70" y="112" text-anchor="middle" fill="#9aa0a8" font-size="12" font-family="Segoe UI,Arial,sans-serif">nailgun</text>
+  </g>
+  <!-- m16 -->
+  <g transform="translate(520,80)">
+    <rect width="140" height="120" fill="#252830" stroke="#4a5058"/>
+    <rect x="20" y="52" width="100" height="14" fill="#2a2e26"/>
+    <rect x="70" y="36" width="22" height="18" fill="#111"/>
+    <rect x="55" y="66" width="12" height="28" fill="#5a6068"/>
+    <text x="70" y="112" text-anchor="middle" fill="#9aa0a8" font-size="12" font-family="Segoe UI,Arial,sans-serif">m16_rifle</text>
+  </g>
+  <!-- mac -->
+  <g transform="translate(680,80)">
+    <rect width="140" height="120" fill="#252830" stroke="#4a5058"/>
+    <rect x="40" y="40" width="55" height="30" fill="#26292e"/>
+    <rect x="58" y="70" width="12" height="32" fill="#5a6068"/>
+    <text x="70" y="112" text-anchor="middle" fill="#9aa0a8" font-size="12" font-family="Segoe UI,Arial,sans-serif">mac_smg</text>
+  </g>
+  <!-- pump -->
+  <g transform="translate(40,240)">
+    <rect width="140" height="120" fill="#252830" stroke="#4a5058"/>
+    <rect x="18" y="55" width="110" height="12" fill="#1a1c20"/>
+    <rect x="50" y="68" width="36" height="14" fill="#5a3a22"/>
+    <text x="70" y="112" text-anchor="middle" fill="#9aa0a8" font-size="12" font-family="Segoe UI,Arial,sans-serif">pump_shotgun</text>
+  </g>
+  <g transform="translate(200,240)">
+    <rect width="300" height="120" fill="#252830" stroke="#6a3030"/>
+    <text x="150" y="55" text-anchor="middle" fill="#c08080" font-size="14" font-family="Segoe UI,Arial,sans-serif">Boomstick EXCLUDED</text>
+    <text x="150" y="78" text-anchor="middle" fill="#9a7070" font-size="11" font-family="Segoe UI,Arial,sans-serif">protected identity — not in pack</text>
+  </g>
+</svg>
