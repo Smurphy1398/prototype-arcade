@@ -1,0 +1,24 @@
+﻿ZSS SFX Library (P22) — pack attribution
+All packs are CC0-1.0 (public domain dedication). See packs/*/LICENSE.txt.
+
+1. Kenney.nl Impact Sounds, RPG Audio, UI Audio, Digital Audio
+   https://kenney.nl/assets — CC0
+2. Free Firearm Sound Library (Still North Media / Kickstarter; mirror)
+   https://github.com/buddingmonkey/FreeFirearmsSFXLibrary — CC0
+3. Ghost Monster Voice Moaning & Growling — qubodup
+   https://opengameart.org/content/ghost-monster-voice-moaning-growling — CC0
+4. 30 CC0 SFX loops (rain) — rubberduck
+   https://opengameart.org/content/30-cc0-sfx-loops — CC0
+5. zss-procedural — ORIGINAL, generated offline in this repo (no network download).
+   gun/reload_shell_insert_01.wav
+   gun/reload_shell_insert_02.wav
+   Generator (LOCAL, reproducible):
+     v2.0-ec/assets/sfx/gun/reload_shell_insert.gen.mjs
+     node reload_shell_insert.gen.mjs <thisDir>
+   AUD-05 rationale (WN4, 4th attempt): gun/reload_03.ogg is a Kenney RPG hollow-metal
+   bounce that the owner repeatedly heard as a soda can. These two clips use only low
+   modes (<~800 Hz), short decays, and a swept friction hiss for brass case seating.
+   Generator asserts 2–4 kHz / 100–800 Hz band-energy ratio < 0.06 and tail RMS at 200 ms
+   under −26 dB before writing. NOT ear-verified in-lane — owner ear is the verdict.
+
+Clips are trimmed/loudness-normalized for in-game use. See MANIFEST.json.

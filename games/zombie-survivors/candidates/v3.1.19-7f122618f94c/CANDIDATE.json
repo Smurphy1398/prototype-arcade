@@ -1,0 +1,48 @@
+{
+  "schema": "arcade.candidate_snapshot.v1",
+  "game": "Zombie Survivors",
+  "candidate_version": "v3.1.19",
+  "channel": "Candidate",
+  "identity_line": "v3.1.19 · GG_WN3 Recovery: Death-Freeze Retest & Pause-Escape Diagnostics · source ade82ca6 · AGENT-VERIFIED BOOT · OWNER SMOKE STILL REQUIRED",
+  "candidate_sha256_source_build": "7f122618f94ccb3a01d877cece97b9809abd3dd4c0a374952f9135c514d2ed1c",
+  "candidate_bytes_source_build": 6347613,
+  "candidate_sha256_note": "This is the sha256 build.cjs computed on the Windows working tree (CRLF line endings) at build time. This git repository normalizes text files to LF on commit (root .gitattributes: `* text=auto`), so the hash of the file actually served from this directory differs -- corrected below, per the same disclosed correction this repo made for every prior candidate.",
+  "candidate_sha256_as_served": "7971faac4f5fa16a11f35346349e172a45d0e3181221157e18100eec7d8950d3",
+  "candidate_bytes_as_served": 6222796,
+  "candidate_sha256_as_served_note": "Computed from the git index blob (post text=auto LF normalization) before commit -- this is the hash of the exact bytes this repository will serve. Content is byte-for-byte identical to the source build modulo line endings (JS/HTML semantics are line-ending-insensitive).",
+  "artifact": "index.html",
+  "runtime_dependencies_copied": ["three.min.js", "assets/"],
+  "published_at": "2026-09-13",
+  "status": "CANDIDATE / AGENT-VERIFIED BOOT + FRESH SMOKE THIS PUBLISH / NOT OWNER ACCEPTED",
+  "owner_accepted": false,
+  "stable_channel": "unchanged -- this publish does not replace, relabel, or promote any existing Stable/public entry. ZSS has never been promoted to Stable for this game. The prior v3.1.18 candidate (owner-untested lineage predecessor, itself never owner-accepted) remains in place at its own immutable path and is not deleted.",
+  "immutability": "This directory is content-addressed by the source build's SHA-256 prefix and is IMMUTABLE. Never overwrite; future candidates get their own directory.",
+  "excluded_experiments": [
+    "Unchanged from v3.1.18: the 'twitch' zombie variant remains isolated, never integrated into canonical. Sawer (Astra chainsaw mini-boss) remains present as a Dev-Lab-only spawn with its own unresolved canonical keep/revert decision, untouched by this publish."
+  ],
+  "what_changed_since_v3.1.18_candidate": [
+    "ZSS-BUG-033 (player-death hard-freeze + zeroed-results-stats report, owner-observed): found an already-deep, independent investigation from 2026-09-02/03 (docs/agent-runs/2026-09-02-p0-perf-freeze-rootcause/ROOT_CAUSE.md) had already root-caused and fixed the exact catastrophic-stall mechanism (a synchronous renderer.render() call inside the death presentation path), independently reviewed by both Codex and Grok, and confirmed that fix is still present and unreverted in this candidate's source. A fresh live retest directly refuted the 'zeroed stats' half of the original report on this build (real, correct, non-zero survived-time shown on the results screen) and did not reproduce the original catastrophic single-frame stall. NOT claimed fully fixed: no real-hardware Normal-Play death trace has been performed, and a separate, previously-identified, still-unattributed non-death combat-stall class remains untested.",
+    "ZSS-BUG-034 (pause/Escape non-interactive mid-game, owner-observed twice live): found three prior, already-deep investigations (docs/agent-runs/wn-pause-cx/) had all confirmed the escape-stack code is correct under every synthetic-input test, with the most recent specifically hypothesizing that automated (CDP) input cannot exercise the real native browser pointer-lock-release race a physical keypress can. Implemented that investigation's own explicit recommendation: bounded, guarded, purely-observational diagnostic instrumentation (no behavior change) so the real event ordering is captured automatically the next time this is manually encountered, rather than guessing at a fix blind."
+  ],
+  "known_residuals_disclosed": [
+    "ZSS-BUG-033 (player-death hard-freeze): the specific catastrophic single-frame stall mechanism was already fixed in an earlier pass and remains unreverted; a fresh headless retest did not reproduce it and specifically refuted the zeroed-stats claim, but no real-hardware Normal-Play death trace has confirmed this is fully resolved, and a separate unattributed non-death combat-stall class (P0-2b) remains open.",
+    "ZSS-BUG-034 (pause/Escape non-interactive mid-game): still OPEN. Diagnostic instrumentation was added this pass so the next live occurrence leaves real evidence, but no fix has been attempted -- deliberately, per the standing evidence-honesty discipline against guessing a behavior change without a reproduction.",
+    "ZSS-BUG-029 MP5/M4A1 secondary-audio-layer contention remains OPEN, unchanged from v3.1.18 -- a fix attempt was reverted after an independent technical review found real correctness gaps.",
+    "Unchanged from v3.1.18's own disclosed list: WAVE 7+ ENCOUNTER, ZSS-BUG-020 (loot replenishment), ZSS-BUG-007 (compass/HUD alignment), and the same pre-existing test-harness staleness gaps (confirmed unchanged against a pre-session baseline, not new to this or the prior candidate).",
+    "Sawer's own canonical keep/revert decision remains explicitly unresolved by design; this publish does not decide it."
+  ],
+  "source": {
+    "repo": "ZOMBIE SURVIVORS EXPERIMENT (canonical ZSS)",
+    "worktree": "v3.1.16-core-world-zombie-integrity",
+    "branch": "zss/v3.1.16-core-world-zombie-integrity",
+    "commit": "ade82ca6",
+    "commit_note": "Version-bump commit (docs-only) sits directly on top of b70e17a3, the last product-source-changing commit in this session (lands the ZSS-BUG-034 diagnostic instrumentation in v2.0-ec/src/ui.js). The build used for this candidate was regenerated at ade82ca6 and reproduces byte-identical product content to what b70e17a3 alone would produce -- only the build-identity banner string differs, deliberately, per the version bump.",
+    "run_docs": "docs/agent-runs/GG_WN3-recovery/ (death-freeze-retest-2026-09-13.md, pause-escape-diagnostic-2026-09-13.md, and everything referenced by the v3.1.18 candidate's own source block); docs/BUGS.md (ZSS-BUG-033/034)."
+  },
+  "smoke_evidence": {
+    "reused_evidence": "None -- see fresh_evidence_this_publish.",
+    "fresh_evidence_this_publish": "Boot-confirmation run against this exact served candidate file, captured immediately after this manifest was written -- see the publish receipt in this repo for the real headed/headless-CDP evidence (screenshots, console-error count, identity-line match).",
+    "not_claimed": "This publish does not claim a fresh sustained multi-minute natural-play session, for the same CDP-synthetic-movement limitation disclosed in every prior candidate. It does not claim ZSS-BUG-033 or ZSS-BUG-034 are fixed -- both are explicitly disclosed as open/partial in known_residuals_disclosed above."
+  },
+  "deployment_semantics": "Deployment success does NOT equal product acceptance. Publicly reachable means copied and served; owner smoke decides. This entry does not replace, relabel, or promote Stable, and is not marked owner-accepted."
+}

@@ -35,7 +35,7 @@
 <body>
   <div class="wrap">
     <h1>Zombie Survivors — Latest Owner Preview</h1>
-    <p class="sub">GG_WN3 Recovery — Sawer Readability, Core-Bug Closeouts &amp; Audio Diagnostics</p>
+    <p class="sub">GG_WN3 Recovery — Death-Freeze Retest &amp; Pause-Escape Diagnostics</p>
 
     <div class="banner">
       <strong>CANDIDATE / AGENT-VERIFIED BOOT / NOT OWNER ACCEPTED</strong>
@@ -45,42 +45,39 @@
       <b>not</b> replace or supersede the existing candidate lineage.
     </div>
 
-    <p><a class="play" href="./zombie-survivors/candidates/v3.1.18-63ee9a4c2e43/index.html">Play the candidate</a></p>
+    <p><a class="play" href="./zombie-survivors/candidates/v3.1.19-7f122618f94c/index.html">Play the candidate</a></p>
 
     <div class="meta">
-      <p><b>Version:</b> <code>v3.1.18</code> &middot; GG_WN3 Recovery: Sawer Readability, Core-Bug Closeouts &amp; Audio Diagnostics<br />
-         <b>ZSS source commit:</b> <code>7f611193</code> (version-bump commit <code>a356bd72</code> sits on top, docs-only)<br />
-         <b>Full detail:</b> <a href="./zombie-survivors/candidates/v3.1.18-63ee9a4c2e43/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a>
-         &middot; <a href="./zombie-survivors/candidates/v3.1.18-63ee9a4c2e43/BOOT-CONFIRMATION-2026-09-13.md" style="color:#8fb7ff">boot-confirmation evidence</a></p>
+      <p><b>Version:</b> <code>v3.1.19</code> &middot; GG_WN3 Recovery: Death-Freeze Retest &amp; Pause-Escape Diagnostics<br />
+         <b>ZSS source commit:</b> <code>b70e17a3</code> (version-bump commit <code>ade82ca6</code> sits on top, docs-only)<br />
+         <b>Full detail:</b> <a href="./zombie-survivors/candidates/v3.1.19-7f122618f94c/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a></p>
 
       <p class="warn"><b>Known, disclosed defects (unchanged from prior candidates unless noted):</b></p>
       <ul>
         <li><b>MP5/M4A1 secondary-audio-layer contention</b> (rapid-fire mech/tail sound layers lost under crowded fire, 57.7%/72.5% observed): still OPEN. A targeted fix was attempted and then reverted after an independent technical review found it could still lose the same layer to the shot's own follow-up gunshot and could evict the wrong weapon's sound — needs a redesign, not shipped uncertified.</li>
-        <li><b>Player-death hard-freeze:</b> a real, owner-reported defect (browser "page unresponsive" on death). Previously narrowed to a likely cause inside the zombie AI update loop, not yet fixed. Not re-tested this pass — carried forward, disclosed.</li>
-        <li><b>Pause menu sometimes non-interactive mid-game:</b> a real defect the owner has seen twice. Not re-tested this pass — carried forward, disclosed.</li>
+        <li><b>Player-death hard-freeze:</b> UPDATED this pass. Found a much older, deeper investigation had already root-caused and fixed the exact catastrophic-stall mechanism (still present, unreverted); a fresh retest specifically disproved the "zeroed results stats" half of the report; no isolated catastrophic stall reproduced. Still not fully closed — a real-device death trace is needed to be sure.</li>
+        <li><b>Pause menu sometimes non-interactive mid-game:</b> still OPEN. Added diagnostic instrumentation (not a fix) so the next real occurrence leaves evidence instead of another guess.</li>
         <li><b>Wave 7+ encounter, corpse-loot round trip, compass/HUD alignment:</b> unchanged from prior candidates, still not re-verified.</li>
       </ul>
 
-      <p><b>What changed since the last published candidate (v3.1.17):</b> a real world-freeze bug
-      near an Eastview lumber pile fully fixed and confirmed in real normal play at two separate
-      locations; a real main-thread freeze in the developer debug overlay fixed and independently
-      certified; the isolated "Sawer" chainsaw mini-boss prototype's readability at range and its
-      attack telegraph both fixed and independently re-certified as passing (still a developer-lab-only
-      prototype, not a live spawned enemy); the original multi-second gunshot-delay report tested
-      with a new, more precise timing method across 2,500+ real shots and not reproduced (worst case
-      15 thousandths of a second) — not claimed fixed, since one clean test session cannot rule out
-      something the owner saw happen twice. Full list in CANDIDATE.json.</p>
+      <p><b>What changed since the last published candidate (v3.1.18):</b> re-investigated the two
+      recovered player-death-freeze and pause-menu reports. Found both had already been
+      investigated far more deeply than this recovery initially knew — the death-freeze's actual
+      catastrophic-stall cause was found and fixed weeks ago and is still intact; a fresh retest
+      shows the results screen genuinely reports real stats, not zeroed ones. The pause bug's own
+      prior investigation explained why automated testing structurally can't catch it and
+      recommended lightweight diagnostic logging instead of another guess — that's what this pass
+      adds. Full list in CANDIDATE.json.</p>
 
       <p class="warn"><b>Not included:</b> the "twitch" zombie variant experiment remains isolated,
       never integrated into the branch this candidate ships from. The Sawer chainsaw mini-boss
-      <i>is</i> present this time (developer-lab-only, its two named readability gaps fixed), but the
-      decision on whether it becomes a real spawned enemy has not been made and is not decided by
-      this publish.</p>
+      <i>is</i> present (developer-lab-only), but the decision on whether it becomes a real spawned
+      enemy has not been made and is not decided by this publish.</p>
 
       <p>Candidate snapshots are immutable and content-addressed; older previews (including
-      <code>v2.8-WN5</code>, <code>v3.0-SLICE1</code>, <code>v3.1.5</code>, <code>v3.1.14</code>, and
-      <code>v3.1.17</code>) are never deleted. Prior candidate:
-      <a href="./zombie-survivors/candidates/v3.1.17-b7fe6d3a262b/index.html" style="color:#8fb7ff">v3.1.17</a>.</p>
+      <code>v2.8-WN5</code>, <code>v3.0-SLICE1</code>, <code>v3.1.5</code>, <code>v3.1.14</code>,
+      <code>v3.1.17</code>, and <code>v3.1.18</code>) are never deleted. Prior candidate:
+      <a href="./zombie-survivors/candidates/v3.1.18-63ee9a4c2e43/index.html" style="color:#8fb7ff">v3.1.18</a>.</p>
       <p><a class="back" href="../index.html">← Back to Floor</a>
          · <a class="back" href="../classic/index.html">Classic</a></p>
     </div>
