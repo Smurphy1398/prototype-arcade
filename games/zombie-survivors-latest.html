@@ -35,46 +35,52 @@
 <body>
   <div class="wrap">
     <h1>Zombie Survivors — Latest Owner Preview</h1>
-    <p class="sub">GG_WN2 — Loot, Reserve Fixes &amp; Test-Suite Repair</p>
+    <p class="sub">GG_WN3 Recovery — Sawer Readability, Core-Bug Closeouts &amp; Audio Diagnostics</p>
 
     <div class="banner">
       <strong>CANDIDATE / AGENT-VERIFIED BOOT / NOT OWNER ACCEPTED</strong>
-      This build boots cleanly and reaches a playing state (agent-verified, evidence below), and
-      reuses an already-PASSED natural-play smoke from the same product content two days earlier.
-      It has known, disclosed defects below (not buried in a log). Deployment here does
-      <b>not</b> mean the owner has accepted this build, and it does <b>not</b> replace or
-      supersede the existing candidate lineage.
+      This build boots cleanly and reaches a playing state (fresh agent-verified boot-confirmation
+      this publish, evidence below). It has known, disclosed defects below (not buried in a log).
+      Deployment here does <b>not</b> mean the owner has accepted this build, and it does
+      <b>not</b> replace or supersede the existing candidate lineage.
     </div>
 
-    <p><a class="play" href="./zombie-survivors/candidates/v3.1.17-b7fe6d3a262b/index.html">Play the candidate</a></p>
+    <p><a class="play" href="./zombie-survivors/candidates/v3.1.18-63ee9a4c2e43/index.html">Play the candidate</a></p>
 
     <div class="meta">
-      <p><b>Version:</b> <code>v3.1.17</code> &middot; GG_WN2 Loot, Reserve Fixes &amp; Test-Suite Repair<br />
-         <b>ZSS source commit:</b> <code>4b06c503</code> (docs-only preservation commit; product content identical to GG_WN2's closeout build <code>a73e23d0</code>)<br />
-         <b>Full detail:</b> <a href="./zombie-survivors/candidates/v3.1.17-b7fe6d3a262b/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a></p>
+      <p><b>Version:</b> <code>v3.1.18</code> &middot; GG_WN3 Recovery: Sawer Readability, Core-Bug Closeouts &amp; Audio Diagnostics<br />
+         <b>ZSS source commit:</b> <code>7f611193</code> (version-bump commit <code>a356bd72</code> sits on top, docs-only)<br />
+         <b>Full detail:</b> <a href="./zombie-survivors/candidates/v3.1.18-63ee9a4c2e43/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a>
+         &middot; <a href="./zombie-survivors/candidates/v3.1.18-63ee9a4c2e43/BOOT-CONFIRMATION-2026-09-13.md" style="color:#8fb7ff">boot-confirmation evidence</a></p>
 
       <p class="warn"><b>Known, disclosed defects (unchanged from prior candidates unless noted):</b></p>
       <ul>
-        <li><b>Bar roof ladder:</b> now a real dedicated ladder-state movement override, verified round-trip in BOTH directions (fixed in v3.1.15 — supersedes the earlier "climbing down is broken" disclosure).</li>
-        <li><b>Wave 7+ encounter:</b> a real boss-tier "brute" zombie and a real storm/lightning-intensify system both exist in code, but the last session that specifically looked (five attempts) did not observe either firing live. Not re-tested this pass — still not claimed as working.</li>
-        <li><b>Corpse-loot round trip</b> (throwables/ammo/meds): two bounded attempts this pass were inconclusive, not claimed pass or fail.</li>
-        <li><b>Compass/HUD cardinal alignment:</b> still uncertified despite this pass's HUD/minimap readability fix.</li>
+        <li><b>MP5/M4A1 secondary-audio-layer contention</b> (rapid-fire mech/tail sound layers lost under crowded fire, 57.7%/72.5% observed): still OPEN. A targeted fix was attempted and then reverted after an independent technical review found it could still lose the same layer to the shot's own follow-up gunshot and could evict the wrong weapon's sound — needs a redesign, not shipped uncertified.</li>
+        <li><b>Player-death hard-freeze:</b> a real, owner-reported defect (browser "page unresponsive" on death). Previously narrowed to a likely cause inside the zombie AI update loop, not yet fixed. Not re-tested this pass — carried forward, disclosed.</li>
+        <li><b>Pause menu sometimes non-interactive mid-game:</b> a real defect the owner has seen twice. Not re-tested this pass — carried forward, disclosed.</li>
+        <li><b>Wave 7+ encounter, corpse-loot round trip, compass/HUD alignment:</b> unchanged from prior candidates, still not re-verified.</li>
       </ul>
 
-      <p><b>What changed since the last published candidate (v3.1.14):</b> bar-roof ladder fully fixed,
-      two apartment fall-through bugs fixed and round-trip verified, roof-edge shot connect validated,
-      loot/inventory payoff work, New Game config panel (map/mode/difficulty/wave-length), HUD/minimap
-      readability pass, a full test-suite sweep (4 real stale-test defects found and fixed — none were
-      product regressions). Full list in CANDIDATE.json.</p>
+      <p><b>What changed since the last published candidate (v3.1.17):</b> a real world-freeze bug
+      near an Eastview lumber pile fully fixed and confirmed in real normal play at two separate
+      locations; a real main-thread freeze in the developer debug overlay fixed and independently
+      certified; the isolated "Sawer" chainsaw mini-boss prototype's readability at range and its
+      attack telegraph both fixed and independently re-certified as passing (still a developer-lab-only
+      prototype, not a live spawned enemy); the original multi-second gunshot-delay report tested
+      with a new, more precise timing method across 2,500+ real shots and not reproduced (worst case
+      15 thousandths of a second) — not claimed fixed, since one clean test session cannot rule out
+      something the owner saw happen twice. Full list in CANDIDATE.json.</p>
 
-      <p class="warn"><b>Not included:</b> the Astra reserve-zombie-behavior experiments (a "Sawer"
-      chainsaw mini-boss and a "twitch" zombie variant) were built and evaluated in isolated
-      worktrees this same marathon but never integrated into the branch this candidate ships from —
-      they are explicitly excluded, not merely untested.</p>
+      <p class="warn"><b>Not included:</b> the "twitch" zombie variant experiment remains isolated,
+      never integrated into the branch this candidate ships from. The Sawer chainsaw mini-boss
+      <i>is</i> present this time (developer-lab-only, its two named readability gaps fixed), but the
+      decision on whether it becomes a real spawned enemy has not been made and is not decided by
+      this publish.</p>
 
       <p>Candidate snapshots are immutable and content-addressed; older previews (including
-      <code>v2.8-WN5</code>, <code>v3.0-SLICE1</code>, <code>v3.1.5</code>, and <code>v3.1.14</code>)
-      are never deleted. Prior candidate: <a href="./zombie-survivors/candidates/v3.1.14-436fee76a7a6/index.html" style="color:#8fb7ff">v3.1.14</a>.</p>
+      <code>v2.8-WN5</code>, <code>v3.0-SLICE1</code>, <code>v3.1.5</code>, <code>v3.1.14</code>, and
+      <code>v3.1.17</code>) are never deleted. Prior candidate:
+      <a href="./zombie-survivors/candidates/v3.1.17-b7fe6d3a262b/index.html" style="color:#8fb7ff">v3.1.17</a>.</p>
       <p><a class="back" href="../index.html">← Back to Floor</a>
          · <a class="back" href="../classic/index.html">Classic</a></p>
     </div>

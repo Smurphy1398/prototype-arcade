@@ -1,0 +1,18 @@
+{
+  "leaf": "pump_shotgun",
+  "id": "weapon.held.pump_shotgun",
+  "wepName": "Pump Shotgun",
+  "kind": "shotgun",
+  "place": "hip",
+  "muzzle": [0, 0.04, -0.96],
+  "mag": { "type": "box", "sx": 0.07, "sy": 0.06, "sz": 0.16, "mat": "wood", "x": 0, "y": -0.04, "z": -0.48 },
+  "notes": "Distinct single-tube pump — never dualBarrel / never Boomstick",
+  "parts": [
+    { "type": "box", "sx": 0.06, "sy": 0.08, "sz": 0.26, "mat": "wood", "x": 0, "y": -0.02, "z": -0.08, "rx": 0.10 },
+    { "type": "box", "sx": 0.072, "sy": 0.085, "sz": 0.16, "mat": "body", "x": 0, "y": 0.01, "z": -0.30 },
+    { "type": "box", "sx": 0.028, "sy": 0.028, "sz": 0.56, "mat": "blued", "x": 0, "y": 0.04, "z": -0.66 },
+    { "type": "box", "sx": 0.022, "sy": 0.022, "sz": 0.40, "mat": "metal", "x": 0, "y": -0.01, "z": -0.55 },
+    { "type": "box", "sx": 0.048, "sy": 0.11, "sz": 0.065, "mat": "wood", "x": 0, "y": -0.09, "z": -0.24, "rx": 0.32 },
+    { "type": "box", "sx": 0.012, "sy": 0.022, "sz": 0.012, "mat": "sight", "x": 0, "y": 0.07, "z": -0.88 }
+  ]
+}
