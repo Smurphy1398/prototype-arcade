@@ -1,0 +1,19 @@
+{
+  "status": "publicly verified",
+  "gameCommit": "093d84f34f38aefbd13aa6aa927602de38473dc8",
+  "version": "1.0.0-rc.2",
+  "build": "1.0.0-rc.2 - MOBILE POLISH",
+  "landing": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing.html",
+  "game": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/index.html",
+  "checkedAt": "2026-09-14T06:38:18.747Z",
+  "sourceSha256": "d1308316d9b61afec53705bb9e70f3c5f9225b459d51340fa3be35181a402c3d",
+  "distSha256": "4e47a24ee30b43f4f3ea6a156cd56e8537d2b604421eb0f19dd720ddd46af50f",
+  "runtimeFiles": 25,
+  "promotionalImages": 2,
+  "publicMultiplayer": "unavailable; Render connection request paused by owner",
+  "rollbackTag": "arcade-before-astro-mobile-rc2",
+  "rollbackCommit": "de81a363d9ab6c87b6950a4fe62e6b6da9d3fc75",
+  "checkpoint44Sha256": "0c1a1fa259c64f457f968d03adb881af05dff98f552c092b1f0caf3f476604cd",
+  "mobileVerification": "emulated; physical phone checks remain",
+  "newHostingCharges": 0
+}

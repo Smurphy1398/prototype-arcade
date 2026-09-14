@@ -1,0 +1,15 @@
+{
+  "base": "https://smurphy1398.github.io/prototype-arcade/",
+  "checkedAt": "2026-09-14T06:38:18.747Z",
+  "version": "1.0.0-rc.2",
+  "checks": [
+    "All 25 active runtime hashes and both promotional image hashes match RC2 manifest",
+    "Arcade card → landing → correct RC2 game; 16 previews, keyboard driving, public room availability disclosed",
+    "Actual UI path: choose Volcano, Enable Tilt, calibrate, countdown, auto-accelerate; emulated permission/sensor",
+    "Desktop/mobile landing and cabinet crops, compact 844×340 tilt and 568×320 touch render inspected"
+  ],
+  "errors": [],
+  "kind": "Browser verification; phone checks are emulated, not physical.",
+  "build": "1.0.0-rc.2 - MOBILE POLISH",
+  "passed": true
+}

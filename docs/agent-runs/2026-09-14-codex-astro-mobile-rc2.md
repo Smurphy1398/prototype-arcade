@@ -1,4 +1,4 @@
-✅ RC2 implementation and local verification complete. Publication is prepared; public proof is recorded after deployment. Render connection is paused. No new charges.
+🚀 Astro Racing 1.0.0-rc.2 is live and publicly browser-verified at game commit `093d84f`. Render connection is paused. No new charges.
 
 ## Agent Snapshot
 
@@ -38,9 +38,11 @@ Rollback uses a new targeted revert commit for the RC2 release, then a normal pu
 
 ## Git / deploy state
 
-Prepared against freshly verified main/Pages commit `de81a36`. Existing GitHub Pages infrastructure is legacy `main`/root, HTTPS enforced. Push/build uses existing authenticated GitHub access; no new host is created. The code commit and public verification receipt will be recorded after publication.
+Prepared against freshly verified main/Pages commit `de81a36`. Existing GitHub Pages infrastructure is legacy `main`/root, HTTPS enforced. Push/build uses existing authenticated GitHub access; no new host is created. Game commit **093d84f34f38aefbd13aa6aa927602de38473dc8** was committed and pushed. GitHub Pages completed its explicit build successfully. `public-presentation.json` and `publication.json` record public HTTPS launch, all 25 runtime hashes, both promotional hashes, desktop driving and the emulated phone setup path. The follow-up documentation commit records this evidence without changing the game bytes.
 
 ## Evidence and limits
+
+Public game deployment: [successful Pages run 34814225646](https://github.com/Smurphy1398/prototype-arcade/actions/runs/34814225646), game commit `093d84f34f38aefbd13aa6aa927602de38473dc8`. Pages reported built at 06:37:57 UTC; public checks began at 06:38:18 UTC and passed. Public screenshots are prefixed `public-` in the evidence folder.
 
 See `../releases/astro-racing-1.0.0-rc.2/`: release manifest, mobile-checks.json, local-presentation.json, native-render screenshots and P2P-ASSESSMENT.md. Browser harness copies document the exact local checks; their local paths refer to the Astro workspace's existing Playwright/Edge installation. The in-app Browser listed no browser; the established standalone harness was used.
 
@@ -50,7 +52,7 @@ Public multiplayer is still unavailable. Render login request is paused; server 
 
 ## TL;DR
 
-RC2 finishes the requested mobile/presentation implementation and local verification while preserving approved content. Public publication is the remaining step before the owner playtests it.
+RC2 is published and verified through the actual Arcade. The requested mobile/presentation changes are complete; physical phone playtesting is next. Public multiplayer remains unavailable.
 
 ## Quick smoke
 
@@ -58,4 +60,4 @@ Open https://smurphy1398.github.io/prototype-arcade/games/astro-racing.html, Lau
 
 ## Exact next action
 
-Deploy this targeted release through the existing Pages workflow, verify public hashes/launch, then have Simon test RC2 on his phone. Render connection remains paused. Consult the bounded P2P assessment before selecting the next networking lane.
+Simon can now play RC2 on his phone using the live URL. Render connection remains paused. Consult the bounded P2P assessment before selecting the next networking lane. Do not authorize billing without asking first.

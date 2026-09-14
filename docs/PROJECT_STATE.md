@@ -1,16 +1,16 @@
 # Project State
 
-Last updated: **2026-09-14**. Reflects live baseline **de81a363d9ab6c87b6950a4fe62e6b6da9d3fc75** plus the RC2 mobile/presentation changes in this commit. Public verification follows deployment.
+Last updated: **2026-09-14**. Reflects publicly verified game commit **093d84f34f38aefbd13aa6aa927602de38473dc8** plus this publication-evidence update. Active game bytes match the RC2 manifest.
 
 ## Current lane
 
-**Astro Racing 1.0.0-rc.2 is locally verified and prepared for publication.** Simon authorized the targeted mobile controls, HUD, Sunspun promotional imagery, commits, pushes and Pages deployment. His actual phone screenshots informed the layout. Final approved course content, checkpoint 44 and the original prepared room server are retained. Online leaderboard work remains separate.
+**Astro Racing 1.0.0-rc.2 is live and publicly verified.** Simon authorized the targeted mobile controls, HUD, Sunspun promotional imagery, commits, pushes and Pages deployment. His actual phone screenshots informed the layout. Final approved course content, checkpoint 44 and the original prepared room server are retained. Online leaderboard work remains separate.
 
 The canonical editable source is `services/astro-racing/`; active browser build is `games/astro-racing/`, linked from `games/astro-racing.html` and the Arcade cabinet. RC2 source SHA-256 `d1308316d9b61afec53705bb9e70f3c5f9225b459d51340fa3be35181a402c3d`; active dist SHA-256 `4e47a24ee30b43f4f3ea6a156cd56e8537d2b604421eb0f19dd720ddd46af50f`. Manifest and evidence: `releases/astro-racing-1.0.0-rc.2/`. Previous RC1 evidence remains historical.
 
 ## Verification and phone testing
 
-Four Node tests, 24 mobile browser checks, the actual Arcade UI launch path, all 25 active runtime hashes and both promotional assets pass locally. Desktop/mobile crops and actual race rendering were inspected. Touch/sensor checks are **emulated**, not real-phone verification. Physical Safari permission, tilt feel/sign, thumb reach, frame rate and background return remain for Simon.
+Four Node tests, 24 mobile browser checks, the actual Arcade UI launch path, all 25 active runtime hashes and both promotional assets pass; the actual Arcade launch, asset hashes, keyboard driving and emulated phone setup also pass on public HTTPS. Desktop/mobile crops and actual race rendering were inspected. Touch/sensor checks are **emulated**, not real-phone verification. Physical Safari permission, tilt feel/sign, thumb reach, frame rate and background return remain for Simon.
 
 ## Multiplayer
 
@@ -26,4 +26,4 @@ Checkpoint 44 remains SHA-256 `0c1a1fa259c64f457f968d03adb881af05dff98f552c092b1
 
 ## Next action
 
-Publish/verify RC2, then real-phone playtesting. Render login is paused. The P2P assessment is preparation, not a networking conversion or a new account-connection request.
+Real-phone playtesting of the published RC2. Render login is paused. The P2P assessment is preparation, not a networking conversion or a new account-connection request.
