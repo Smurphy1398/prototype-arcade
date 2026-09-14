@@ -1,4 +1,4 @@
-> Astro-only update, 2026-09-14: RC3 mobile controls hotfix prepared; publication pending. Current Astro truth: PROJECT_STATE.md and GAME_CATALOG.md. Earlier July roadmap below is historical for this lane.
+> Astro-only update, 2026-09-14: RC3 mobile controls hotfix live and publicly verified at game commit `6ae654c0c96a1520fdb6c33e72c444e7d79bdb11`. Current Astro truth: PROJECT_STATE.md and GAME_CATALOG.md. Earlier July roadmap below is historical for this lane.
 
 # Roadmap
 

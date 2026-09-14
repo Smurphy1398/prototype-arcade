@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-09-14T16:00:08.751663+00:00",
+  "version": "1.0.0-rc.3",
+  "gameCommit": "6ae654c0c96a1520fdb6c33e72c444e7d79bdb11",
+  "pagesStatus": "built",
+  "pagesBuildUpdatedAt": "2026-09-14T15:58:37Z",
+  "sourceSha256": "f0f1f3d6178b56fdb310a1e2a5921462f95b19ad92d349125cabbfb3b744bffc",
+  "distSha256": "5517186eb5016553cc87a09946993aeb5fbd6ac73a5dbd7b63fdc5456218125a",
+  "publicRuntimeHashesMatched": 25,
+  "nodeTestsPassed": 6,
+  "emulatedMobileChecksPassed": 22,
+  "publicBrowserChecks": [
+    "All 25 active runtime hashes match RC3 manifest",
+    "Arcade card \u2192 landing \u2192 correct RC3 game; 16 previews, keyboard driving, public room availability disclosed",
+    "Actual UI path: choose Classic, Enable Tilt, calibrate, countdown stays stopped, held Drive accelerates; emulated permission/sensor",
+    "Desktop/mobile landing and cabinet crops, compact 844\u00d7340 tilt and 568\u00d7320 touch render inspected"
+  ],
+  "publicPageErrors": [],
+  "physicalPhoneVerified": false,
+  "newCharges": 0
+}

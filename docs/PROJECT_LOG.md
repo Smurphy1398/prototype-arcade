@@ -409,4 +409,4 @@ RC2 publication verified: game commit `093d84f34f38aefbd13aa6aa927602de38473dc8`
 
 ## 2026-09-14 — Astro Racing RC3 mobile hotfix
 
-Codex (inline; authorized sole implementer) corrected auto-drive, tilt and thumb controls. Six Node tests, 22 emulated checks and build pass. Publication pending. No outside agents; no new charges. Full record: `agent-runs/2026-09-14-codex-astro-mobile-rc3.md`.
+Codex (inline; authorized sole implementer) corrected auto-drive, tilt and thumb controls. Six Node tests, 22 emulated checks and build pass. Game commit `6ae654c0c96a1520fdb6c33e72c444e7d79bdb11` pushed/deployed; public HTTPS hashes and browser checks pass. No outside agents; no new charges. Full record: `agent-runs/2026-09-14-codex-astro-mobile-rc3.md`.

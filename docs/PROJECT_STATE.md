@@ -1,9 +1,9 @@
 # Project State
 
-Last updated: **2026-09-14**. Reflects RC3 release preparation against `7b31d01`; publication pending.
+Last updated: **2026-09-14**. Reflects publicly verified RC3 game commit `6ae654c0c96a1520fdb6c33e72c444e7d79bdb11` plus this publication-evidence update.
 
 ## Current lane
-Astro Racing **1.0.0-rc.3 - MOBILE CONTROLS HOTFIX** is built and passes targeted checks. Simon authorized implementation, commit, push and existing Pages redeployment. Canonical source: `services/astro-racing/`; active build: `games/astro-racing/`; landing: `games/astro-racing.html`.
+Astro Racing **1.0.0-rc.3 - MOBILE CONTROLS HOTFIX** is live and publicly verified. Simon authorized implementation, commit, push and existing Pages redeployment. Canonical source: `services/astro-racing/`; active build: `games/astro-racing/`; landing: `games/astro-racing.html`.
 
 Large right Drive/left Drift, independent multitouch, opt-in auto-drive, steady-grip tilt calibration, both landscape orientations, Recenter and touch fallback. Six Node tests, 22 emulated browser checks and normal build pass. Physical-phone verification remains outstanding. Release evidence: `releases/astro-racing-1.0.0-rc.3/`; report: `agent-runs/2026-09-14-codex-astro-mobile-rc3.md`.
 
@@ -18,4 +18,4 @@ Existing HTTPS GitHub Pages main/root; request an explicit Pages build if needed
 Public rooms unavailable; Render connection paused. No new charges. Prepared server, P2P, leaderboard, courses, physics, bots, items and audio are outside this hotfix and retained.
 
 ## Next action
-Complete authorized publication and public checks, then physical-phone smoke in the RC3 report.
+Simon: perform the physical-phone smoke in the RC3 report. Public HTTPS launch, all 25 runtime hashes, keyboard driving and emulated phone hold-to-drive pass.

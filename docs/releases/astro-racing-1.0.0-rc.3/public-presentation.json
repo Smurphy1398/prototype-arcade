@@ -1,0 +1,15 @@
+{
+  "base": "https://smurphy1398.github.io/prototype-arcade/",
+  "checkedAt": "2026-09-14T15:59:16.468Z",
+  "version": "1.0.0-rc.3",
+  "checks": [
+    "All 25 active runtime hashes match RC3 manifest",
+    "Arcade card → landing → correct RC3 game; 16 previews, keyboard driving, public room availability disclosed",
+    "Actual UI path: choose Classic, Enable Tilt, calibrate, countdown stays stopped, held Drive accelerates; emulated permission/sensor",
+    "Desktop/mobile landing and cabinet crops, compact 844×340 tilt and 568×320 touch render inspected"
+  ],
+  "errors": [],
+  "kind": "Browser verification; phone checks are emulated, not physical.",
+  "build": "1.0.0-rc.3 - MOBILE CONTROLS HOTFIX",
+  "passed": true
+}

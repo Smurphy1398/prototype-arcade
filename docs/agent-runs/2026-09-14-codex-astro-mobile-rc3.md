@@ -1,10 +1,10 @@
-Publication pending. Physical-phone verification remains an owner check.
+RC3 is live and publicly verified. Physical-phone verification remains an owner check.
 
 ## Agent Snapshot
 Codex (inline), sole implementer in Simon's explicitly authorized mobile hotfix lane.
 
 ## Agent Contributions
-- Codex inspected canonical source/live RC2, implemented the focused repair, extended the existing input harness, built and prepared RC3. Accepted implementation, subject to public verification below.
+- Codex inspected canonical source/live RC2, implemented the focused repair, extended the existing input harness, built and prepared RC3. Accepted implementation; public verification passed.
 - Outside agents were not used because the request is tightly scoped and usage is limited. No verbatim agent output captured.
 
 ## Claude Synthesis
@@ -31,10 +31,10 @@ Axis derivation reference: https://www.w3.org/TR/orientation-event/ (Z-X'-Y'' or
 - Source manifest comparison permits only nine files: mobile controller/math/CSS/hints/tests, package identity, build label, and README source-identity correction. Course/physics/bot/item/network/server/audio/preview files match RC2 byte for byte. All old hashed assets and checkpoints remain. Checkpoint 44 archive hash was rechecked. Existing rollback tag arcade-before-astro-mobile-rc2 remains unchanged; 7b31d01 also retains the complete RC2 release.
 
 ## Git / Commit / Push / Deploy State
-Local release prepared; commit, push, Pages build and public verification pending. Existing main/root Pages only. No new charges. Public rooms remain unavailable; Render paused. P2P, leaderboard and course work excluded.
+Game commit `6ae654c0c96a1520fdb6c33e72c444e7d79bdb11` was committed, pushed and successfully built by GitHub Pages. Public HTTPS verification passed: all 25 active runtime hashes, Arcade card/landing/game navigation, keyboard driving, and actual phone UI setup/countdown stationary until held Drive accelerates (emulated sensor/touch). Zero browser page errors. `publication.json` records the receipt; the following documentation commit does not change game bytes. Existing main/root Pages only. No new charges. Public rooms remain unavailable; Render paused. P2P, leaderboard and course work excluded.
 
 ## TL;DR
-RC3 implements the requested mobile controls hotfix. Targeted automated checks and the normal build pass. Public verification will be recorded in this same release flow.
+RC3 implements the requested mobile controls hotfix. Targeted automated checks and the normal build pass. Public verification passed and is recorded in publication.json.
 
 ## Quick Smoke — Do This Now
 - Open https://smurphy1398.github.io/prototype-arcade/games/astro-racing.html and check RC3.
@@ -44,4 +44,4 @@ RC3 implements the requested mobile controls hotfix. Targeted automated checks a
 - Switch apps and return; resume explicitly and re-hold Drive. Use Touch steering if motion is unavailable. Report phone/browser plus any wrong direction or stuck control.
 
 ## Exact Next Action
-Complete the authorized push/Pages deployment and public HTTPS checks; then Simon performs the physical-phone smoke above.
+Simon performs the physical-phone smoke above on published RC3.

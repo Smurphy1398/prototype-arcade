@@ -1,6 +1,6 @@
 # Game Catalog
 
-Last updated: **2026-09-14** for Astro Racing only. Reflects RC3 release preparation against `7b31d01`; publication pending. Other games retain their previous evidence.
+Last updated: **2026-09-14** for Astro Racing only. Reflects publicly verified RC3 game commit `6ae654c0c96a1520fdb6c33e72c444e7d79bdb11` plus this publication-evidence update. Other games retain their previous evidence.
 
 Canonical inventory of every recognizable game. **Confirmed** = evidence supports it as canonical.
 **Provisional** = best current candidate, still needs a runtime playtest / diff before it's locked.
@@ -15,7 +15,7 @@ Seeded from the 2026-07-13 orientation audit (read-only). Hashes are MD5.
 
 | Game | Runtime | Published? | Canonical status | Confidence |
 |---|---|---|---|---|
-| Astro Racing | Three.js, bundled | RC3 prepared; publication pending | Mobile controls hotfix; Render paused | 6 Node + 22 emulated checks; normal build |
+| Astro Racing | Three.js, bundled | RC3 live, publicly verified | Mobile controls hotfix; Render paused | 6 Node + 22 emulated checks; normal build |
 | Halo FPS Arena | Babylon.js (CDN) | ✅ live | ⚠️ Provisional — published file matches no local build | Medium |
 | Tower Defense | Canvas 2D | ✅ live | Provisional (published ≈ local v6.1) | High |
 | Bob Ross Painting Sim | Canvas 2D | ✅ live | Provisional (only meaningful build) | High |
@@ -176,6 +176,6 @@ derivatives, so the repo and the source archive have diverged.
 - Source SHA-256 `f0f1f3d6178b56fdb310a1e2a5921462f95b19ad92d349125cabbfb3b744bffc`; dist SHA-256 `5517186eb5016553cc87a09946993aeb5fbd6ac73a5dbd7b63fdc5456218125a`.
 - Active bundle `assets/index-C-Np7Fsz.js`; 25 runtime files in `releases/astro-racing-1.0.0-rc.3/release-manifest.json`. Previous hashed assets retained.
 - Hold Drive right, Drift left; opt-in auto-drive migration, independently held controls, gravity-based calibrated tilt, Recenter, sensor fail-safe and touch fallback.
-- Six Node tests, 22 browser emulation checks and build pass. Physical-phone testing remains outstanding. Publication pending.
+- Six Node tests, 22 browser emulation checks and build pass. Physical-phone testing remains outstanding. Public HTTPS launch, 25 hashes, keyboard driving and emulated phone hold-to-drive pass.
 - Courses, physics, bots, items, audio, previews, server and protocol retained. Public rooms unavailable; Render paused. No P2P or leaderboard work.
 - Report: `agent-runs/2026-09-14-codex-astro-mobile-rc3.md`. Previous canonical section is preserved in the RC3 evidence directory.
