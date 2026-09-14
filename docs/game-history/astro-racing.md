@@ -20,3 +20,7 @@ in `raw/2026-09-14-astro-racing-publication.txt`.
 Owner’s actual phone screenshots and authorization are preserved in `raw/2026-09-14-astro-mobile-feedback.txt`. RC2 updates tilt/auto-drive, thumb controls, compact HUD and Sunspun covers. Game content, checkpoint 44 and prepared server retained. Render connection is paused. See `../agent-runs/2026-09-14-codex-astro-mobile-rc2.md` and `../releases/astro-racing-1.0.0-rc.2/P2P-ASSESSMENT.md`.
 
 Published RC2 game commit `093d84f34f38aefbd13aa6aa927602de38473dc8`. Public HTTPS launch, build/assets and mobile setup verified (sensor/touch emulated). Multiplayer remains unavailable; Render request stays paused.
+
+## RC3 mobile-controls correction
+
+Owner phone feedback and authorization: `raw/2026-09-14-astro-mobile-hotfix-request.txt`. RC3 replaces default auto-drive with a large held Drive button, repairs landscape tilt/calibration and per-pointer releases. Report: `../agent-runs/2026-09-14-codex-astro-mobile-rc3.md`. Existing content, rollback and checkpoints preserved.

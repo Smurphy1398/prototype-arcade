@@ -1,3 +1,5 @@
+> Astro-only update, 2026-09-14: RC3 mobile controls hotfix prepared; publication pending. Current Astro truth: PROJECT_STATE.md and GAME_CATALOG.md. Earlier July roadmap below is historical for this lane.
+
 # Roadmap
 
 Living, reprioritizable view of where Prototype Arcade is headed. This changes as reality changes —

@@ -67,3 +67,15 @@
 .touch-layout .control-guide,.touch-layout .controller{display:none}.touch-layout #online-state{bottom:0;font-size:8px;pointer-events:none}
 @media(max-height:380px){#mobile-control-sheet{padding:10px 16px}#mobile-control-sheet h2{font-size:21px}.mobile-explainer{margin:6px 0;font-size:12px}#tilt-status{margin:6px 0;min-height:0;font-size:12px}.touch-steering{width:144px}.touch-steering [data-touch=drift]{height:62px}.touch-steering .touch-arrows button{height:44px}.touch-actions [data-touch=item]{height:62px}.touch-layout .drift-panel{width:190px}.touch-layout .drift-panel small{display:none}.touch-layout .speedometer{bottom:calc(var(--touch-bottom) + 39px)}}
 @media(orientation:portrait) and (max-width:650px){.touch-layout .time-ticket{left:var(--touch-left);top:calc(var(--touch-top) + 58px);transform:none}.touch-layout .item-ticket{top:calc(var(--touch-top) + 58px)}.touch-layout .toast{top:145px;max-width:80%}.touch-layout .wrongway{top:190px;max-width:80%}.touch-layout .drift-panel{bottom:calc(var(--touch-bottom) + 190px);width:210px}.touch-layout .speedometer{bottom:calc(var(--touch-bottom) + 245px)}.mobile-tuning{grid-template-columns:1fr}.mobile-auto-label small{display:none}.touch-layout .shield-status,.touch-layout .trick-cue{top:240px;max-width:80%}}
+
+/* RC3: primary thumb targets stay low, secondary actions share a row. */
+.touch-steering,.touch-actions{width:148px;gap:8px}
+.touch-secondary{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.touch-actions .touch-secondary button{height:48px;font-size:14px!important}
+.touch-actions [data-touch=throttle],.touch-steering [data-touch=drift]{height:80px;font-size:24px!important}
+.touch-actions [data-touch=throttle]{background:#287350ee;border-color:#b8fff1}
+.touch-layout .drift-panel{width:min(190px,calc(100vw - 336px))}
+@media(max-height:380px){.touch-actions [data-touch=throttle],.touch-steering [data-touch=drift]{height:72px}.touch-steering,.touch-actions{width:136px}.touch-layout .drift-panel{width:min(180px,calc(100vw - 310px))}}
+@media(orientation:portrait){.touch-layout .drift-panel{width:210px}}
+
+.touch-top button{min-height:44px!important}

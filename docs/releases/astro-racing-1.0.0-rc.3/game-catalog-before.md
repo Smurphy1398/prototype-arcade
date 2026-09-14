@@ -1,6 +1,6 @@
 # Game Catalog
 
-Last updated: **2026-09-14** for Astro Racing only. Reflects RC3 release preparation against `7b31d01`; publication pending. Other games retain their previous evidence.
+Last updated: **2026-09-14** for Astro Racing only. Reflects publicly verified game commit **093d84f34f38aefbd13aa6aa927602de38473dc8** plus this publication-evidence update. Other games retain their previous evidence.
 
 Canonical inventory of every recognizable game. **Confirmed** = evidence supports it as canonical.
 **Provisional** = best current candidate, still needs a runtime playtest / diff before it's locked.
@@ -15,7 +15,7 @@ Seeded from the 2026-07-13 orientation audit (read-only). Hashes are MD5.
 
 | Game | Runtime | Published? | Canonical status | Confidence |
 |---|---|---|---|---|
-| Astro Racing | Three.js, bundled | RC3 prepared; publication pending | Mobile controls hotfix; Render paused | 6 Node + 22 emulated checks; normal build |
+| Astro Racing | Three.js, bundled | RC2 live, publicly verified | Tilt/mobile polish; Render request paused | 25-file hashes + mobile/UI checks |
 | Halo FPS Arena | Babylon.js (CDN) | ✅ live | ⚠️ Provisional — published file matches no local build | Medium |
 | Tower Defense | Canvas 2D | ✅ live | Provisional (published ≈ local v6.1) | High |
 | Bob Ross Painting Sim | Canvas 2D | ✅ live | Provisional (only meaningful build) | High |
@@ -170,12 +170,15 @@ derivatives, so the repo and the source archive have diverged.
   — this is fine on GitHub Pages (which is itself served over the internet) but each affected game's landing
   page says so honestly.
 
-## Astro Racing — 1.0.0-rc.3
+## Astro Racing — 1.0.0-rc.2
 
-- Canonical source: `services/astro-racing/`; build: `games/astro-racing/`; landing: `games/astro-racing.html`.
-- Source SHA-256 `f0f1f3d6178b56fdb310a1e2a5921462f95b19ad92d349125cabbfb3b744bffc`; dist SHA-256 `5517186eb5016553cc87a09946993aeb5fbd6ac73a5dbd7b63fdc5456218125a`.
-- Active bundle `assets/index-C-Np7Fsz.js`; 25 runtime files in `releases/astro-racing-1.0.0-rc.3/release-manifest.json`. Previous hashed assets retained.
-- Hold Drive right, Drift left; opt-in auto-drive migration, independently held controls, gravity-based calibrated tilt, Recenter, sensor fail-safe and touch fallback.
-- Six Node tests, 22 browser emulation checks and build pass. Physical-phone testing remains outstanding. Publication pending.
-- Courses, physics, bots, items, audio, previews, server and protocol retained. Public rooms unavailable; Render paused. No P2P or leaderboard work.
-- Report: `agent-runs/2026-09-14-codex-astro-mobile-rc3.md`. Previous canonical section is preserved in the RC3 evidence directory.
+- Landing: `games/astro-racing.html`; active game: `games/astro-racing/index.html`.
+- Canonical source: `services/astro-racing/`; additive Astro checkpoint 45. Checkpoint 44 remains the approved RC1 content baseline.
+- Source SHA-256: `d1308316d9b61afec53705bb9e70f3c5f9225b459d51340fa3be35181a402c3d`.
+- Active dist SHA-256: `4e47a24ee30b43f4f3ea6a156cd56e8537d2b604421eb0f19dd720ddd46af50f`; 25 files in `releases/astro-racing-1.0.0-rc.2/release-manifest.json`.
+- Main bundle: `assets/index-DvS4bCKF.js`; old RC1 hashed assets retained for rollback.
+- RC2: preferred tilt, permission/setup/recenter/tuning, default auto-drive, left Drift/right Item/Trick, touch fallback with Drift slide, compact safe-area HUD and Sunspun Classic promotional renders.
+- All sixteen approved courses, twelve racers, difficulties, garage, items, music, physics and in-game previews are unchanged. Minor Toybox/Glacier visual limitations remain.
+- Four Node tests and 24 browser mobile checks pass, plus actual UI launch/asset/crop checks. Sensor/touch tests are emulated; physical phone testing remains.
+- Public multiplayer unavailable; Render connection paused. Prepared Node server unchanged. P2P conversion and online leaderboard are separate later tasks.
+- Report: `agent-runs/2026-09-14-codex-astro-mobile-rc2.md`. Raw feedback: `game-history/raw/2026-09-14-astro-mobile-feedback.txt`.

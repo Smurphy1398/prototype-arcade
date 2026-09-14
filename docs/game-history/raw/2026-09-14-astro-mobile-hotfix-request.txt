@@ -1,0 +1,32 @@
+Continue Astro Racing in:
+C:\Users\Simon\Documents\AI Projects 26\Astro-Racing
+
+The previous chat was cleared. I have approximately 6% of my weekly usage remaining. Complete only a focused mobile-controls hotfix.
+
+First read the project instructions, CURRENT_STATE.md, ARCADE-PUBLICATION-STATUS.md, and any latest mobile handoff. Inspect current Git changes and identify the source/build actually deployed. Preserve existing work and continue any partially completed repair.
+
+The game is already published through Smurphy1398/prototype-arcade:
+https://smurphy1398.github.io/prototype-arcade/games/astro-racing.html
+
+My actual phone feedback:
+
+* Auto-acceleration is unwanted. I need a proper hold-to-drive button.
+* Tilt incorrectly steers right while I hold the phone normally.
+* Controls are crowded and awkward.
+
+Required behavior:
+
+* Large Drive button under the right thumb; large Drift button under the left. Item/Trick and brake/reverse remain reachable.
+* Auto-accelerate OFF by default and optional. Correct the previous automatic default without resetting unrelated settings.
+* Independent touch handling: using or releasing another control must not interrupt held acceleration.
+* Enable Tilt handles permission and calibrates neutral from valid readings in my comfortable landscape holding position.
+* Steady phone means straight. Left/right tilt produces proportional steering; returning to neutral stops steering.
+* Support both landscape orientations, sensible sensitivity, dead zone, smoothing, and accessible Recenter.
+* Invalid or missing sensor data must not steer the kart. Handle rotation, interrupted touches, and background/resume safely.
+* Provide touch-steering fallback and mobile-specific instructions. Keep the road visible.
+
+Use targeted input checks and the normal build. Avoid another full course audit, new testing framework, or unrelated feature work. Leave P2P, leaderboard, and course changes outside this task.
+
+I authorize the targeted commits, pushes, and Arcade redeployment. Preserve the current rollback and checkpoints; incur no new charges.
+
+Complete implementation and deployment. Return the live URL, deployed version, actual verification results, and a brief phone check. Distinguish emulation from physical-phone verification.

@@ -1,0 +1,668 @@
+{
+  "url": "http://127.0.0.1:8806/?verify",
+  "kind": "Emulated Edge touch viewport, synthetic sensor permission/orientation, CDP simultaneous touch. Not a physical phone test.",
+  "checks": [
+    {
+      "name": "Permission gesture; invalid/one sample cannot calibrate; steady comfortable grip can",
+      "passed": true
+    },
+    {
+      "name": "Fresh install defaults to hold-to-drive and centered phone steers straight",
+      "passed": true
+    },
+    {
+      "name": "Held Drive accelerates the actual race simulation",
+      "passed": true
+    },
+    {
+      "name": "Native CDP four-finger Drive/Drift/Item/Trick and independent releases",
+      "passed": true
+    },
+    {
+      "name": "Unrelated cancellation/lost capture preserves Drive; brake overrides and release restores Drive; native cancel releases Drive",
+      "passed": true
+    },
+    {
+      "name": "Left/right proportional direction, dead zone and immediate neutral return in landscape 90",
+      "passed": true
+    },
+    {
+      "name": "Reachable Recenter uses new stable samples at a changed grip",
+      "passed": true
+    },
+    {
+      "name": "tilt-844x340",
+      "passed": true,
+      "width": 844,
+      "height": 340,
+      "bounds": [
+        {
+          "selector": "[data-touch=brake]",
+          "x": 10,
+          "y": 208,
+          "w": 136,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=recenter]",
+          "x": 628.859375,
+          "y": 6,
+          "w": 65.140625,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=drift]",
+          "x": 10,
+          "y": 260,
+          "w": 136,
+          "h": 72,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=item]",
+          "x": 698,
+          "y": 204,
+          "w": 64,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=trick]",
+          "x": 770,
+          "y": 204,
+          "w": 64,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=throttle]",
+          "x": 698,
+          "y": 260,
+          "w": 136,
+          "h": 72,
+          "visible": true
+        },
+        {
+          "selector": ".speedometer",
+          "x": 367,
+          "y": 256,
+          "w": 110,
+          "h": 37,
+          "visible": true
+        },
+        {
+          "selector": ".drift-panel",
+          "x": 332,
+          "y": 300,
+          "w": 180,
+          "h": 32,
+          "visible": true
+        },
+        {
+          "selector": ".session-label",
+          "x": 10,
+          "y": 6,
+          "w": 90,
+          "h": 52,
+          "visible": true
+        },
+        {
+          "selector": ".time-ticket",
+          "x": 367,
+          "y": 6,
+          "w": 110,
+          "h": 67,
+          "visible": true
+        },
+        {
+          "selector": ".item-ticket",
+          "x": 722,
+          "y": 53,
+          "w": 112,
+          "h": 38.34375,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=pause]",
+          "x": 770,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=mobile-controls]",
+          "x": 700,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "Rotation clears inputs/pauses; landscape 270 recalibrates and steers both ways",
+      "passed": true
+    },
+    {
+      "name": "Invalid readings neutralize immediately; stalled feed neutralizes and enables touch fallback",
+      "passed": true
+    },
+    {
+      "name": "Touch steering fallback supports simultaneous Drive/left/Drift",
+      "passed": true
+    },
+    {
+      "name": "touch-844x390",
+      "passed": true,
+      "width": 844,
+      "height": 390,
+      "bounds": [
+        {
+          "selector": "[data-touch=left]",
+          "x": 10,
+          "y": 194,
+          "w": 71,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=right]",
+          "x": 87,
+          "y": 194,
+          "w": 71,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=brake]",
+          "x": 10,
+          "y": 250,
+          "w": 148,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=drift]",
+          "x": 10,
+          "y": 302,
+          "w": 148,
+          "h": 80,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=item]",
+          "x": 686,
+          "y": 246,
+          "w": 70,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=trick]",
+          "x": 764,
+          "y": 246,
+          "w": 70,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=throttle]",
+          "x": 686,
+          "y": 302,
+          "w": 148,
+          "h": 80,
+          "visible": true
+        },
+        {
+          "selector": ".speedometer",
+          "x": 367,
+          "y": 297,
+          "w": 110,
+          "h": 37,
+          "visible": true
+        },
+        {
+          "selector": ".drift-panel",
+          "x": 327,
+          "y": 336,
+          "w": 190,
+          "h": 46,
+          "visible": true
+        },
+        {
+          "selector": ".session-label",
+          "x": 10,
+          "y": 6,
+          "w": 90,
+          "h": 52,
+          "visible": true
+        },
+        {
+          "selector": ".time-ticket",
+          "x": 367,
+          "y": 6,
+          "w": 110,
+          "h": 67,
+          "visible": true
+        },
+        {
+          "selector": ".item-ticket",
+          "x": 722,
+          "y": 53,
+          "w": 112,
+          "h": 38.34375,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=pause]",
+          "x": 770,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=mobile-controls]",
+          "x": 700,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "touch-667x300",
+      "passed": true,
+      "width": 667,
+      "height": 300,
+      "bounds": [
+        {
+          "selector": "[data-touch=left]",
+          "x": 10,
+          "y": 116,
+          "w": 65,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=right]",
+          "x": 81,
+          "y": 116,
+          "w": 65,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=brake]",
+          "x": 10,
+          "y": 168,
+          "w": 136,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=drift]",
+          "x": 10,
+          "y": 220,
+          "w": 136,
+          "h": 72,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=item]",
+          "x": 521,
+          "y": 164,
+          "w": 64,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=trick]",
+          "x": 593,
+          "y": 164,
+          "w": 64,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=throttle]",
+          "x": 521,
+          "y": 220,
+          "w": 136,
+          "h": 72,
+          "visible": true
+        },
+        {
+          "selector": ".speedometer",
+          "x": 278.5,
+          "y": 216,
+          "w": 110,
+          "h": 37,
+          "visible": true
+        },
+        {
+          "selector": ".drift-panel",
+          "x": 243.5,
+          "y": 260,
+          "w": 180,
+          "h": 32,
+          "visible": true
+        },
+        {
+          "selector": ".session-label",
+          "x": 10,
+          "y": 6,
+          "w": 90,
+          "h": 52,
+          "visible": true
+        },
+        {
+          "selector": ".time-ticket",
+          "x": 278.5,
+          "y": 6,
+          "w": 110,
+          "h": 67,
+          "visible": true
+        },
+        {
+          "selector": ".item-ticket",
+          "x": 545,
+          "y": 53,
+          "w": 112,
+          "h": 38.34375,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=pause]",
+          "x": 593,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=mobile-controls]",
+          "x": 523,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "touch-568x320",
+      "passed": true,
+      "width": 568,
+      "height": 320,
+      "bounds": [
+        {
+          "selector": "[data-touch=left]",
+          "x": 10,
+          "y": 136,
+          "w": 65,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=right]",
+          "x": 81,
+          "y": 136,
+          "w": 65,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=brake]",
+          "x": 10,
+          "y": 188,
+          "w": 136,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=drift]",
+          "x": 10,
+          "y": 240,
+          "w": 136,
+          "h": 72,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=item]",
+          "x": 422,
+          "y": 184,
+          "w": 64,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=trick]",
+          "x": 494,
+          "y": 184,
+          "w": 64,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=throttle]",
+          "x": 422,
+          "y": 240,
+          "w": 136,
+          "h": 72,
+          "visible": true
+        },
+        {
+          "selector": ".speedometer",
+          "x": 229,
+          "y": 236,
+          "w": 110,
+          "h": 37,
+          "visible": true
+        },
+        {
+          "selector": ".drift-panel",
+          "x": 194,
+          "y": 280,
+          "w": 180,
+          "h": 32,
+          "visible": true
+        },
+        {
+          "selector": ".session-label",
+          "x": 10,
+          "y": 6,
+          "w": 90,
+          "h": 52,
+          "visible": true
+        },
+        {
+          "selector": ".time-ticket",
+          "x": 229,
+          "y": 6,
+          "w": 110,
+          "h": 67,
+          "visible": true
+        },
+        {
+          "selector": ".item-ticket",
+          "x": 446,
+          "y": 53,
+          "w": 112,
+          "h": 38.34375,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=pause]",
+          "x": 494,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=mobile-controls]",
+          "x": 424,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "touch-390x760",
+      "passed": true,
+      "width": 390,
+      "height": 760,
+      "bounds": [
+        {
+          "selector": "[data-touch=left]",
+          "x": 10,
+          "y": 564,
+          "w": 71,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=right]",
+          "x": 87,
+          "y": 564,
+          "w": 71,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=brake]",
+          "x": 10,
+          "y": 620,
+          "w": 148,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=drift]",
+          "x": 10,
+          "y": 672,
+          "w": 148,
+          "h": 80,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=item]",
+          "x": 232,
+          "y": 616,
+          "w": 70,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=trick]",
+          "x": 310,
+          "y": 616,
+          "w": 70,
+          "h": 48,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=throttle]",
+          "x": 232,
+          "y": 672,
+          "w": 148,
+          "h": 80,
+          "visible": true
+        },
+        {
+          "selector": ".speedometer",
+          "x": 140,
+          "y": 470,
+          "w": 110,
+          "h": 37,
+          "visible": true
+        },
+        {
+          "selector": ".drift-panel",
+          "x": 90,
+          "y": 516,
+          "w": 210,
+          "h": 46,
+          "visible": true
+        },
+        {
+          "selector": ".session-label",
+          "x": 10,
+          "y": 6,
+          "w": 90,
+          "h": 52,
+          "visible": true
+        },
+        {
+          "selector": ".time-ticket",
+          "x": 10,
+          "y": 64,
+          "w": 110,
+          "h": 67,
+          "visible": true
+        },
+        {
+          "selector": ".item-ticket",
+          "x": 268,
+          "y": 64,
+          "w": 112,
+          "h": 38.34375,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=pause]",
+          "x": 316,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        },
+        {
+          "selector": "[data-touch=mobile-controls]",
+          "x": 246,
+          "y": 6,
+          "w": 64,
+          "h": 44,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "Background/blur clears held Drive; explicit resume does not resurrect touches",
+      "passed": true
+    },
+    {
+      "name": "Hidden page and restore stay neutral",
+      "passed": true
+    },
+    {
+      "name": "RC2 auto-drive default corrected once without resetting tuning/graphics/setup; deliberate opt-in persists",
+      "passed": true
+    },
+    {
+      "name": "Permission denied uses touch fallback safely",
+      "passed": true
+    },
+    {
+      "name": "Permission unavailable uses touch fallback safely",
+      "passed": true
+    },
+    {
+      "name": "Permission pending uses touch fallback safely",
+      "passed": true
+    },
+    {
+      "name": "Permission no-data uses touch fallback safely",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true
+}

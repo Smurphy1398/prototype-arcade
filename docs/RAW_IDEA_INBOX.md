@@ -87,3 +87,7 @@ These `.txt` notes live under `..\PROTOTYPE ARCADE\` and should be captured verb
 Verbatim user prompt retained in `game-history/raw/2026-09-14-astro-racing-publication.txt`.
 
 Follow-up hosting direction retained verbatim in game-history/raw/2026-09-14-astro-hosting-followup.txt.
+
+## 2026-09-14 — Astro mobile hotfix request
+
+Verbatim request preserved in `game-history/raw/2026-09-14-astro-mobile-hotfix-request.txt`; implementation and evidence in the RC3 agent report.

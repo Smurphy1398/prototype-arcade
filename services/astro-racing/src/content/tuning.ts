@@ -1,4 +1,4 @@
-export const BUILD = '1.0.0-rc.2 - MOBILE POLISH';
+export const BUILD = '1.0.0-rc.3 - MOBILE CONTROLS HOTFIX';
 export const TUNING = {
   fixedDt: 1 / 60, maxCatchup: 6,
   topSpeed: 33, boostSpeed: 45, acceleration: 19, braking: 34,

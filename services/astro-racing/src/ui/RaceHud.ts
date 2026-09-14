@@ -102,7 +102,7 @@ export class RaceHud extends Hud {
       if(!p.state.drifting&&p.state.boost<=0)document.getElementById('drift-label')!.textContent=tilt?'HOLD DRIFT + TILT TO TURN':'HOLD + SLIDE DRIFT TO TURN';
       document.getElementById('drive-hint')!.textContent=p.state.drifting?'Release Drift for a charged boost':'Left thumb: Drift · right thumb: Item / Trick';
     }
-    document.getElementById('wrongway')!.textContent=p.steeringRearm?(this.device==='touch'&&document.body.classList.contains('tilt-driving')?'LEVEL PHONE + RELEASE DRIFT':'RELEASE STEERING / DRIFT TO DRIVE ON'):p.state.falling?'RESCUE INCOMING':p.state.rescueTime>0?'BACK ON THE ROAD':progress.invalid?(this.device==='touch'?'MISSED GATE · CONTROLS → RETURN KART':'MISSED GATE · PRESS R TO RECOVER'):'↶ WRONG WAY';
+    document.getElementById('wrongway')!.textContent=p.steeringRearm?(this.device==='touch'&&document.body.classList.contains('tilt-driving')?'CENTER PHONE + RELEASE DRIFT':'RELEASE STEERING / DRIFT TO DRIVE ON'):p.state.falling?'RESCUE INCOMING':p.state.rescueTime>0?'BACK ON THE ROAD':progress.invalid?(this.device==='touch'?'MISSED GATE · CONTROLS → RETURN KART':'MISSED GATE · PRESS R TO RECOVER'):'↶ WRONG WAY';
     document.getElementById('lap')!.textContent=`${progress.lap} / 3`;
     document.getElementById('position')!.textContent=String(p.position);
     document.getElementById('difficulty-hud')!.textContent=DIFFICULTIES[race.difficulty].label.toUpperCase();

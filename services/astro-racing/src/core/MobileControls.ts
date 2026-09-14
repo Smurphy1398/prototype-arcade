@@ -1,6 +1,6 @@
 import {clamp} from './math';
 import {neutralInput,type Input,type DriveInput} from './Input';
-import {tiltAngle,tiltTarget,smoothTilt} from './mobileSteering';
+import {TiltCalibration,smoothTilt} from './mobileSteering';
 export {tiltAngle} from './mobileSteering';
 
 export interface MobilePreferences {
@@ -8,7 +8,7 @@ export interface MobilePreferences {
   sensitivity:number;deadZone:number;smoothing:number;
   graphics:'mobile'|'balanced'|'high';resolution:number;setupDone:boolean;
 }
-const defaults=():MobilePreferences=>({touch:'auto',steering:'tilt',autoAccelerate:true,
+const defaults=():MobilePreferences=>({touch:'auto',steering:'tilt',autoAccelerate:false,
   sensitivity:1.4,deadZone:3,smoothing:.14,graphics:matchMedia('(pointer: coarse)').matches?'mobile':'high',
   resolution:matchMedia('(pointer: coarse)').matches?.7:1,setupDone:false});
 
@@ -24,11 +24,12 @@ export class MobileControls {
   private suspended=false;
   private tiltEnabled=false;
   private received=false;
-  private tiltZero:number|null=null;
-  private tiltRaw=0;
+  private sensor=new TiltCalibration();
   private tiltSmooth=0;
   private lastRead=performance.now();
+  private calibrationStarted=performance.now();
   private permissionAttempt=0;
+  private motionTimeout:number|undefined;
   private lastOrientation=this.orientation();
   private lastLandscape=this.landscape;
   private accepted:(()=>void)|undefined;
@@ -40,25 +41,25 @@ export class MobileControls {
       const p=JSON.parse(saved??localStorage.getItem('astro-mobile-v07')??'{}');
       for(const k of ['touch','graphics'] as const)if((k==='touch'?['auto','on','off']:['mobile','balanced','high']).includes(p[k]))(this.prefs as any)[k]=p[k];
       for(const [k,min,max] of [['sensitivity',.5,3],['deadZone',0,10],['smoothing',.04,.4],['resolution',.5,1.5]] as const)if(Number.isFinite(p[k]))this.prefs[k]=clamp(p[k],min,max);
-      // Introduce the new defaults once; all choices made in this release persist.
-      if(saved){if(['tilt','buttons'].includes(p.steering))this.prefs.steering=p.steering;
-        this.prefs.autoAccelerate=p.autoAccelerate!==false;this.prefs.setupDone=p.setupDone===true;}
+      // RC2 silently enabled auto-drive. Correct it once, retaining other preferences.
+      {if(['tilt','buttons'].includes(p.steering))this.prefs.steering=p.steering;
+        this.prefs.autoAccelerate=p.controlsVersion===3&&p.autoAccelerate===true;this.prefs.setupDone=p.setupDone===true;}
     }catch{}
     this.root=document.createElement('div');this.root.id='touch-controls';this.root.className='hidden';
     const button=(key:string,label:string)=>`<button type="button" data-touch="${key}" aria-label="${label}">${label}</button>`;
-    this.root.innerHTML=`<div class="touch-top">${button('mobile-controls','Controls')}${button('pause','Pause')}</div>
+    this.root.innerHTML=`<div class="touch-top">${button('recenter','Recenter')}${button('mobile-controls','Controls')}${button('pause','Pause')}</div>
       <div class="touch-steering"><div class="touch-arrows">${button('left','◀')}${button('right','▶')}</div>
-      <div class="touch-assist">${button('brake','Brake / reverse')}${button('recenter','Center')}</div>${button('drift','Drift')}</div>
-      <div class="touch-actions">${button('trick','Trick')}${button('item','Item')}${button('throttle','Drive')}</div>
+      <div class="touch-assist">${button('brake','Brake / reverse')}</div>${button('drift','Drift')}</div>
+      <div class="touch-actions"><div class="touch-secondary">${button('item','Item')}${button('trick','Trick')}</div>${button('throttle','Drive')}</div>
       <div class="touch-notice" role="status"><span></span><button type="button" id="touch-resume">Resume controls</button></div>`;
     document.getElementById('app')!.append(this.root);
     this.sheet=document.createElement('dialog');this.sheet.id='mobile-control-sheet';
     this.sheet.setAttribute('aria-labelledby','mobile-controls-title');
     this.sheet.innerHTML=`<header><h2 id="mobile-controls-title">Make yourself comfortable</h2><button type="button" id="mobile-close" aria-label="Close controls">×</button></header>
-      <p class="mobile-explainer">Drift with your left thumb. Items and tricks on your right. Auto-drive keeps you moving; brake always overrides it.</p>
+      <p class="mobile-explainer">Hold Drive with your right thumb; release to coast. Hold Drift with your left while turning. Item and Trick sit above Drive. Brake / reverse stops, then backs up.</p>
       <div class="mobile-mode"><button type="button" id="tilt-enable">Enable Tilt</button><button type="button" id="touch-enable">Touch steering</button><button type="button" id="tilt-recenter">Recenter</button></div>
       <p id="tilt-status" role="status" aria-live="polite"></p>
-      <label class="mobile-auto-label"><input id="mobile-auto" type="checkbox"> Auto-accelerate <small>Turn off to show Drive</small></label>
+      <label class="mobile-auto-label"><input id="mobile-auto" type="checkbox"> Auto-accelerate <small>Optional; off by default</small></label>
       <details><summary>Tilt tuning</summary><div class="mobile-tuning">
       <label>Sensitivity <output id="sensitivity-value"></output><input id="mobile-sensitivity" type="range" min=".5" max="3" step=".1"></label>
       <label>Dead zone <output id="deadZone-value"></output><input id="mobile-deadZone" type="range" min="0" max="10" step="1"></label>
@@ -72,7 +73,7 @@ export class MobileControls {
     this.sheet.querySelector('#mobile-recover')!.addEventListener('click',()=>{if(this.finishSetup())this.action('recover');});
     this.sheet.querySelector('#tilt-enable')!.addEventListener('click',()=>void this.enableTilt());
     this.sheet.querySelector('#touch-enable')!.addEventListener('click',()=>this.fallback('Touch steering ready. Hold an arrow to turn. For corners, hold Drift and slide sideways to steer with one thumb.'));
-    this.sheet.querySelector('#tilt-recenter')!.addEventListener('click',()=>{this.recenter();this.message('Centered. Hold this comfortable landscape position, then tilt to turn.');});
+    this.sheet.querySelector('#tilt-recenter')!.addEventListener('click',()=>{this.recenter();});
     this.sheet.querySelector('#mobile-auto')!.addEventListener('change',e=>{this.prefs.autoAccelerate=(e.target as HTMLInputElement).checked;this.save();});
     for(const key of ['sensitivity','deadZone','smoothing'] as const){this.sheet.querySelector('#mobile-'+key)!.addEventListener('input',e=>{this.prefs[key]=Number((e.target as HTMLInputElement).value);this.save();});}
     this.root.addEventListener('contextmenu',e=>e.preventDefault());
@@ -88,9 +89,10 @@ export class MobileControls {
     });
     this.root.addEventListener('pointermove',e=>{const start=this.driftOrigin.get(e.pointerId);if(start!==undefined&&!this.usingTilt)this.driftSteer=clamp((e.clientX-start)/40,-1,1);});
     this.root.addEventListener('pointerup',e=>{this.held.delete(e.pointerId);if(this.driftOrigin.delete(e.pointerId))this.driftSteer=0;this.syncHeld();});
-    // An unexpected cancellation releases every action, including auto-drive, until an explicit resume.
-    this.root.addEventListener('lostpointercapture',e=>{if(this.held.has(e.pointerId))this.interrupt();});
-    this.root.addEventListener('pointercancel',()=>this.interrupt());
+    // Each pointer owns only its control. OS-wide interruptions clear everything below.
+    const release=(e:PointerEvent)=>{this.held.delete(e.pointerId);if(this.driftOrigin.delete(e.pointerId)){this.driftSteer=0;this.driftArmed=false;}this.syncHeld();};
+    this.root.addEventListener('lostpointercapture',release);
+    this.root.addEventListener('pointercancel',release);
     this.root.querySelector('#touch-resume')!.addEventListener('click',()=>{if(this.canDrive){this.recenter();this.suspended=false;this.sync();}else this.action('mobile-controls');});
     window.addEventListener('blur',()=>this.clear());
     document.addEventListener('visibilitychange',()=>{if(document.hidden)this.clear();});
@@ -106,32 +108,38 @@ export class MobileControls {
     window.addEventListener('resize',rotation);screen.orientation?.addEventListener('change',rotation);
     window.addEventListener('orientationchange',rotation);
     window.addEventListener('deviceorientation',e=>{
-      if(!this.tiltEnabled||!Number.isFinite(e.beta)||!Number.isFinite(e.gamma)||e.beta===null||e.gamma===null)return;
-      const first=!this.received;this.received=true;this.tiltRaw=tiltAngle(e.beta,e.gamma,this.orientation());
-      if(this.tiltZero===null)this.tiltZero=this.tiltRaw;
-      if(first)this.message('Tilt ready. Centered at your current position. Recenter whenever you change your grip.');
+      if(!this.tiltEnabled||document.hidden||!this.landscape)return;
+      const wasReady=this.received;
+      this.received=this.sensor.sample(e.beta,e.gamma,this.orientation(),performance.now());
+      if(this.received)window.clearTimeout(this.motionTimeout);
+      if(!this.received)this.tiltSmooth=0;
+      if(this.received&&!wasReady)this.message('Tilt ready. Hold this grip for straight driving. Tip the left edge down to turn left, right edge down to turn right.');
+      else if(wasReady&&!this.received){this.calibrationStarted=performance.now();this.message('Motion interrupted. Hold steady to recalibrate, or choose Touch steering.');}
     });
-    this.settings();this.input.mobile=this;if(this.visible)this.input.device='touch';this.sync();
+    this.settings();this.input.mobile=this;if(this.visible)this.input.device='touch';this.save();
   }
   get visible(){return this.prefs.touch==='on'||this.prefs.touch==='auto'&&(matchMedia('(pointer: coarse)').matches||navigator.maxTouchPoints>0);}
-  get usingTilt(){return this.prefs.steering==='tilt'&&this.tiltEnabled&&this.received;}
+  get usingTilt(){return this.prefs.steering==='tilt'&&this.tiltEnabled&&this.received&&this.sensor.ready(performance.now());}
   get needsSetup(){return this.visible&&(!this.prefs.setupDone||this.prefs.steering==='tilt'&&!this.usingTilt);}
   private get landscape(){return innerWidth>innerHeight;}
-  private get canDrive(){return this.prefs.steering==='buttons'||this.usingTilt&&this.landscape;}
+  private get canDrive(){return this.prefs.steering==='buttons'||this.tiltEnabled&&this.landscape;}
+  private get setupReady(){return this.prefs.steering==='buttons'||this.usingTilt&&this.landscape;}
   private orientation(){return screen.orientation?.angle??Number((window as any).orientation??0);}
   setActive(active:boolean){
     if(this.active!==active){this.clear();this.suspended=false;this.recenter(true);}
     this.active=active;if(active&&this.visible)this.input.device='touch';this.sync();
   }
-  clear(){this.held.clear();this.driftOrigin.clear();this.driftSteer=0;this.driftArmed=false;this.tiltSmooth=0;this.suspended=true;this.syncHeld();this.sync();}
+  clear(){this.held.clear();this.driftOrigin.clear();this.driftSteer=0;this.driftArmed=false;this.recenter(true);this.suspended=true;this.syncHeld();this.sync();}
   private interrupt(){this.input.clear();if(this.active)this.action('blur');this.sync();}
-  recenter(fresh=false){this.tiltZero=fresh||!this.received?null:this.tiltRaw;this.tiltSmooth=0;this.lastRead=performance.now();}
+  recenter(silent=false){this.sensor.reset();this.received=false;this.tiltSmooth=0;this.lastRead=performance.now();this.calibrationStarted=this.lastRead;if(!silent)this.message('Hold your comfortable landscape grip steady for a moment to center.');}
   read():DriveInput{
     const now=performance.now(),dt=Math.min(.1,(now-this.lastRead)/1000);this.lastRead=now;
+    if(this.received&&!this.sensor.ready(now)){this.received=false;this.tiltSmooth=0;this.fallback('Motion stopped. Touch steering is ready; use Controls to retry Enable Tilt.');}
+    if(this.tiltEnabled&&!this.received&&now-this.calibrationStarted>2500)this.fallback('No stable motion data. Touch steering is ready; use Controls to retry Enable Tilt.');
     if(!this.active||!this.visible||this.suspended||document.hidden||this.sheet.open||!this.canDrive)return neutralInput();
     const has=(key:string)=>[...this.held.values()].includes(key);
     let steer=Number(has('right'))-Number(has('left'))||this.driftSteer;
-    if(this.usingTilt){this.tiltSmooth=smoothTilt(this.tiltSmooth,tiltTarget(this.tiltRaw,this.tiltZero??this.tiltRaw,this.prefs.deadZone,this.prefs.sensitivity),dt,this.prefs.smoothing);steer=this.tiltSmooth;}
+    if(this.usingTilt){const target=this.sensor.target(now,this.prefs.deadZone,this.prefs.sensitivity);this.tiltSmooth=target===0?0:smoothTilt(this.tiltSmooth,target,dt,this.prefs.smoothing);steer=this.tiltSmooth;}
     // Physics starts a drift on the press edge. Defer that edge until the thumb/tilt has turned.
     if(has('drift')&&Math.abs(steer)>.2)this.driftArmed=true;
     return {throttle:has('brake')?0:this.prefs.autoAccelerate||has('throttle')?1:0,brake:has('brake')?1:0,steer,drift:has('drift')&&this.driftArmed};
@@ -144,26 +152,26 @@ export class MobileControls {
   }
   private cancelSetup(){this.accepted=undefined;this.permissionAttempt++;this.sheet.close();}
   private finishSetup(){
-    if(!this.canDrive)return false;
+    if(!this.setupReady)return false;
     this.prefs.setupDone=true;this.save();this.sheet.close();const done=this.accepted;this.accepted=undefined;
-    this.recenter();this.suspended=false;done?.();this.sync();return true;
+    this.suspended=false;done?.();this.sync();return true;
   }
-  private save(){try{localStorage.setItem('astro-mobile-v10',JSON.stringify(this.prefs));}catch{}this.sync();}
+  private save(){try{localStorage.setItem('astro-mobile-v10',JSON.stringify({...this.prefs,controlsVersion:3}));}catch{}this.sync();}
   private syncHeld(){this.root.querySelectorAll<HTMLElement>('[data-touch]').forEach(b=>b.classList.toggle('held',[...this.held.values()].includes(b.dataset.touch!)));}
   private sync(){
     if(!this.root||!this.sheet)return;
     this.root.classList.toggle('hidden',!this.visible||!this.active);
     document.body.classList.toggle('touch-layout',this.visible);document.body.classList.toggle('tilt-driving',this.usingTilt);
     this.root.querySelector<HTMLElement>('.touch-arrows')!.hidden=this.usingTilt;
-    this.root.querySelector<HTMLElement>('[data-touch=recenter]')!.hidden=!this.usingTilt;
-    this.root.querySelector<HTMLElement>('[data-touch=throttle]')!.hidden=this.prefs.autoAccelerate;
+    this.root.querySelector<HTMLElement>('[data-touch=recenter]')!.hidden=!this.tiltEnabled;
+    this.root.querySelector<HTMLElement>('[data-touch=throttle]')!.hidden=false;
     const notice=this.root.querySelector<HTMLElement>('.touch-notice')!;
     notice.hidden=!this.suspended&&this.canDrive;
     notice.querySelector('span')!.textContent=!this.canDrive?this.usingTilt?'Rotate to landscape, then resume.':'Choose Enable Tilt or Touch steering in Controls.':'Controls released.';
     this.sheet.querySelector('#tilt-status')!.textContent=this.usingTilt&&!this.landscape?'Rotate to landscape to center tilt and continue.':this.status;
-    this.sheet.querySelector<HTMLButtonElement>('#mobile-done')!.disabled=!this.canDrive;
-    this.sheet.querySelector<HTMLButtonElement>('#mobile-recover')!.disabled=!this.canDrive;
-    this.sheet.querySelector<HTMLButtonElement>('#tilt-recenter')!.disabled=!this.usingTilt||!this.landscape;
+    this.sheet.querySelector<HTMLButtonElement>('#mobile-done')!.disabled=!this.setupReady;
+    this.sheet.querySelector<HTMLButtonElement>('#mobile-recover')!.disabled=!this.setupReady;
+    this.sheet.querySelector<HTMLButtonElement>('#tilt-recenter')!.disabled=!this.tiltEnabled||!this.landscape;
     this.sheet.querySelector('#tilt-enable')!.setAttribute('aria-pressed',String(this.prefs.steering==='tilt'));
     this.sheet.querySelector('#tilt-enable')!.textContent=this.usingTilt?'Tilt enabled':'Enable Tilt';
     this.sheet.querySelector('#touch-enable')!.setAttribute('aria-pressed',String(this.prefs.steering==='buttons'));
@@ -184,8 +192,8 @@ export class MobileControls {
       if(attempt!==this.permissionAttempt)return;
       if(permission!=='granted'){this.fallback('Tilt permission was denied. Touch steering is ready; you can retry Enable Tilt.');return;}
       this.tiltEnabled=true;this.received=false;this.prefs.steering='tilt';this.recenter(true);this.save();
-      this.message('Waiting for motion data. Hold your phone in landscape.');
-      window.setTimeout(()=>{if(attempt===this.permissionAttempt&&!this.received)this.fallback('No motion data arrived. Touch steering is ready; retry Enable Tilt in a supported browser.');},2500);
+      this.message('Hold still in your comfortable landscape grip for a moment. Waiting for valid motion data.');
+      this.motionTimeout=window.setTimeout(()=>{if(attempt===this.permissionAttempt&&!this.received)this.fallback('No motion data arrived. Touch steering is ready; retry Enable Tilt in a supported browser.');},2500);
     }catch{if(attempt===this.permissionAttempt)this.fallback('Tilt could not be enabled. Touch steering is ready.');}
   }
   private fallback(message:string){this.permissionAttempt++;this.tiltEnabled=false;this.received=false;this.prefs.steering='buttons';this.recenter(true);this.save();this.message(message);}

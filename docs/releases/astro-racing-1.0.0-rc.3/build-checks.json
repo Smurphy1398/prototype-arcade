@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0-rc.3",
+  "nodeTests": {
+    "passed": 6,
+    "failed": 0,
+    "command": "node_modules/.bin/tsx.cmd --test tests/input.test.ts tests/mobile.test.ts"
+  },
+  "build": {
+    "command": "npm run build",
+    "passed": true,
+    "steps": [
+      "tsc --noEmit",
+      "vite build --configLoader native"
+    ]
+  },
+  "scope": "Targeted mobile/input checks; no course audit or new framework",
+  "physicalPhoneTested": false
+}

@@ -1,17 +1,16 @@
-# Astro Racing rc.1 room service
+# Astro Racing client and prepared room service
 
 Status: prepared, not publicly deployed. No hosting account/service or endpoint is configured.
 The Arcade's existing GitHub Pages service only serves the static game.
 
 The static game is now live and publicly verified at
 https://smurphy1398.github.io/prototype-arcade/games/astro-racing.html.
-See `../../docs/releases/astro-racing-1.0.0-rc.1/HOSTING-DECISION.md` for current prices,
-measured bandwidth, and the exact Render account connection needed to finish rooms.
+The client is now RC3 (mobile controls hotfix). The room server remains the prepared RC1 implementation;
+public rooms are unavailable and the Render connection request is paused.
 
-This directory preserves the candidate's 109 source/configuration files byte for byte.
-`RELEASE-MANIFEST.json` records source SHA-256
-`836043b225acc2531bb2b9e1b26c3c56278021afcb37de4ad9fcc0d4f1282875`.
-The live client is the matching prebuilt output in `../../games/astro-racing/`.
+Canonical editable client source lives here. `RELEASE-MANIFEST.json` identifies its exact source
+and prebuilt output in `../../games/astro-racing/`. Historical RC1/RC2 manifests retain their original hashes.
+
 Do not change simulation source during deployment or enable server verification acceleration.
 
 ## Deploy on an existing Node or Docker host

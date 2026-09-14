@@ -406,3 +406,7 @@ and the audit found outside agents unnecessary here.
 Codex implemented Simon’s authorized tilt/auto-drive/thumb-layout/HUD fixes and native Sunspun covers. Approved content and checkpoint 44 are preserved. Local tests pass; publication follows. Render connection paused, P2P assessment saved, no new charges. See `agent-runs/2026-09-14-codex-astro-mobile-rc2.md`.
 
 RC2 publication verified: game commit `093d84f34f38aefbd13aa6aa927602de38473dc8`; all 25 runtime hashes, Sunspun images and public UI launch pass. Evidence: `releases/astro-racing-1.0.0-rc.2/publication.json`. No new hosting charges.
+
+## 2026-09-14 — Astro Racing RC3 mobile hotfix
+
+Codex (inline; authorized sole implementer) corrected auto-drive, tilt and thumb controls. Six Node tests, 22 emulated checks and build pass. Publication pending. No outside agents; no new charges. Full record: `agent-runs/2026-09-14-codex-astro-mobile-rc3.md`.

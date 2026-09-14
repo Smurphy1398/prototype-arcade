@@ -1,15 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {tiltAngle,tiltTarget,smoothTilt} from '../src/core/mobileSteering';
+import {tiltAngle,tiltTarget,smoothTilt,TiltCalibration} from '../src/core/mobileSteering';
 import {CoastTrack} from '../src/tracks/sunspun/track';
 import {KartPhysics} from '../src/vehicle/KartPhysics';
 import {RaceSimulation} from '../src/race/RaceSimulation';
 import {neutralInput} from '../src/core/Input';
 
 test('tilt maps both landscape directions and portrait, including angle wrap',()=>{
-  assert.ok(Math.abs(tiltAngle(12,3,90)-12)<1e-9);
-  assert.ok(Math.abs(tiltAngle(12,3,270)+12)<1e-9);
-  assert.equal(tiltAngle(12,3,0),3);
+  assert.ok(Math.abs(tiltAngle(12,3,90)+12)<1e-9);
+  assert.ok(Math.abs(tiltAngle(12,3,270)-12)<1e-9);
+  assert.ok(Math.abs(tiltAngle(0,3,0)-3)<1e-9);
   assert.equal(tiltTarget(2,0,3,1.4),0);
   assert.equal(tiltTarget(-2,0,3,1.4),0);
   assert.equal(tiltTarget(50,0,3,1.4),1);
@@ -38,4 +38,32 @@ test('throttle at a barrier stays finite and reverse moves away; recovery rearms
   race.step({...neutralInput(),throttle:1},1/60);assert.equal(race.player.steeringRearm,false);
   for(let i=0;i<90;i++)race.step({...neutralInput(),throttle:1},1/60);
   assert.ok(race.player.state.speed>4,'recovered and centered kart accelerates normally');
+});
+
+test('gravity mapping survives Euler representation flips in both landscape grips',()=>{
+  for(const angle of [90,270,-90]){
+    assert.ok(Math.abs(tiltAngle(5,89,angle)-tiltAngle(175,-89,angle))<1e-9);
+    assert.ok(Math.abs(tiltAngle(0,60,angle))<1e-9);
+  }
+  assert.ok(tiltAngle(-15,60,90)>0); // Right edge down.
+  assert.ok(tiltAngle(15,-60,270)>0);
+  assert.ok(tiltAngle(15,60,90)<0);
+  assert.ok(tiltAngle(-15,-60,270)<0);
+});
+test('calibration requires stable valid samples and never steers from stale or invalid data',()=>{
+  const sensor=new TiltCalibration();
+  sensor.sample(12,60,90,0);assert.equal(sensor.ready(0),false);
+  for(let t=50;t<=200;t+=50)sensor.sample(12,60,90,t);
+  assert.equal(sensor.ready(200),true);assert.equal(sensor.target(200,3,1.4),0);
+  sensor.sample(-8,60,90,250);assert.ok(sensor.target(250,3,1.4)>.5);
+  sensor.sample(12,60,90,300);assert.equal(sensor.target(300,3,1.4),0);
+  assert.equal(sensor.target(801,3,1.4),0);assert.equal(sensor.ready(801),false);
+  for(const invalid of [null,NaN,Infinity,181]){
+    assert.equal(sensor.sample(invalid,60,90,900),false);
+    assert.equal(sensor.target(900,3,1.4),0);
+  }
+  sensor.reset();
+  for(let t=0;t<=500;t+=50)sensor.sample(t%100?20:0,60,90,t);
+  assert.equal(sensor.ready(500),false,'moving phone must not calibrate');
+  sensor.reset();assert.equal(sensor.target(0,3,1.4),0);
 });
