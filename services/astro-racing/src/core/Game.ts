@@ -95,6 +95,7 @@ export class Game {
     if(focus[screen])document.querySelector<HTMLElement>(focus[screen]!)?.focus();else (document.activeElement as HTMLElement)?.blur?.();
   }
   private roomAction(action:string,v:any){
+    if(action==='ready'&&v.ready&&this.mobile?.needsSetup){this.mobile.openSetup(()=>this.roomAction(action,v));return;}
     if(action==='back'){this.roomClient.close();this.networkRace='';this.roomPanel.reset();this.roomPanel.show(false);this.race.localPlayerId=0;this.hud.difficulty=this.profile.difficulty;this.changeTrack(this.track.id??'classic');this.setScreen('menu');return;}
     if(action==='create'||action==='join'){try{const url=new URL(v.endpoint);if(!['ws:','wss:'].includes(url.protocol))throw Error();this.roomPanel.message('Connecting...');this.roomClient.connect(v.endpoint,{type:action,name:v.name,code:v.code,garage:this.selection});}catch{this.roomPanel.message('Enter a ws:// or wss:// room address.');}return;}
     if(action==='reconnect'){this.roomClient.connect(v.endpoint,{type:'reconnect',code:this.roomClient.code,token:this.roomClient.token});return;}
@@ -117,6 +118,15 @@ export class Game {
     if(this.race.player.progress.finished&&this.screen!=='results'){this.audio.finishRace(this.race.player.position);this.setScreen('results');}
   }
   private action(action:string){
+    if(action==='mobile-controls'){
+      const racing=this.screen==='driving'||this.screen==='countdown';
+      if(racing){this.beforePause=this.screen as 'driving'|'countdown';this.setScreen('paused');}
+      const resume=racing||this.screen==='paused';
+      this.mobile.openSetup(resume?()=>this.action('pause'):undefined,resume&&this.beforePause==='driving');return;
+    }
+    if((action==='start'||action==='restart'||action==='enter'&&this.screen==='results')&&this.mobile?.needsSetup){
+      this.mobile.openSetup(()=>this.action(action));return;
+    }
     if(this.networkRace){
       if(action==='recover'){this.roomClient.send({type:'recover'});return;}
       if(action==='restart'||action==='start'||action==='enter'&&this.screen==='results'){this.roomClient.send({type:'rematch'});return;}

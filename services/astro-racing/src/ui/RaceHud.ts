@@ -97,7 +97,12 @@ export class RaceHud extends Hud {
     document.getElementById('setup-ride')!.textContent=`${p.livery.name} · ${BODIES[p.setup.body].name} · ${TIRES[p.setup.tires].name}`;
     document.getElementById('result-record')!.textContent=recordText;
     super.update(p.state,{laps:Math.min(2,progress.completedLaps),lapTime:progress.finished?progress.lastLap:Math.max(0,race.elapsed-progress.lapStart),best:0,wrongWay:p.steeringRearm||progress.wrongWay||progress.invalid||p.state.falling||p.state.rescueTime>0},time);
-    document.getElementById('wrongway')!.textContent=p.steeringRearm?'RELEASE STEERING / DRIFT TO DRIVE ON':p.state.falling?'RESCUE INCOMING':p.state.rescueTime>0?'BACK ON THE ROAD':progress.invalid?'MISSED GATE · PRESS R TO RECOVER':'↶ WRONG WAY';
+    if(this.device==='touch'){
+      const tilt=document.body.classList.contains('tilt-driving');
+      if(!p.state.drifting&&p.state.boost<=0)document.getElementById('drift-label')!.textContent=tilt?'HOLD DRIFT + TILT TO TURN':'HOLD + SLIDE DRIFT TO TURN';
+      document.getElementById('drive-hint')!.textContent=p.state.drifting?'Release Drift for a charged boost':'Left thumb: Drift · right thumb: Item / Trick';
+    }
+    document.getElementById('wrongway')!.textContent=p.steeringRearm?(this.device==='touch'&&document.body.classList.contains('tilt-driving')?'LEVEL PHONE + RELEASE DRIFT':'RELEASE STEERING / DRIFT TO DRIVE ON'):p.state.falling?'RESCUE INCOMING':p.state.rescueTime>0?'BACK ON THE ROAD':progress.invalid?(this.device==='touch'?'MISSED GATE · CONTROLS → RETURN KART':'MISSED GATE · PRESS R TO RECOVER'):'↶ WRONG WAY';
     document.getElementById('lap')!.textContent=`${progress.lap} / 3`;
     document.getElementById('position')!.textContent=String(p.position);
     document.getElementById('difficulty-hud')!.textContent=DIFFICULTIES[race.difficulty].label.toUpperCase();
@@ -108,9 +113,9 @@ export class RaceHud extends Hud {
     document.getElementById('item-name')!.textContent=(p.rocket>0?'Comet Rocket':item?.name)??(p.itemFeedback>0?'ITEM USED':'FIND A PICKUP');
     document.getElementById('item-state')!.textContent=p.rocket>0?`GUIDED RIDE · ${p.rocket.toFixed(1)}s`:unavailable&&item?'WAIT FOR CONTROL':collecting?'PICKED UP':p.item&&['triple','tripleBoost','ember'].includes(p.item)?`${p.charges} CHARGES · ONE PER PRESS`:item?'READY TO USE':p.itemFeedback>0?'CONSUMED':'EMPTY';
     document.getElementById('item-action')!.innerHTML=p.rocket>0?'GUIDANCE ACTIVE<span>Steering returns when the timer ends</span>':item?`<kbd>${hint}</kbd> ${item.action}<span>${item.description}</span>`:'Drive through a glowing diamond';
-    const ticket=document.querySelector('.item-ticket')!;ticket.classList.toggle('item-ready',!!item);ticket.classList.toggle('item-collecting',collecting);
+    const ticket=document.querySelector('.item-ticket')!;ticket.classList.toggle('item-ready',!!item);ticket.classList.toggle('item-collecting',collecting);ticket.classList.toggle('item-empty',!item&&p.rocket<=0);
     const incoming=race.items.projectiles.some(q=>q.kind==='seeker'&&q.target===p.id),storm=race.items.storms.some(s=>s.targets.includes(p.id));const shield=document.getElementById('shield-status')!;shield.classList.toggle('hidden',p.shield<=0&&!incoming&&!storm);shield.textContent=storm?'STORM SPARK INCOMING — SHIELD NOW':incoming?'WINGED COCO INCOMING - SHIELD OR EVADE':`SEA BUBBLE ACTIVE · ${p.shield.toFixed(1)}s · ONE HIT`;
-    const trickCue=document.getElementById('trick-cue')!;trickCue.innerHTML=`PRESS <kbd>${this.device==='gamepad'?'X':'E'}</kbd> FOR A BARREL ROLL`;trickCue.classList.toggle('hidden',!(p.state.airKind==='ramp'&&p.state.airTime<=.35&&p.state.trick==='none'||p.state.grounded&&this.coast.surface(p.state.x,p.state.z,p.state.route).ramp));
+    const trickCue=document.getElementById('trick-cue')!;trickCue.innerHTML=`${this.device==='touch'?'TAP':'PRESS'} <kbd>${this.device==='touch'?'TRICK':this.device==='gamepad'?'X':'E'}</kbd> FOR A BARREL ROLL`;trickCue.classList.toggle('hidden',!(p.state.airKind==='ramp'&&p.state.airTime<=.35&&p.state.trick==='none'||p.state.grounded&&this.coast.surface(p.state.x,p.state.z,p.state.route).ramp));
     const boardKey=race.racers.map(r=>[r.position,r.progress.finished,r.livery.name,r.setup.driver].join('/')).join('|');
     if(boardKey!==this.boardKey){this.boardKey=boardKey;document.getElementById('race-leaderboard')!.innerHTML=[...race.racers].sort((a,b)=>a.position-b.position).map(r=>`<div class="${r.id===race.localPlayerId?'you':''}"><b>${r.position}</b>${portrait(r.setup.driver)}${escapeText(r.livery.name)}<span>${r.progress.finished?'FIN':r.id===race.localPlayerId?'YOU':''}</span></div>`).join('');}
     const canvas=document.getElementById('minimap') as HTMLCanvasElement,ctx=canvas.getContext('2d')!;

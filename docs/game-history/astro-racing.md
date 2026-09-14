@@ -14,3 +14,7 @@ The matching server rebuild reproduced all 25 client files exactly.
 See `../agent-runs/2026-09-14-codex-astro-publication.md` for publication evidence,
 hosting limitations, commit IDs and rollback. Raw user authorization is preserved verbatim
 in `raw/2026-09-14-astro-racing-publication.txt`.
+
+## 2026-09-14 — Phone feedback, RC2
+
+Owner’s actual phone screenshots and authorization are preserved in `raw/2026-09-14-astro-mobile-feedback.txt`. RC2 updates tilt/auto-drive, thumb controls, compact HUD and Sunspun covers. Game content, checkpoint 44 and prepared server retained. Render connection is paused. See `../agent-runs/2026-09-14-codex-astro-mobile-rc2.md` and `../releases/astro-racing-1.0.0-rc.2/P2P-ASSESSMENT.md`.

@@ -1,0 +1,48 @@
+User request, preserved verbatim (quoted prior assistant login request omitted; Render pause is in the request below).
+
+The Arcade publication is working. I tried the game on my phone, but mobile controls are difficult and unintuitive. I’m going to bed; complete the work below using this feedback.
+
+1. Replace the promotional image
+
+Replace the Vegas image on the Astro Racing landing page, and the Arcade card wherever it uses that image, with a clean, high-resolution rendered view of Sunspun Classic. Its coastal scenery is my preferred presentation. Orbital Drift is a suitable alternate.
+
+The current Vegas angle looks cluttered and glitchy, with a slot-machine-like object in the road. Choose a deliberate composition and inspect its desktop and mobile crops. Preserve the approved in-game course previews.
+
+2. Fix mobile controls and publish the improvement
+
+My phone currently uses steering buttons, the controls feel scattered, and switching between gas and drift with my right hand is awkward.
+
+Make tilt the preferred mobile steering mode:
+
+* Offer a clear Enable Tilt action that handles required browser permission.
+* Provide landscape calibration/recenter, sensitivity, dead zone, and smoothing.
+* Make denied or unavailable tilt fall back clearly to touch steering.
+* Keep steering mode easy to change and remember the preference.
+
+Default mobile play to auto-accelerate, with a setting to disable it. Give drift a large left-thumb control and item/trick actions a clear right-thumb arrangement. Keep brake/reverse accessible. Remove the need to hold gas while operating drift or items.
+
+Hide directional steering buttons when tilt is active. Respect screen safe areas, keep the road visible, and prevent overlapping controls. Verify simultaneous steering, drifting, and item use; rotation; interrupted touches; and returning after backgrounding. Preserve desktop controls.
+
+Use the current implementation and this feedback to proceed. Clearly distinguish emulated checks from real-phone verification.
+
+3. Assess P2P without delaying those fixes
+
+Pause the Render account-connection request. Perform a bounded assessment of reusing the existing multiplayer logic for a host-player browser using WebRTC.
+
+Report the necessary code changes, signaling and relay requirements, realistic free-service limitations, host-disconnect behavior, and the reported 3.3 GB/hour bandwidth issue. Preserve the prepared server implementation. Keep a full networking conversion separate from these immediate mobile and presentation repairs.
+
+I authorize the necessary targeted commits, pushes, and redeployment of the verified mobile/presentation fixes through the existing Arcade workflow. Preserve the current live rollback and checkpoint 44. Do not incur new charges.
+
+Return the live URL, deployed version, completed changes, remaining phone checks, and the concise P2P recommendation. Keep this focused on finishing usability; the online leaderboard remains a separate later task.
+
+Follow-up, with actual phone screenshots mobile1.jpeg and mobile2.jpeg (1536 × 707, browser chrome visible):
+
+[Image #1] [Image #2] These are the actual phone screenshots supporting my mobile feedback. Continue the existing polish task and use these as layout references.
+
+Prioritize tilt steering with a clear Enable Tilt action and auto-accelerate enabled by default. Put a large Drift control on the left and Item/Trick on the right. Keep brake/reverse accessible, and hide steering arrows and the gas button when their selected modes make them unnecessary.
+
+Shrink the position/lap panels and oversized empty-item panel. Keep controls clear of the speed display and preserve road visibility with browser chrome present. Replace “HOLD SPACE + TURN TO DRIFT” with instructions matching the active controls.
+
+Verify simultaneous inputs and usable touch-steering fallback. The second screenshot shows Drive highlighted while the kart is against the barrier; investigate input and recovery behavior without assuming the still image proves an acceleration bug.
+
+Complete and publish the mobile/presentation fixes already requested. Preserve the approved tracks and continue the separate P2P assessment.

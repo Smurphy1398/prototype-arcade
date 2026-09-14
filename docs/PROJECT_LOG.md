@@ -400,3 +400,7 @@ and the audit found outside agents unnecessary here.
 (Halo conflict first).
 
 **Transcript records:** none (no outside-agent runs this lane).
+
+## 2026-09-14 — Astro Racing RC2 mobile/presentation
+
+Codex implemented Simon’s authorized tilt/auto-drive/thumb-layout/HUD fixes and native Sunspun covers. Approved content and checkpoint 44 are preserved. Local tests pass; publication follows. Render connection paused, P2P assessment saved, no new charges. See `agent-runs/2026-09-14-codex-astro-mobile-rc2.md`.
