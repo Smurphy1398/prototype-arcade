@@ -9,8 +9,12 @@
   "localRollbackZipSha256": "01fb29b1144226a8263e74130dcf44d32f7ddce9b1bbd181fc91d92a96863e7b",
   "checkpoint44Sha256": "0c1a1fa259c64f457f968d03adb881af05dff98f552c092b1f0caf3f476604cd",
   "publicMultiplayer": {
-    "status": "blocked: hosting access/service not configured",
-    "endpoint": null
+    "status": "blocked: authenticated Render workspace required; portable login launcher prepared",
+    "endpoint": null,
+    "recommendedFirstTest": "Render Free, subject to billing and capacity checks",
+    "chargesIncurred": false
   },
-  "staticPublication": "prepared; public verification will be added after Pages deployment"
+  "staticPublication": "Published and publicly browser-verified",
+  "gameCommit": "54e20bf2f7c15956c2ede5c6abfe5296946222ab",
+  "pagesRun": "https://github.com/Smurphy1398/prototype-arcade/actions/runs/34808002639"
 }

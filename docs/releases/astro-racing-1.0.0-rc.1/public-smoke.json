@@ -1,0 +1,294 @@
+{
+  "at": "2026-09-14T05:01:17.308Z",
+  "base": "https://smurphy1398.github.io/prototype-arcade/",
+  "method": "Actual Arcade homepage, landing and unmodified production game; normal clicks and keyboard; desktop plus landscape touch emulation. No physical phone claim.",
+  "errors": [],
+  "badResponses": [],
+  "assets": [
+    {
+      "file": "assets/index-D4hdARBy.js",
+      "status": 200,
+      "sha256": "59f43e0bffeff43f9430e16a8349f4c608bb90378cf7d81ef4a822d8921b1bc1"
+    },
+    {
+      "file": "assets/index-DyKP-PyO.css",
+      "status": 200,
+      "sha256": "4d17a623a40b00a15f5d91fb65b5245d4709effc01b3264138a930c44a6476d4"
+    },
+    {
+      "file": "assets/three-CwJmqroH.js",
+      "status": 200,
+      "sha256": "3e7069b0863854e3be0307b3dbf5a8d61bd4980a2487c854436b351f67dedd8f"
+    },
+    {
+      "file": "courses/atlantis.jpg",
+      "status": 200,
+      "sha256": "a2e2ec1cb397bfb0d8fc48e33b713e0d3a6b9e14f2924cc4c308a6b58f3ce937"
+    },
+    {
+      "file": "courses/barnyard.jpg",
+      "status": 200,
+      "sha256": "ebda58f15c44cf3df6c714ee3f6626d87e4d4b8a096ba2667f7fa1215e67d0d0"
+    },
+    {
+      "file": "courses/candy.jpg",
+      "status": 200,
+      "sha256": "22e93e6652db758a213f6ebb6b0c90d044c741f88b016d1da129a2d84bab5e28"
+    },
+    {
+      "file": "courses/classic.jpg",
+      "status": 200,
+      "sha256": "f15d0d3714aa63fc43a82c143367ea536103d58f2c9feb35d26ad8551dd194af"
+    },
+    {
+      "file": "courses/dc.jpg",
+      "status": 200,
+      "sha256": "2463082808cb458a7ffbdb9b99f4440dc16a5a7591a5692963083ec87cbcf249"
+    },
+    {
+      "file": "courses/factory.jpg",
+      "status": 200,
+      "sha256": "5ed0e6e0a64d602ddb7c8c2874c1216139a9bea6ceb3e341dda236ebbd44dfc8"
+    },
+    {
+      "file": "courses/glacier.jpg",
+      "status": 200,
+      "sha256": "dc0a36e55cc45f85a50da64668e332a4aaa3186c96242e953941749a5a02e3bd"
+    },
+    {
+      "file": "courses/moonbell-v08-curated.jpg",
+      "status": 200,
+      "sha256": "3bce3dc18558297f57102eff57b99435bd321fe403db6ef686deda34a9687a79"
+    },
+    {
+      "file": "courses/moonbell.jpg",
+      "status": 200,
+      "sha256": "436e84816fe4692b7854967c71f268fc4094dcf4a3773a2ed80b55fa8acaee4c"
+    },
+    {
+      "file": "courses/nyc.jpg",
+      "status": 200,
+      "sha256": "0de62ce1fa51d1ec08bd19110312fbb5a10a66be1029605fb569921e54da8600"
+    },
+    {
+      "file": "courses/orbital.jpg",
+      "status": 200,
+      "sha256": "123ee675eea8352c6bacd97ea2f16715dacf99621cc1dba83ef9fbb405672e95"
+    },
+    {
+      "file": "courses/rally.jpg",
+      "status": 200,
+      "sha256": "d7e9ecd17241a9427c0fd056f2bc715990cf60a1995e08b0b34e8214333cf107"
+    },
+    {
+      "file": "courses/sunspun-tour-v08-curated.jpg",
+      "status": 200,
+      "sha256": "5f8a74ea9f7c47c83cc8261e3fad28998c9401542c09b9cf7929cc8fd208672c"
+    },
+    {
+      "file": "courses/sunspun-tour.jpg",
+      "status": 200,
+      "sha256": "81978314e1a5431912fe3b3bcfaee27f2760c5abc2a59e9f3082a6828487d6ef"
+    },
+    {
+      "file": "courses/toybox.jpg",
+      "status": 200,
+      "sha256": "2a25c20206da8b0f918ec06aea258f24aead37b4d7b1e70dce160f380504f632"
+    },
+    {
+      "file": "courses/vegas.jpg",
+      "status": 200,
+      "sha256": "b374f246de2b19c8db50069797109324c1421961a8cb8c70e05150c93f346fce"
+    },
+    {
+      "file": "courses/vietnam.jpg",
+      "status": 200,
+      "sha256": "b18621b70b2afe0bf0b0edee8b7e849e7b84cca7d37d4874357df33a5c5f7de5"
+    },
+    {
+      "file": "courses/volcano-v08-curated.jpg",
+      "status": 200,
+      "sha256": "285aded4a4c2cbf92892edc7ee097b2a1dfb60ab89b43343130dbd4de3045cf3"
+    },
+    {
+      "file": "courses/volcano.jpg",
+      "status": 200,
+      "sha256": "f0fe3d10da7cda10faa7d499d3f55ebcc8f54b677276edb239e1d9699280fdc9"
+    },
+    {
+      "file": "favicon.svg",
+      "status": 200,
+      "sha256": "55dca7b5def53989a79265e03a5f00996495438debe736dd1f6e2a55d83b1d4e"
+    },
+    {
+      "file": "index.html",
+      "status": 200,
+      "sha256": "dfd3f2787f586fd8d804871f3b3f9b5b5f2d131bc8c8454a9d620d9e626904f9"
+    },
+    {
+      "file": "playtest.html",
+      "status": 200,
+      "sha256": "15db9158ccac5350f988df5f91fc95f97f0c6be64078da5b63c2cb6c7daff01f"
+    }
+  ],
+  "multiplayer": "Not connected: requires public Node/WebSocket hosting access.",
+  "arcadeLinks": [
+    {
+      "label": "Play",
+      "href": "games/astro-racing.html"
+    },
+    {
+      "label": "Play",
+      "href": "games/zombie-survivors-latest.html"
+    },
+    {
+      "label": "Lobby",
+      "href": "next/lobbies/echo-yard.html"
+    },
+    {
+      "label": "Launch",
+      "href": "games/halo-fps.html"
+    },
+    {
+      "label": "Lobby",
+      "href": "next/lobbies/grid-siege.html"
+    },
+    {
+      "label": "Launch",
+      "href": "games/tower-defense.html"
+    },
+    {
+      "label": "Lobby",
+      "href": "next/lobbies/happy-accidents.html"
+    },
+    {
+      "label": "Launch",
+      "href": "games/bob-ross.html"
+    },
+    {
+      "label": "Lobby",
+      "href": "next/lobbies/kingboard.html"
+    },
+    {
+      "label": "Launch",
+      "href": "games/chess.html"
+    },
+    {
+      "label": "Lobby",
+      "href": "next/lobbies/cube-orbit.html"
+    },
+    {
+      "label": "Launch",
+      "href": "games/rubiks-cube.html"
+    },
+    {
+      "label": "Lobby",
+      "href": "next/lobbies/true-atlas.html"
+    },
+    {
+      "label": "Launch",
+      "href": "games/world-history.html"
+    },
+    {
+      "label": "Lobby",
+      "href": "next/lobbies/party-sketch.html"
+    },
+    {
+      "label": "Launch",
+      "href": "games/pictionary.html"
+    },
+    {
+      "label": "Launch",
+      "href": "games/nebula-rescue.html"
+    }
+  ],
+  "identity": {
+    "title": "Astro Racing · Final Polish",
+    "build": "1.0.0-rc.1 - FINAL POLISH",
+    "mutableGameExposed": false,
+    "scripts": [
+      "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/assets/index-D4hdARBy.js"
+    ]
+  },
+  "previews": [
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/barnyard.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/rally.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/dc.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/nyc.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/vegas.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/candy.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/atlantis.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/toybox.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/glacier.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/vietnam.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/volcano-v08-curated.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/sunspun-tour-v08-curated.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/moonbell-v08-curated.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/classic.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/factory.jpg",
+      "loaded": true
+    },
+    {
+      "url": "https://smurphy1398.github.io/prototype-arcade/games/astro-racing/courses/orbital.jpg",
+      "loaded": true
+    }
+  ],
+  "driven": {
+    "track": "sunspun-tour",
+    "screen": "driving",
+    "speed": 10.277078029625704,
+    "progress": 21.7162895443289
+  },
+  "backNavigation": true,
+  "mobile": {
+    "width": 844,
+    "height": 390,
+    "noOverflow": true,
+    "touchButtons": 11,
+    "build": "1.0.0-rc.1 - FINAL POLISH"
+  },
+  "status": "passed"
+}

@@ -1,0 +1,15 @@
+{
+  "renderCliVersion": "2.28.0",
+  "downloadSha256": "15eae402a24bbcd03c50f6b9283ee34407a090b53a84c3b788bd337eeb978b1d",
+  "existingRenderAuth": "CLI reports login required",
+  "yamlParse": "passed",
+  "criticalSettings": {
+    "plan": "free",
+    "runtime": "node",
+    "autoDeployTrigger": "off",
+    "healthCheckPath": "/health"
+  },
+  "renderAccountValidation": "requires authenticated workspace",
+  "sourceBuild": "passed; all 25 dist hashes reproduced",
+  "publicRooms": "not deployed; account connection required"
+}

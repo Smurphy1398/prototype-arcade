@@ -1,0 +1,7 @@
+Continue the Arcade publication so I can playtest the game there.
+
+For multiplayer, check whether an existing authenticated hosting service is available. If none is available, recommend the lowest-cost suitable host for the current Node/WebSocket server, confirm its current price and relevant limitations, and prepare the deployment.
+
+Tell me exactly what account connection or approval you need to finish getting public friend races working. Ask before incurring new charges.
+
+Keep the server deployment in scope. Return the live Arcade game URL as soon as publication is verified, and clearly report multiplayer availability separately.

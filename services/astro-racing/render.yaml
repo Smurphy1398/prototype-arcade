@@ -10,7 +10,7 @@ services:
     buildCommand: npm ci --include=dev && npm run build
     startCommand: ASTRO_PORT=$PORT npm run server
     healthCheckPath: /health
-    autoDeployTrigger: off
+    autoDeployTrigger: "off"
     envVars:
       - key: NODE_VERSION
         value: "24"

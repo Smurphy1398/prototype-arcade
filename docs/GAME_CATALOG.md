@@ -1,7 +1,7 @@
 # Game Catalog
 
-Last updated: **2026-09-14** for Astro Racing only. Reflects the Astro rc.1 integration after
-`7ece6acc09d3e3ca3513116b5230732f4b2cc8f3`; see its release evidence for publication status.
+Last updated: **2026-09-14** for Astro Racing only. Reflects publicly verified Astro game commit
+`54e20bf2f7c15956c2ede5c6abfe5296946222ab`; see its release evidence for details.
 Earlier games below retain their historical audit dates; this is not a new audit of those builds.
 
 Canonical inventory of every recognizable game. **Confirmed** = evidence supports it as canonical.
@@ -17,7 +17,7 @@ Seeded from the 2026-07-13 orientation audit (read-only). Hashes are MD5.
 
 | Game | Runtime | Published? | Canonical status | Confidence |
 |---|---|---|---|---|
-| Astro Racing | Three.js, bundled | rc.1 publication in progress | Confirmed candidate bytes; public rooms pending hosting | Exact 25-file SHA-256 match |
+| Astro Racing | Three.js, bundled | Live, publicly verified | Confirmed candidate bytes; public rooms pending hosting | Exact 25-file SHA-256 match |
 | Halo FPS Arena | Babylon.js (CDN) | ✅ live | ⚠️ Provisional — published file matches no local build | Medium |
 | Tower Defense | Canvas 2D | ✅ live | Provisional (published ≈ local v6.1) | High |
 | Bob Ross Painting Sim | Canvas 2D | ✅ live | Provisional (only meaningful build) | High |

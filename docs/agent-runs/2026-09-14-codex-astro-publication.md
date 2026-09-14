@@ -1,4 +1,4 @@
-⚠️ Public multiplayer is blocked on hosting account/service access. Static publication is prepared; live verification follows the authorized push. No hosting charges incurred.
+⚠️ Public multiplayer is blocked on hosting account/service access. Static publication is live and publicly browser-verified at `54e20bf`. No hosting charges incurred.
 
 ## Agent Snapshot
 
@@ -43,7 +43,19 @@ rather than treating stale July documents as current truth.
 - Fresh offline dependency installation and production build of the copied server package passed;
   all 25 rebuilt output hashes match the final candidate.
 - Browser evidence is under `../releases/astro-racing-1.0.0-rc.1/`. The in-app Browser was unavailable;
-  the existing standalone Playwright/Edge harness was used. Public evidence is added after deployment.
+  the existing standalone Playwright/Edge harness was used. `public-smoke.json` and screenshots prove
+  public launch, all 25 asset SHA-256 hashes, 16 previews, keyboard driving, Back navigation and landscape touch rendering.
+- The portable official Render CLI confirms no existing login. YAML parsing and critical settings
+  checks pass; provider account-level Blueprint validation requires a connected workspace.
+- The local normal-time server probe rejects an unapproved origin with 403 and ignores verify-step;
+  mean simulation step 0.857 ms, about 132 MiB RSS, output about 3.30 GB/hour for two clients.
+  These local measurements do not establish free-host capacity. One early harness assertion referenced
+  a nonexistent progress field; the harness was corrected and passed without game/server changes.
+- Imported artifacts retain their original line endings/vendor whitespace. Broad whitespace checking
+  flags those preserved bytes; authored integration/docs are checked separately.
+- The reusable browser room harness passed locally on the normal server clock: exact copied guest
+  link, two independent browser contexts, separate racer IDs, twelve finishers, matching results,
+  and a full rematch. See local-real-time-rooms.json. This remains local preparation evidence.
 - No public WSS endpoint exists yet. No public guest-link/race/rematch success is claimed.
   Checkpoint 44 contains prior local two-client evidence, distinct from internet verification.
 - Physical phone/friend tests, network latency and hosted capacity remain unverified.
@@ -52,8 +64,13 @@ rather than treating stale July documents as current truth.
 ## Git / Commit / Push / Deploy State
 
 Prepared in an isolated clean clone at pre-release main `7ece6acc09d3e3ca3513116b5230732f4b2cc8f3`.
-Integration is the commit containing this report. Push to main triggers the existing Pages deployment.
-Live commit and verification results will be recorded in the same release flow after the push.
+Integration is the commit containing this report. Game commit **54e20bf2f7c15956c2ede5c6abfe5296946222ab** was committed and pushed to main.
+The push did not automatically queue Pages; POST to the existing Pages build endpoint did.
+[Pages run 34808002639](https://github.com/Smurphy1398/prototype-arcade/actions/runs/34808002639)
+completed successfully. Actual live browser checks then passed. The first probe during build
+returned an expected not-yet-published 404; the completed deployment served all files correctly.
+This follow-up commit records evidence, deployment helpers and a clearer landing availability notice.
+It does not change the candidate bundles or simulation source.
 
 Rollback tag: `arcade-before-astro-1.0.0-rc.1`. Local full baseline Git archive SHA-256:
 `01fb29b1144226a8263e74130dcf44d32f7ddce9b1bbd181fc91d92a96863e7b`.
@@ -63,13 +80,13 @@ Archive ZIP and full deployment evidence also remain in the Astro workspace's `d
 
 ## TL;DR
 
-The finished Astro candidate is integrated without gameplay changes and the matching server package builds.
-Existing GitHub access permits static publication. Public multiplayer still needs an authenticated
+The finished Astro candidate is published and publicly browser-verified without gameplay changes.
+The matching server package builds, and its local production-mode origin/timing check passes. Public multiplayer still needs an authenticated
 Node/WebSocket hosting account/service; no paid service has been purchased.
 
 ## Quick Smoke — Do This Now
 
-- After successful Pages verification, open https://smurphy1398.github.io/prototype-arcade/games/astro-racing.html.
+- Open https://smurphy1398.github.io/prototype-arcade/games/astro-racing.html.
 - Launch game, confirm `1.0.0-rc.1`, pick a course and race solo.
 - On a phone, use landscape; check steering/drift/item buttons and audio after tapping.
 - Use browser Back, then Back to Arcade; all prior cabinets should remain.
@@ -77,5 +94,7 @@ Node/WebSocket hosting account/service; no paid service has been purchased.
 
 ## Exact Next Action
 
-Verify public Pages after the push, then connect a Node/WebSocket hosting account using
-`services/astro-racing/README.md` so the public room deployment and two-client checks can finish.
+Run the Astro workspace’s `Connect-Astro-Racing-Multiplayer.cmd`, authorize Render CLI,
+and select the workspace. This creates no service or charge. The prepared Free recipe and current
+limits are in `releases/astro-racing-1.0.0-rc.1/HOSTING-DECISION.md`. After access is available,
+verify workspace billing, deploy, configure WSS, and complete public two-client race/rematch checks.

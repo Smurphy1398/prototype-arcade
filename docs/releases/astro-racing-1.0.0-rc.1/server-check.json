@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "method": "Local production-mode Node server, normal 60 Hz clock, two independent WebSocket clients with separate snapshot-based input pilots. Includes client CPU overhead; not hosted capacity or public browser proof.",
+  "originAccepted": "https://smurphy1398.github.io",
+  "unapprovedOriginStatus": 403,
+  "verificationAccelerationDisabled": true,
+  "health": {
+    "ok": true,
+    "version": "1.0.0-rc.1",
+    "protocol": 2,
+    "rooms": 1,
+    "steps": 3657,
+    "meanStepMs": 0.85650371889524,
+    "maxStepMs": 7.532700000003388,
+    "verify": false
+  },
+  "wallSeconds": 60.7590059,
+  "simulationSeconds": 57.783333333331335,
+  "cpuCoreEquivalent": 0.09873433429561757,
+  "memoryMiB": 131.85546875,
+  "outboundBytesPerSecond": 917861.9560001722,
+  "clientInputBytes": 425489,
+  "peers": [
+    {
+      "id": 0,
+      "tick": 3648,
+      "position": 6
+    },
+    {
+      "id": 1,
+      "tick": 3648,
+      "position": 2
+    }
+  ]
+}

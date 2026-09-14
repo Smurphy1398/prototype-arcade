@@ -85,3 +85,5 @@ These `.txt` notes live under `..\PROTOTYPE ARCADE\` and should be captured verb
 ## 2026-09-14 — Astro publication authorization
 
 Verbatim user prompt retained in `game-history/raw/2026-09-14-astro-racing-publication.txt`.
+
+Follow-up hosting direction retained verbatim in game-history/raw/2026-09-14-astro-hosting-followup.txt.
