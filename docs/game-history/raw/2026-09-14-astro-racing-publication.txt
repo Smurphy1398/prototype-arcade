@@ -1,0 +1,13 @@
+Publish the completed Astro Racing v1.0.0-rc.1 candidate on my existing Prototype Arcade so I can playtest on my phone and with friends.
+
+Read ARCADE-RELEASE-HANDOFF.md and verify the actual Arcade repository, hosting configuration, and multiplayer deployment requirements.
+
+I authorize the necessary targeted integration, commits, pushes, and deployment through the existing Arcade infrastructure. Preserve checkpoint 44 and a rollback to the current live Arcade.
+
+Publish the game and configure a publicly reachable secure multiplayer room server. Verify the Arcade entry launches the correct build, assets load, guest room links work, and two independent clients can race and rematch through the public deployment.
+
+Complete the deployment work available with existing access. If something genuinely blocks publication, identify the exact missing access or service after completing all possible preparation. Ask before incurring new hosting charges.
+
+Return the live Arcade game URL, multiplayer join instructions, deployed build identity, and any remaining limitations. Physical phone/friend testing follows publication.
+
+Keep this focused on getting the finished candidate live. The online leaderboard remains the next separate task.

@@ -1,0 +1,12 @@
+node_modules
+dist
+evidence
+docs
+scripts
+tests
+arcade-publication
+exports
+final-polish-briefs
+.git
+*.zip
+

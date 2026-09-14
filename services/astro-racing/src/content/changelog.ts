@@ -1,0 +1,6 @@
+/** Player-facing final content update. */
+export const CHANGELOG={version:'1.0.0-rc.1',title:'The Final Lap',date:'2026-09-14',status:'Final polish candidate',
+ Added:['DC flags, Nationals Park and a Potomac waterfront; NYC Empire State Building, Times Square and Central Park detail.','Vegas Eiffel Tower, miniature Liberty, Caesars Palace, palm-lined streets and a refreshed course preview.','Toy soldiers and tank, fire truck and dinosaur, rockets, slinky, drawing toy, log castle, stacking game and an animated television.','Atlantis Poseidon and opening treasure chest; opposing river patrols in Vietnam; flowing lava and warned boulders in Volcano.'],
+ Improved:['Hard racers commit sooner, carry more speed through safe corners and shortcuts, and avoid nearby hazards more decisively.','Glacier’s blue ice enclosure and exhibits; city joins, Toybox book decks, inner rails and scenery support.'],
+ Fixed:['Steam and chocolate vents now deliver visible, shield-aware hits with recovery protection.','Course preview assets also load when the game is published in an Arcade subfolder.'],
+ note:'All sixteen courses and the restored interiors remain. Comet stays rare and requires a meaningful deficit. Guest rooms need a reachable race server; the online leaderboard is a later update.'};

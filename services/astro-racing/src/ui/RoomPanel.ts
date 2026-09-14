@@ -1,0 +1,23 @@
+import { DESTINATIONS } from '../tracks/catalog';
+import { escapeText } from '../content/profile';
+export class RoomPanel {
+ readonly root:HTMLElement;room:any;localId=0;
+ constructor(readonly action:(name:string,value?:any)=>void){
+  this.root=document.createElement('section');this.root.id='guest-room';this.root.className='room-panel hidden';document.getElementById('ui')!.append(this.root);
+  this.root.innerHTML=`<div class="room-card"><span class="eyebrow">RACE TOGETHER / GUEST MULTIPLAYER</span><h2>Bring a rival.</h2><p>Two guests, ten bots. No account needed.</p><label>Your name<input id="guest-name" maxlength="20" placeholder="Guest"></label><label>Room server<input id="room-endpoint" aria-label="Room server" spellcheck="false"></label><div class="room-entry"><button id="room-create" class="primary">CREATE ROOM</button><label>Room code<input id="room-code" maxlength="6" placeholder="ABC123"></label><button id="room-join" class="back-button">JOIN ROOM</button></div><div id="room-lobby" class="hidden"><h3 id="room-title"></h3><button id="room-copy" class="back-button">COPY JOIN LINK</button><button id="room-share" class="back-button">SHARE</button><div id="room-seats"></div><label>Course<select id="room-track">${Object.entries(DESTINATIONS).map(([id,t])=>`<option value="${id}">${t.name}</option>`).join('')}</select></label><label>Bot difficulty<select id="room-difficulty"><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select></label><div class="room-actions"><button id="room-ready" class="back-button">READY</button><button id="room-start" class="primary">START RACE</button></div></div><p id="room-message" role="status">Start the room server, then create or join a room.</p><button id="room-reconnect" class="back-button hidden">RECONNECT</button><button id="room-back" class="text-button">BACK TO MENU</button></div>`;
+  const endpoint=document.getElementById('room-endpoint') as HTMLInputElement;endpoint.value=new URLSearchParams(location.search).get('server')??import.meta.env.VITE_ROOM_URL??`${location.protocol==='https:'?'wss':'ws'}://${location.hostname}:${location.port==='5173'||location.port==='4173'?'8787':location.port|| (location.protocol==='https:'?'443':'80')}/rooms`;
+  (document.getElementById('room-code') as HTMLInputElement).value=new URLSearchParams(location.search).get('room')??'';
+  for(const name of ['create','join','ready','start','back','copy','share','reconnect'])document.getElementById(`room-${name}`)!.addEventListener('click',()=>this.action(name,this.values()));
+  for(const id of ['room-track','room-difficulty'])document.getElementById(id)!.addEventListener('change',()=>this.action('settings',this.values()));
+ }
+ values(){const v=(id:string)=>(document.getElementById(id) as HTMLInputElement).value;return {endpoint:v('room-endpoint'),name:v('guest-name'),code:v('room-code').trim().toUpperCase(),track:v('room-track'),difficulty:v('room-difficulty'),ready:!this.room?.seats.find((s:any)=>s.id===this.localId)?.ready};}
+ show(show:boolean){this.root.classList.toggle('hidden',!show);}
+ message(text:string,reconnect=false){document.getElementById('room-message')!.textContent=text;document.getElementById('room-reconnect')!.classList.toggle('hidden',!reconnect);}
+ update(room:any,localId:number){this.room=room;this.localId=localId;document.querySelector('.room-entry')!.classList.add('hidden');document.getElementById('room-lobby')!.classList.remove('hidden');document.getElementById('room-title')!.textContent=`ROOM ${room.code}`;
+  document.getElementById('room-seats')!.innerHTML=room.seats.map((s:any)=>`<p><b>${escapeText(s.name)}</b> · ${s.id===localId?'you · ':''}${s.connected?s.ready?'ready':'choosing':'bot takeover'}</p>`).join('')+'<small>Field fills to twelve with bots.</small>';
+  for(const id of ['track','difficulty']){const select=document.getElementById(`room-${id}`) as HTMLSelectElement;select.value=room[id];select.disabled=room.host!==localId||room.racing;}
+  const start=document.getElementById('room-start') as HTMLButtonElement;start.disabled=room.host!==localId||room.seats.length<2||room.seats.some((s:any)=>!s.ready)||room.racing;
+  (document.getElementById('room-ready') as HTMLButtonElement).disabled=room.racing;document.getElementById('room-ready')!.textContent=room.seats.find((s:any)=>s.id===localId)?.ready?'NOT READY':'READY';this.message(room.racing?'Race in progress.':room.seats.length<2?'Share the code or join link with your rival.':'Both guests choose Ready; the host starts.');
+ }
+ reset(){this.room=undefined;document.querySelector('.room-entry')!.classList.remove('hidden');document.getElementById('room-lobby')!.classList.add('hidden');}
+}

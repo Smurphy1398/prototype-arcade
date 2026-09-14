@@ -1,0 +1,30 @@
+{
+  "name": "astro-racing",
+  "version": "1.0.0-rc.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --configLoader native --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build --configLoader native",
+    "preview": "vite preview --configLoader native --host 127.0.0.1",
+    "test": "tsx --test tests/*.test.ts",
+    "test:built": "node scripts/smoke-built.mjs",
+    "server": "tsx server/room-server.ts",
+    "dev:lan": "vite --configLoader native --host 0.0.0.0"
+  },
+  "dependencies": {
+    "three": "0.180.0",
+    "ws": "8.21.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.5.2",
+    "@types/three": "0.180.0",
+    "@types/ws": "8.18.1",
+    "tsx": "4.20.5",
+    "typescript": "5.9.2",
+    "vite": "7.3.6"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

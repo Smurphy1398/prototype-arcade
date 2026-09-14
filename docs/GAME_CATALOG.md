@@ -1,5 +1,9 @@
 # Game Catalog
 
+Last updated: **2026-09-14** for Astro Racing only. Reflects the Astro rc.1 integration after
+`7ece6acc09d3e3ca3513116b5230732f4b2cc8f3`; see its release evidence for publication status.
+Earlier games below retain their historical audit dates; this is not a new audit of those builds.
+
 Canonical inventory of every recognizable game. **Confirmed** = evidence supports it as canonical.
 **Provisional** = best current candidate, still needs a runtime playtest / diff before it's locked.
 Source paths are relative to the protected import collection `..\PROTOTYPE ARCADE\` unless noted.
@@ -13,6 +17,7 @@ Seeded from the 2026-07-13 orientation audit (read-only). Hashes are MD5.
 
 | Game | Runtime | Published? | Canonical status | Confidence |
 |---|---|---|---|---|
+| Astro Racing | Three.js, bundled | rc.1 publication in progress | Confirmed candidate bytes; public rooms pending hosting | Exact 25-file SHA-256 match |
 | Halo FPS Arena | Babylon.js (CDN) | ✅ live | ⚠️ Provisional — published file matches no local build | Medium |
 | Tower Defense | Canvas 2D | ✅ live | Provisional (published ≈ local v6.1) | High |
 | Bob Ross Painting Sim | Canvas 2D | ✅ live | Provisional (only meaningful build) | High |
@@ -166,3 +171,20 @@ derivatives, so the repo and the source archive have diverged.
   and Pictionary remain fully self-contained. **5 of 7 games now require internet access to fully function**
   — this is fine on GitHub Pages (which is itself served over the internet) but each affected game's landing
   page says so honestly.
+
+## Astro Racing — 1.0.0-rc.1
+
+- Landing: `games/astro-racing.html`; game: `games/astro-racing/index.html`.
+- Canonical candidate: Astro workspace `release-v1.0/`, checkpoint 44, unchanged game content.
+- Dist SHA-256: `23a6782ce89661413665e0553792b304952537afd20e515946818546921cee1e`.
+- Source SHA-256: `836043b225acc2531bb2b9e1b26c3c56278021afcb37de4ad9fcc0d4f1282875`.
+- Main bundle: `assets/index-D4hdARBy.js`; all 25 files enumerated in
+  `releases/astro-racing-1.0.0-rc.1/release-manifest.json`.
+- Sixteen courses, twelve racers, three laps; Easy/Normal/Hard; restored shortcuts/interiors,
+  garage, items and music. Standalone prebuilt application; no Arcade framework migration.
+- Browser keyboard and landscape touch supported. Physical device performance/tilt/audio
+  need owner testing. Minor carried-forward Toybox bend flicker / Glacier light slit remain.
+- Multiplayer: two human guests + ten bots, matching Node/WebSocket source prepared in
+  `services/astro-racing/`; public host/access missing. Local verification is not public proof.
+- History and raw authorization: `game-history/astro-racing.md` and
+  `game-history/raw/2026-09-14-astro-racing-publication.txt`.

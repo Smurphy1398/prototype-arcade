@@ -1,0 +1,22 @@
+# Optional deployment recipe. Not connected to a Render account or deployed.
+# Select this Blueprint path in Render, or enter the same settings for a Web Service.
+services:
+  - type: web
+    name: astro-racing-rc1-rooms
+    runtime: node
+    plan: free
+    branch: main
+    rootDir: services/astro-racing
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: ASTRO_PORT=$PORT npm run server
+    healthCheckPath: /health
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: ASTRO_HOST
+        value: "0.0.0.0"
+      - key: ASTRO_VERIFY
+        value: "0"
+      - key: ASTRO_ORIGINS
+        value: "https://smurphy1398.github.io"

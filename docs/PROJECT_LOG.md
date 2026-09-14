@@ -6,6 +6,15 @@ for the attribution rules (exact quotes only; never claim an agent ran unless it
 
 ---
 
+## 2026-09-14 — Astro Racing rc.1 publication lane
+
+🔍 Codex (inline; Simon-authorized integrator) added the exact final candidate to the current
+Arcade floor and prepared its matching room service. All 25 rebuilt runtime hashes match.
+Pre-release live main `7ece6acc` is retained by rollback tag and local Git archive; checkpoint 44 is unchanged.
+Static publication and verification proceed through main/root GitHub Pages. Public rooms remain blocked
+on hosting access; no charges incurred. Full record: `agent-runs/2026-09-14-codex-astro-publication.md`.
+
+
 ## 2026-07-15 — B8 Nebula Rescue read-only diagnosis complete (docs-only checkpoint)
 **Agent Snapshot:** 🧭 Claude (Opus/High, inline, sole editor) — read-only v6.3↔v6.4 diff/code trace + one
 headless-Chrome load-render check. No 🧠 Grok/🔍 Codex runs this pass.

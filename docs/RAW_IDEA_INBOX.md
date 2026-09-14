@@ -80,3 +80,8 @@ These `.txt` notes live under `..\PROTOTYPE ARCADE\` and should be captured verb
 - `3d space pinball game\passover.txt` — pinball handoff notes
 - `world history map\prompt notes.txt`, `historical timeline articles FACTS from school.txt`, `history.txt` — atlas source material
 - Per-game `changelog.txt` / `readme.txt` files across the version folders
+
+
+## 2026-09-14 — Astro publication authorization
+
+Verbatim user prompt retained in `game-history/raw/2026-09-14-astro-racing-publication.txt`.

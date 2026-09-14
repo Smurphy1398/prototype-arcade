@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0-rc.1",
+  "sourceSha256": "836043b225acc2531bb2b9e1b26c3c56278021afcb37de4ad9fcc0d4f1282875",
+  "distSha256": "23a6782ce89661413665e0553792b304952537afd20e515946818546921cee1e",
+  "runtimeFiles": 25,
+  "baselineCommit": "7ece6acc09d3e3ca3513116b5230732f4b2cc8f3",
+  "baselineLiveHomepageSha256": "61c528bea037a026b41b1bcec3095a86f3b8633200505a740da3e01ae508b61d",
+  "rollbackTag": "arcade-before-astro-1.0.0-rc.1",
+  "localRollbackZipSha256": "01fb29b1144226a8263e74130dcf44d32f7ddce9b1bbd181fc91d92a96863e7b",
+  "checkpoint44Sha256": "0c1a1fa259c64f457f968d03adb881af05dff98f552c092b1f0caf3f476604cd",
+  "publicMultiplayer": {
+    "status": "blocked: hosting access/service not configured",
+    "endpoint": null
+  },
+  "staticPublication": "prepared; public verification will be added after Pages deployment"
+}

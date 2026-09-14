@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Astro rc.1 release bytes are fingerprinted; preserve them exactly.
+games/astro-racing/** -text
+services/astro-racing/** -text
