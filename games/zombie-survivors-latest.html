@@ -35,49 +35,45 @@
 <body>
   <div class="wrap">
     <h1>Zombie Survivors — Latest Owner Preview</h1>
-    <p class="sub">GG_WN3 Recovery — Death-Freeze Retest &amp; Pause-Escape Diagnostics</p>
+    <p class="sub">v3.1.22-SP — Combined candidate: 60fps repairs + hammer + glass + mall + results guard</p>
 
     <div class="banner">
-      <strong>CANDIDATE / AGENT-VERIFIED BOOT / NOT OWNER ACCEPTED</strong>
-      This build boots cleanly and reaches a playing state (fresh agent-verified boot-confirmation
-      this publish, evidence below). It has known, disclosed defects below (not buried in a log).
-      Deployment here does <b>not</b> mean the owner has accepted this build, and it does
-      <b>not</b> replace or supersede the existing candidate lineage.
+      <strong>CANDIDATE / AGENT-VERIFIED CHECKS / NOT OWNER ACCEPTED</strong>
+      This build passed its release checks on the exact published file (identity, frame times,
+      map switch, hammer, held-key results guard, zero console errors). It has known, disclosed
+      limitations below. Deployment here does <b>not</b> mean the owner has accepted this build,
+      and it does <b>not</b> replace or delete the existing candidate lineage.
     </div>
 
-    <p><a class="play" href="./zombie-survivors/candidates/v3.1.19-7f122618f94c/index.html">Play the candidate</a></p>
+    <p><a class="play" href="./zombie-survivors/candidates/v3.1.22-SP-521781322d53/index.html">Play the candidate</a></p>
 
     <div class="meta">
-      <p><b>Version:</b> <code>v3.1.19</code> &middot; GG_WN3 Recovery: Death-Freeze Retest &amp; Pause-Escape Diagnostics<br />
-         <b>ZSS source commit:</b> <code>b70e17a3</code> (version-bump commit <code>ade82ca6</code> sits on top, docs-only)<br />
-         <b>Full detail:</b> <a href="./zombie-survivors/candidates/v3.1.19-7f122618f94c/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a></p>
+      <p><b>Version:</b> <code>v3.1.22-SP · 475e6a08</code> (in-game stamp) &middot; tree commit <code>48dcd621</code><br />
+         <b>Maps:</b> District (default) and Meridian Mall (pick it in New Game, or add <code>?map=mall</code>)<br />
+         <b>Full detail:</b> <a href="./zombie-survivors/candidates/v3.1.22-SP-521781322d53/CANDIDATE.json" style="color:#8fb7ff">CANDIDATE.json</a></p>
 
-      <p class="warn"><b>Known, disclosed defects (unchanged from prior candidates unless noted):</b></p>
+      <p><b>What changed since the last published candidate (v3.1.19):</b></p>
       <ul>
-        <li><b>MP5/M4A1 secondary-audio-layer contention</b> (rapid-fire mech/tail sound layers lost under crowded fire, 57.7%/72.5% observed): still OPEN. A targeted fix was attempted and then reverted after an independent technical review found it could still lose the same layer to the shot's own follow-up gunshot and could evict the wrong weapon's sound — needs a redesign, not shipped uncertified.</li>
-        <li><b>Player-death hard-freeze:</b> UPDATED this pass. Found a much older, deeper investigation had already root-caused and fixed the exact catastrophic-stall mechanism (still present, unreverted); a fresh retest specifically disproved the "zeroed results stats" half of the report; no isolated catastrophic stall reproduced. Still not fully closed — a real-device death trace is needed to be sure.</li>
-        <li><b>Pause menu sometimes non-interactive mid-game:</b> still OPEN. Added diagnostic instrumentation (not a fix) so the next real occurrence leaves evidence instead of another guess.</li>
-        <li><b>Wave 7+ encounter, corpse-loot round trip, compass/HUD alignment:</b> unchanged from prior candidates, still not re-verified.</li>
+        <li>Performance repairs: measured 16.7 ms median / 16.8 ms p95 frame time on both maps during a walk (headed browser, real GPU, 1584×805). Not a heavy-combat benchmark.</li>
+        <li>Claw hammer for boarding windows/doors with nails, plus pry.</li>
+        <li>Glass: first shot cracks the pane with the old cracked-glass look, second shot removes it; edge remnants stay; New Game restores panes. Mall skylights included.</li>
+        <li>Meridian Mall map (WIP.11) alongside the District; District interior pass.</li>
+        <li>Holding Space/Enter through the end of a run no longer skips the results screen; release and press once to start exactly one new run.</li>
       </ul>
 
-      <p><b>What changed since the last published candidate (v3.1.18):</b> re-investigated the two
-      recovered player-death-freeze and pause-menu reports. Found both had already been
-      investigated far more deeply than this recovery initially knew — the death-freeze's actual
-      catastrophic-stall cause was found and fixed weeks ago and is still intact; a fresh retest
-      shows the results screen genuinely reports real stats, not zeroed ones. The pause bug's own
-      prior investigation explained why automated testing structurally can't catch it and
-      recommended lightweight diagnostic logging instead of another guess — that's what this pass
-      adds. Full list in CANDIDATE.json.</p>
-
-      <p class="warn"><b>Not included:</b> the "twitch" zombie variant experiment remains isolated,
-      never integrated into the branch this candidate ships from. The Sawer chainsaw mini-boss
-      <i>is</i> present (developer-lab-only), but the decision on whether it becomes a real spawned
-      enemy has not been made and is not decided by this publish.</p>
+      <p class="warn"><b>Known, disclosed limitations:</b></p>
+      <ul>
+        <li><b>Zombie window breach:</b> zombies break boards (slowly) but pop through a cleared opening with no climb animation yet.</li>
+        <li><b>Mall upper floor:</b> zombies do not yet follow you up the escalators.</li>
+        <li><b>Boards:</b> build/pry can return more boards than were spent.</li>
+        <li><b>Mall combat frame rate</b> under many enemies is not benchmarked; 60 fps there is a target, not a verified claim. First glass crack / first gunshot may hitch once.</li>
+        <li>Mall shops are sparse and loot is not yet store-appropriate; mall railings are opaque; audio contention (MP5/M4A1) still open.</li>
+      </ul>
 
       <p>Candidate snapshots are immutable and content-addressed; older previews (including
       <code>v2.8-WN5</code>, <code>v3.0-SLICE1</code>, <code>v3.1.5</code>, <code>v3.1.14</code>,
-      <code>v3.1.17</code>, and <code>v3.1.18</code>) are never deleted. Prior candidate:
-      <a href="./zombie-survivors/candidates/v3.1.18-63ee9a4c2e43/index.html" style="color:#8fb7ff">v3.1.18</a>.</p>
+      <code>v3.1.17</code>, <code>v3.1.18</code> and <code>v3.1.19</code>) are never deleted. Prior candidate:
+      <a href="./zombie-survivors/candidates/v3.1.19-7f122618f94c/index.html" style="color:#8fb7ff">v3.1.19</a>.</p>
       <p><a class="back" href="../index.html">← Back to Floor</a>
          · <a class="back" href="../classic/index.html">Classic</a></p>
     </div>

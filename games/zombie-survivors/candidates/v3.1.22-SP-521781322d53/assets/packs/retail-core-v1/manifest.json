@@ -1,0 +1,232 @@
+{
+  "id": "retail-core-v1",
+  "name": "Retail Core v1",
+  "version": "1.0.0",
+  "status": "active",
+  "kind": "pack",
+  "executable": false,
+  "source": {
+    "kind": "procedural",
+    "base_dev_ref": "v2.0-ec/src/retail-assets.js"
+  },
+  "notes": "Data-only inventory. Load retail-assets.js, retail-expansion-assets.js, map architecture.js, then construction.js. Floor-centre independent instances; 30 retail registry IDs. Escalators are map architecture over shared stairs.",
+  "assets": [
+    {
+      "id": "prop.model.retail_shelf",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 1.6,
+        "y": 1.52,
+        "z": 0.44
+      }
+    },
+    {
+      "id": "prop.model.retail_table",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 1.15,
+        "y": 0.74,
+        "z": 0.72
+      }
+    },
+    {
+      "id": "prop.model.retail_chair",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 0.44,
+        "y": 0.86,
+        "z": 0.46
+      }
+    },
+    {
+      "id": "prop.model.retail_counter",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 2.4,
+        "y": 1.08,
+        "z": 0.72
+      }
+    },
+    {
+      "id": "prop.model.retail_planter",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 2.4,
+        "y": 0.96,
+        "z": 2.4
+      }
+    },
+    {
+      "id": "prop.model.retail_booth",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 1.72,
+        "y": 1.08,
+        "z": 1.48
+      }
+    },
+    {
+      "id": "prop.model.retail_pegboard",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 2.5,
+        "y": 2.05,
+        "z": 0.16
+      }
+    },
+    {
+      "id": "prop.model.retail_workbench",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 2.2,
+        "y": 0.92,
+        "z": 0.78
+      }
+    },
+    {
+      "id": "prop.model.retail_column",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 0.72,
+        "y": 7.8,
+        "z": 0.72
+      }
+    },
+    {
+      "id": "prop.model.retail_hand_truck",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 0.48,
+        "y": 1.12,
+        "z": 0.62
+      }
+    },
+    {
+      "id": "prop.model.retail_gondola",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 1.7,
+        "y": 1.48,
+        "z": 0.92
+      }
+    },
+    {
+      "id": "prop.model.retail_sign",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 3.2,
+        "y": 0.7,
+        "z": 0.08
+      }
+    },
+    {
+      "id": "prop.model.retail_crate_stack",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 0.78,
+        "y": 0.96,
+        "z": 0.78
+      }
+    },
+    {
+      "id": "prop.model.retail_pipe_rack",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 1.8,
+        "y": 1.35,
+        "z": 0.42
+      }
+    },
+    {
+      "id": "prop.model.retail_yard_lamp",
+      "domain": "prop",
+      "kind": "model",
+      "pivot": "floor-center",
+      "front": "+Z",
+      "units": "meters",
+      "size": {
+        "x": 0.32,
+        "y": 4.4,
+        "z": 0.32
+      },
+      "notes": "Emissive globe only; does not call lamp()"
+    }
+  ],
+  "expansion": {
+    "source": "v2.0-ec/src/retail-expansion-assets.js",
+    "author": "Grok-4.6 draft; Astra corrections",
+    "assets": [
+      "prop.model.retail_tray",
+      "prop.model.retail_tenant_sign",
+      "prop.model.retail_grille",
+      "prop.model.retail_book_bay",
+      "prop.model.retail_apparel_rack",
+      "prop.model.retail_fridge_bank",
+      "prop.model.retail_monitor_run",
+      "prop.model.retail_record_bin",
+      "prop.model.retail_lamp_island",
+      "prop.model.retail_shoe_run",
+      "prop.model.retail_kiosk",
+      "prop.model.retail_food_stall",
+      "prop.model.retail_directory",
+      "prop.model.retail_bag",
+      "prop.model.retail_medallion"
+    ]
+  }
+}
