@@ -1,0 +1,61 @@
+{
+  "schema": "arcade.candidate_snapshot.v1",
+  "game": "Zombie Survivors",
+  "candidate_version": "v3.2.2-mall-recovery.WIP7.9",
+  "lineage": "mall-recovery",
+  "lineage_note": "This candidate is the FIRST-ever Arcade publish of the mall-recovery/WN16 lineage (wn16/combined-candidate worktree). It is NOT a successor to the v3.1.x-SP lineage already published here (v3.1.5..v3.1.22-SP) -- the two lines diverge with no common publish ancestor in this Arcade repo and carry different feature sets. This entry does not replace, relabel, or move the 'latest' pointer, which still points at v3.1.22-SP. Owner-stated future intent: candidate metadata should eventually let the Arcade group builds by lineage (Mall Recovery / WN prototype / Stable / Historical) instead of one flat list.",
+  "channel": "Candidate",
+  "identity_line": "v3.2.2-mall-recovery.WIP7.9 · owner-smoke sprint continuation: pursuit LOS fix, posture/gait fix, Palm Room enclosure, directional hit-reaction impulse · 56ca3f6e · AGENT-VERIFIED CHECKS · OWNER PLAYTEST STILL REQUIRED",
+  "visible_build_stamp": "v3.2.2-mall-recovery.WIP7.9 · 56ca3f6e (one-commit stamp lag by design, same convention as v3.1.22-SP: the stamp names the commit the bundle was built from; the tree commit that packages these exact bytes is e9b8c664)",
+  "candidate_sha256_source_build": "204bfcbe5463a9ee7e715115b87c9dfb85fc7d1a278cd53d201eab2ade93cff8",
+  "candidate_bytes_source_build": 7521703,
+  "candidate_sha256_as_served": "204bfcbe5463a9ee7e715115b87c9dfb85fc7d1a278cd53d201eab2ade93cff8",
+  "candidate_bytes_as_served": 7521703,
+  "candidate_sha256_note": "Verified byte-identical three ways on this exact publish: (1) build.cjs's own reported sha256 at build time, (2) a local static-serve fetch + sha256 of the served bytes, (3) the file copied into this candidate directory. All three match.",
+  "artifact": "index.html",
+  "runtime_dependencies_copied": ["three.min.js", "assets/packs/", "assets/sfx/"],
+  "maps": "District (default) and Meridian Galleria mall v3 (select via ?map=mall). Mall map data (map.json + full-mall.js) is fully injected into index.html at build time -- no separate runtime file dependency for the map.",
+  "published_at": "2026-09-21",
+  "status": "CANDIDATE / AGENT-VERIFIED CHECKS / NOT OWNER ACCEPTED",
+  "owner_accepted": false,
+  "stable_channel": "unchanged -- this publish does not create, replace, relabel or promote any Stable entry, and does not move the Arcade 'latest' pointer (owner-directed: new candidate only, do not touch zombie-survivors-latest.html).",
+  "immutability": "This directory is content-addressed by the source build's SHA-256 prefix and is IMMUTABLE. Never overwrite; future candidates get their own directory. The prior v3.1.22-SP (and all earlier) candidates are untouched by this publish.",
+  "commit_chain": {
+    "source_build_commit": "56ca3f6e",
+    "source_build_commit_note": "The commit whose tree state build.cjs read when it derived and embedded the GAME_VERSION/verTag/smokeVer/deadVer stamp baked into these exact bytes.",
+    "archive_publish_commit": "e9b8c664",
+    "archive_publish_commit_note": "The immediately-next commit in wn16/combined-candidate that adds the rebuilt zombie-survivors.html (these exact bytes, sha256 204bfcbe5463a9ee...) to source control, ready to be archived here. This is the terminal commit of the ZSS-side publish chain for this candidate.",
+    "one_commit_lag_is_structural": "build.cjs embeds the git HEAD short-SHA current AT BUILD TIME. Committing that build is itself a commit, so the embedded reference is always exactly one commit behind the commit that contains it -- for any terminal commit, in any chain, permanently, by this build system's design. Proven non-drift: 'git diff 56ca3f6e e9b8c664 --stat' shows exactly one file changed (v2.0-ec/zombie-survivors.html, 6 lines -- the embedded stamp strings only); the source_input_fingerprint reported by tools/build_freshness_gate.mjs (82dbceecc4aa2985) is IDENTICAL before and after this commit, over the same 60 declared source inputs. Same convention already established in this Arcade repo's own v3.1.22-SP CANDIDATE.json ('one-commit stamp lag by design'). Owner-confirmed 2026-09-21: treat as this precedent, not a general BUILD_STALE waiver."
+  },
+  "gate_waivers": {
+    "wn_token_naming_waiver": "Owner waiver 2026-09-21, NARROW: waives ONLY tools/build_freshness_gate.mjs --mode craft's WN-token / version-token naming requirement, for the established mall-recovery.WIPn.m lineage naming convention. The gate's VERSION_TOKEN_RE (/v\\d+\\.\\d+(?:\\.\\d+)?-[A-Za-z0-9]+/i) truncates any 'v3.2.2-mall-recovery.WIP7.9'-shaped label to 'v3.2.2-mall' for comparison (no hyphens/dots in its suffix character class), guaranteeing claim_correspondence=MISMATCH and wall_alignment=UNREADABLE_WALL for this naming shape regardless of the actual bytes. Confirmed via 'git log --all -S build_freshness_gate' that this gate has zero prior references in this lineage's own docs/agent-runs -- it was built for the separate WN11-WN15 wall-marathon flow and had never been run against this mall-recovery lineage before this sprint. Does NOT waive source fingerprint, served identity, build integrity, launch, or regression checks.",
+    "build_stale_terminal_commit_precedent": "Owner-confirmed 2026-09-21: the BUILD_STALE (exit 71) result that necessarily appears when re-running the gate against the terminal publish commit is treated as the established one-commit embedded-SHA-lag precedent (see commit_chain above), not a waiver of genuine staleness. Explicitly re-verified on THIS exact candidate before packaging: fingerprint identical, diff --stat shows stamp-bytes-only, all 4 visible identity carriers consistent, served-bytes sha256 match, boot/launch clean, regression suite green. If anything besides stamp/identity bytes had differed, this candidate would have been held, not published."
+  },
+  "what_changed_since_last_wn16_combined_checkpoint": [
+    "c29667b3: pursuit-state loseT (give-up timer) rewind now gated on real line-of-sight, not muffled hearing-through-walls -- fixes zombies staying locked onto the player through mall walls after losing visual contact.",
+    "ad1e39b4/4e4c8824: zombie posture/gait -- knee/thigh counter-rotation, reduced constant lean, lead/drag stride, and the P0-3 crossed-arm pose fix (an adducting z-sign bug, not a magnitude issue). Visually confirmed on a live, actively-simulated zombie, not just a static pose check.",
+    "ab47209f: Palm Room south-wall upper extension -- closes a missing-wall gap in the enclosure (P1-5).",
+    "aa977ad4: P2 directional hit-reaction view impulse -- a brief camera roll toward the hit direction on non-lethal damage, reusing the existing damage-arc-indicator vector math for consistency; reset on run start/reload/death to avoid a stuck roll."
+  ],
+  "known_residuals_disclosed": [
+    "P0-1 rubberbanding before/after A/B remains INCONCLUSIVE -- not resolved, not newly regressed, carried forward from prior checkpoints.",
+    "P1-3 roof V4 skylight ~9cm coplanar z-fight: real, diagnosed, deliberately deferred (would require touching locked collider math). Cosmetic only.",
+    "P0-5 gore-material GPU shader-program prewarm: a narrow, real remainder deliberately deferred for a dedicated boot-order-safe pass (touching it now would mean editing the strict test-locked boot init order).",
+    "One of the 7 node critical-regression repro tests (wnsp.wall01.knockback-crossing.repro.js) throws ReferenceError: g2BloodAtCap is not defined. Confirmed via 'diff <(git show <first-continuation-commit>:<path>) <(git show HEAD:<path>)' returning zero diff lines that this test file is byte-identical to this continuation's very first commit -- a pre-existing test-sandbox extraction gap, not a regression introduced by this candidate. The other 6 repro tests pass (exit 0 / ok:true) on this exact candidate.",
+    "No owner Normal-Play Trace has been performed on this exact candidate. Everything above is agent-verified (headed/headless CDP checks, node repro suite, static+served-byte identity) -- not owner acceptance."
+  ],
+  "source": {
+    "repo": "ZOMBIE SURVIVORS EXPERIMENT (canonical ZSS)",
+    "worktree": "ZSS-worktrees/wn16-combined",
+    "branch": "wn16/combined-candidate",
+    "build_commit": "56ca3f6e",
+    "publish_commit": "e9b8c664",
+    "run_docs": "docs/agent-runs/2026-09-21-owner-smoke-sprint/ (HANDOFF.md, continuation-2/publish-gates/)"
+  },
+  "smoke_evidence": {
+    "fresh_evidence_this_publish": "Headless CDP boot check on the exact served bytes (sha256 204bfcbe5463...): CAP=true, READY=true, CONSOLE_ERRORS=0. Served-bytes sha256 verified identical to build.cjs's own reported hash via a local static-serve fetch. All 4 visible identity carriers (artifact GAME_VERSION, core.js literal, _head.html verTag/smokeVer/deadVer/title, mall map.json version/revision) read v3.2.2-mall-recovery.WIP7.9 / Mall Recovery WIP7.9 consistently, including the mall map.json carrier which is NOT touched by build.cjs's other identity substitutions and was previously caught stale live via a HUD screenshot. Critical-regression node repro suite: 6/7 pass, 1 pre-existing unrelated failure (see known_residuals_disclosed).",
+    "grok_review": "A fresh integrated Grok review of this candidate's product commits (through 7ea7e745) was dispatched but the Grok CLI stalled mid-analysis (confirmed root cause: 'Shell is blocked until the run supervisor answers', the same dead-run-supervisor issue that has affected Grok's mutating/shell tools in this worktree all sprint). No fabricated Grok verdict is recorded for this candidate as a whole; the individual product fixes (pursuit LOS gate, posture/gait, Palm Room wall, hit-impulse) were each independently Grok-designed and/or Grok-reviewed earlier in the sprint per the checkpoint history in run_docs.",
+    "not_claimed": "No Normal-Play Trace by the owner, no fresh whole-candidate Grok integrated verdict (stalled), no sustained combat-load benchmark on this exact candidate."
+  },
+  "deployment_semantics": "Deployment success does NOT equal product acceptance. Publicly reachable means copied and served; owner playtest decides. This entry does not replace, relabel or promote Stable, does not move 'latest', and is not marked owner-accepted."
+}
