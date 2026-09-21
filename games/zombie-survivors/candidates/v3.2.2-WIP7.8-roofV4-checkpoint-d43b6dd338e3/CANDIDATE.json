@@ -3,7 +3,7 @@
   "game": "Zombie Survivors",
   "candidate_version": "v3.2.2-mall-recovery.WIP7.8-roofV4-checkpoint",
   "channel": "Candidate",
-  "identity_line": "v3.2.2-mall-recovery.WIP7.8 · 8dc282f7 · Meridian Galleria Mall Architecture WIP -- Roof V4 Playtest Checkpoint · AGENT-VERIFIED BOOT PENDING · OWNER PLAYTEST STILL REQUIRED",
+  "identity_line": "v3.2.2-mall-recovery.WIP7.8 · 8dc282f7 · Meridian Galleria Mall Architecture WIP -- Roof V4 Playtest Checkpoint · AGENT-VERIFIED BOOT CONFIRMED (2026-09-21) · OWNER PLAYTEST STILL REQUIRED",
   "publish_reason": "Owner-directed pause-and-checkpoint (resource constraints, not a completed architecture pass). This is a mid-development WIP snapshot of an ongoing mall-recovery/architecture effort, not a numbered release in the v3.1.x lineage this repo's other candidates follow.",
   "candidate_sha256_source_build": "d43b6dd338e3ad9faf9d5470e7f976d26ed0d331153d5c4e3a06f2b8cdfcce24",
   "candidate_bytes_source_build": 7493407,
@@ -45,7 +45,7 @@
   },
   "smoke_evidence": {
     "reused_evidence": "None.",
-    "fresh_evidence_this_publish": "Post-deploy boot confirmation to be captured immediately after this candidate goes live -- see the post-deploy verification doc for the real headless-CDP evidence (screenshot, identity-line match).",
+    "fresh_evidence_this_publish": "Post-deploy boot confirmation captured against this exact live URL, 2026-09-21, headless CDP: main menu rendered, F8 debug panel identity line reads 'v3.2.2-mall-recovery.WIP7.8 · Meridian Recovery · 8dc282f7', exact match to this candidate's source commit. Screenshot preserved in the run docs referenced below. This is AGENT-VERIFIED BOOT ONLY -- not a Normal-Play Trace, not New-Game-to-playing-state, not owner acceptance.",
     "not_claimed": "This publish does not claim a fresh sustained multi-minute natural-play session, an owner playtest, or that the open items listed above are resolved."
   },
   "deployment_semantics": "Deployment success does NOT equal product acceptance. Publicly reachable means copied and served; owner playtest decides. This entry does not replace, relabel, or promote Stable, and is not marked owner-accepted."
