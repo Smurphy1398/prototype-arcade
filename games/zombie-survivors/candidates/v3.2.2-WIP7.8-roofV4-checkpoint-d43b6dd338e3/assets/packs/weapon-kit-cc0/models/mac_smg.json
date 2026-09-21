@@ -1,0 +1,16 @@
+{
+  "leaf": "mac_smg",
+  "id": "weapon.held.mac_smg",
+  "wepName": "MAC SMG",
+  "kind": "smg",
+  "place": "hip",
+  "muzzle": [0, 0.06, -0.58],
+  "mag": { "type": "box", "sx": 0.045, "sy": 0.20, "sz": 0.055, "mat": "metal", "x": 0, "y": -0.18, "z": -0.38 },
+  "parts": [
+    { "type": "box", "sx": 0.085, "sy": 0.12, "sz": 0.20, "mat": "body", "x": 0, "y": 0.01, "z": -0.38 },
+    { "type": "box", "sx": 0.032, "sy": 0.032, "sz": 0.14, "mat": "blued", "x": 0, "y": 0.06, "z": -0.50 },
+    { "type": "box", "sx": 0.06, "sy": 0.04, "sz": 0.08, "mat": "dark", "x": 0, "y": -0.02, "z": -0.26 },
+    { "type": "box", "sx": 0.05, "sy": 0.10, "sz": 0.055, "mat": "dark", "x": 0, "y": -0.09, "z": -0.30, "rx": 0.08 },
+    { "type": "box", "sx": 0.04, "sy": 0.03, "sz": 0.06, "mat": "accent", "x": 0.05, "y": 0.04, "z": -0.34 }
+  ]
+}

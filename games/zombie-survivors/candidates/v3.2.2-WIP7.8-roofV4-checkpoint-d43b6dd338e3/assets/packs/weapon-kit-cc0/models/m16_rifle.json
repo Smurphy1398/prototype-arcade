@@ -1,0 +1,26 @@
+{
+  "leaf": "m16_rifle",
+  "id": "weapon.held.m16_rifle",
+  "wepName": "M16 Rifle",
+  "kind": "rifle",
+  "place": "hip",
+  "muzzle": [0, 0.045, -0.98],
+  "mag": { "type": "box", "sx": 0.040, "sy": 0.185, "sz": 0.050, "mat": "metal", "x": 0, "y": -0.16, "z": -0.40 },
+  "notes": "P10: AR-15/M16 pattern — A2 stock, centered carry-handle on TOP, tubular handguard, straight STANAG mag; not AUG bullpup",
+  "parts": [
+    { "type": "box", "sx": 0.058, "sy": 0.072, "sz": 0.26, "mat": "body", "x": 0, "y": 0.012, "z": -0.40 },
+    { "type": "box", "sx": 0.045, "sy": 0.048, "sz": 0.09, "mat": "dark", "x": 0, "y": 0.0, "z": -0.24 },
+    { "type": "box", "sx": 0.052, "sy": 0.078, "sz": 0.18, "mat": "dark", "x": 0, "y": -0.01, "z": -0.10 },
+    { "type": "box", "sx": 0.072, "sy": 0.020, "sz": 0.060, "mat": "dark", "x": 0, "y": 0.028, "z": 0.0 },
+    { "type": "box", "sx": 0.036, "sy": 0.058, "sz": 0.16, "mat": "dark", "x": 0, "y": 0.095, "z": -0.38 },
+    { "type": "box", "sx": 0.040, "sy": 0.010, "sz": 0.050, "mat": "dark", "x": 0, "y": 0.128, "z": -0.32 },
+    { "type": "box", "sx": 0.010, "sy": 0.016, "sz": 0.010, "mat": "sight", "x": 0, "y": 0.140, "z": -0.30 },
+    { "type": "box", "sx": 0.020, "sy": 0.020, "sz": 0.50, "mat": "blued", "x": 0, "y": 0.042, "z": -0.72 },
+    { "type": "cylZ", "rTop": 0.030, "rBot": 0.030, "len": 0.24, "mat": "dark", "x": 0, "y": 0.030, "z": -0.58, "seg": 12 },
+    { "type": "cylZ", "rTop": 0.026, "rBot": 0.026, "len": 0.06, "mat": "metal", "x": 0, "y": 0.030, "z": -0.48, "seg": 10 },
+    { "type": "box", "sx": 0.012, "sy": 0.032, "sz": 0.016, "mat": "sight", "x": 0, "y": 0.078, "z": -0.92 },
+    { "type": "box", "sx": 0.008, "sy": 0.018, "sz": 0.008, "mat": "sight", "x": 0, "y": 0.098, "z": -0.92 },
+    { "type": "box", "sx": 0.046, "sy": 0.100, "sz": 0.052, "mat": "dark", "x": 0, "y": -0.078, "z": -0.30, "rx": 0.10 },
+    { "type": "box", "sx": 0.016, "sy": 0.028, "sz": 0.055, "mat": "metal", "x": 0.032, "y": 0.025, "z": -0.36 }
+  ]
+}

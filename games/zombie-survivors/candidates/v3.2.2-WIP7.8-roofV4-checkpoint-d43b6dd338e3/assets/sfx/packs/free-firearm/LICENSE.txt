@@ -1,0 +1,8 @@
+The Free Firearm Sound Library
+Original Kickstarter / Still North Media / Ben Jaszczak et al.
+Mirror used: https://github.com/buddingmonkey/FreeFirearmsSFXLibrary
+License: Creative Commons Zero (CC0 1.0)
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Public domain dedication — free for any use including commercial.
+Clips here are trimmed/normalized derivatives of Master Tracks samples.
